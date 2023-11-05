@@ -117,7 +117,6 @@ class CategoryView extends StatelessWidget {
                   );
                   break;
               }
-
             },
             child: Container(
               height: MediaQuery.of(context).size.height * 0.5,
