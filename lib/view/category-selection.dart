@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:service_squad/view/profile_view.dart';
 
 import '../model/grid_item_data.dart';
 import 'auth_gate.dart';
 
-class Category extends StatelessWidget {
-  const Category({super.key});
+class CategorySelection extends StatelessWidget {
+  const CategorySelection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +63,17 @@ class CategoryView extends StatelessWidget {
               )
           ),
           actions: <Widget>[
+            IconButton(
+              color: Colors.white,
+              icon: const Icon(Icons.person),
+              tooltip: 'Go to profile',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ProfileView()),
+                );
+              },
+            ),
             IconButton(
               color: Colors.white,
               icon: const Icon(Icons.arrow_back_outlined),
