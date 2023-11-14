@@ -27,7 +27,9 @@ class UserProfileData {
   Map<String, dynamic> toMap() {
     return {
       'userType': userType,
-      'listOfOfferingProfessionalServices': listOfOfferingProfessionalServices,
+      'listOfOfferingProfessionalServices': listOfOfferingProfessionalServices
+          ?.map((service) => service.toMap())
+          .toList(),
       'userAbout': userAbout,
       'userRating': userRating,
       'imagePath': imagePath,
@@ -35,6 +37,7 @@ class UserProfileData {
       'mobilePhoneNumber': mobilePhoneNumber
     };
   }
+
 
   /// Converts a Firestore `DocumentSnapshot` back into a `Todo` object.
   ///

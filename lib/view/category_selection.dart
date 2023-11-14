@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:service_squad/controller/professional_service_controller.dart';
 import 'package:service_squad/view/profile_view.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:service_squad/view/service_entry_view.dart';
 
 import '../model/grid_item_data.dart';
 import 'auth_gate.dart';
+import 'services_list_view.dart';
 
 class CategorySelection extends StatelessWidget {
   const CategorySelection({super.key});
@@ -55,6 +60,17 @@ class CategoryView extends StatelessWidget {
 
       appBar: AppBar(
           backgroundColor: Colors.black,
+          // leading: IconButton(
+          //   color: Colors.white,
+          //     icon: Icon(Icons.add),
+          //     onPressed: () async {
+          //       Navigator.push(
+          //         context,
+          //         MaterialPageRoute(
+          //             builder: (context) =>
+          //                 ServiceEntryView.withInheritedTheme(false,category)),
+          //       );
+          //     }),
           title: Text(
               "Service Categories",
               style: GoogleFonts.pacifico(
@@ -100,24 +116,30 @@ class CategoryView extends StatelessWidget {
             onTap: () {
               switch (index){
                 case(0):
-                  print("tapped navigate adventure enthusiast");
+                  print("tapped navigate housekeeping");
+                  //TODO: here we could implement the logic based on the user type/role: if they are
+                  //a service provider they will be able to see all the services available and they will be able to add
+                  //their own professional_service posting
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Placeholder()),//TODO
+                    MaterialPageRoute(builder: (context) => CategoriesView.WithPersistedThemeAndCategory(
+                        false, "House Keeping"),),//TODO
                   );
                   break;
                 case(1):
                   print("tapped gridview- route not implemented yet");
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Placeholder()),//TODO
+                    MaterialPageRoute(builder: (context) => CategoriesView.WithPersistedThemeAndCategory(
+                        false, "Snow Clearance")),//TODO
                   );
                   break;
                 case(2):
                   print("tapped gridview");
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const Placeholder()),
+                    MaterialPageRoute(builder: (context) => CategoriesView.WithPersistedThemeAndCategory(
+                        false, "Lawn Mowing")),
                   );
                   break;
 //TODO
@@ -125,7 +147,8 @@ class CategoryView extends StatelessWidget {
                   print("tapped gridview");
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const Placeholder()),
+                    MaterialPageRoute(builder: (context) => CategoriesView.WithPersistedThemeAndCategory(
+                        false, "Handy Services")),
                   );
                   break;
               }
