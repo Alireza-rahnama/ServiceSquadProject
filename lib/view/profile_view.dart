@@ -6,7 +6,7 @@ import 'package:service_squad/view/category_selection.dart';
 
 import '../model/professional_service.dart';
 
-// TODO iMPLEMENT THE UI  After user authentication is successful USER MUST COMPLETING THEIR PROFILE IN THIS VIEW AND WE COLLECT MORE DATA ,AND set their role in Firestore either associate or custome
+// TODO iMPLEMENT THE UI  After user authentication is successful USERs MUST COMPLETe THEIR PROFILE IN THIS VIEW AND WE COLLECT MORE DATA ,AND set their role in Firestore either associate or custome
 void setUserType(String uid, String userType) {
   FirebaseFirestore.instance
       .collection('users')
@@ -14,10 +14,24 @@ void setUserType(String uid, String userType) {
       .set({'userType': userType}, SetOptions(merge: true));
 }
 
+void setEmail(String uid, String email) {
+  FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
+      .set({'userEmail': email}, SetOptions(merge: true));
+}
+
+void setMobileNumber(String uid, String mobileNumber) {
+  FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
+      .set({'mobileNumber': mobileNumber}, SetOptions(merge: true));
+}
+
 Future<String?> getUserType(String uid) async {
   try {
     DocumentSnapshot<Map<String, dynamic>> userSnapshot =
-    await FirebaseFirestore.instance.collection('users').doc(uid).get();
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
 
     if (userSnapshot.exists) {
       // Check if the 'userType' field exists in the document
@@ -37,7 +51,6 @@ Future<String?> getUserType(String uid) async {
 }
 //TODO if the registration is completed then redirect to the category grid view
 //TODO if the user is an associate when each grid is pressed pop up a new screen allowing to create a new posting of that category type
-
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -63,15 +76,11 @@ class _ProfileViewState extends State<ProfileView> {
 
   @override
   Widget build(BuildContext context) {
-    return  AlertDialog(
+    return AlertDialog(
       title: Text('My Profile'),
       content: Column(children: [
+        // Center(child:Text('Select your user type')),
         dropdownMenu,
-        TextField(
-          controller: userTypeController,
-          decoration: InputDecoration(labelText: "Select your user type"),
-          maxLines: null, // Allows multiple lines of text.
-        ),
         TextField(
           controller: userAboutController,
           decoration: InputDecoration(labelText: "About Me"),
@@ -79,7 +88,8 @@ class _ProfileViewState extends State<ProfileView> {
         ),
         TextField(
           controller: useremailAddressController,
-          decoration: InputDecoration(labelText: "Edit your email"),//TODO: ADD THE USER'S CURRENT EMAIL HERE
+          decoration: InputDecoration(labelText: "Edit your email"),
+          //TODO: ADD THE USER'S CURRENT EMAIL HERE
           maxLines: null, // Allows multiple lines of text.
         ),
         TextField(
@@ -88,9 +98,8 @@ class _ProfileViewState extends State<ProfileView> {
           maxLines: null, // Allows multiple lines of text.
         ),
         SizedBox(height: 50),
-        Text(
-          'My Rating is '//TODO: implement logic
-        ),
+        Text('My Rating is ' //TODO: implement logic
+            ),
         SizedBox(height: 10),
         // ElevatedButton(
         //   onPressed: () => _pickImageFromGallery(),
@@ -125,12 +134,13 @@ class _ProfileViewState extends State<ProfileView> {
             //             diaryEntry.imagePath),
             //         id: diaryEntry.id));
             // updateState();
-
-            setUserType(FirebaseAuth.instance.currentUser!.uid, userTypeController.text);
+            setEmail(FirebaseAuth.instance.currentUser!.uid,useremailAddressController.text);
+            setMobileNumber(FirebaseAuth.instance.currentUser!.uid, mobilePhoneNumberController.text);
             Navigator.of(context).pop();
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                  content: Center(child: Text('Profile info was successfully updated!')),
+                  content: Center(
+                      child: Text('Profile info was successfully updated!')),
                   backgroundColor: Colors.deepPurple),
             );
           },
@@ -139,7 +149,6 @@ class _ProfileViewState extends State<ProfileView> {
     );
   }
 }
-
 
 const List<String> list = <String>['Client', 'Service Associate'];
 
@@ -151,32 +160,41 @@ class DropdownMenuExample extends StatefulWidget {
 
   @override
   DropdownMenuExampleState createState() {
-    DropdownMenuExampleState dropdownMenuExampleState = DropdownMenuExampleState();
+    DropdownMenuExampleState dropdownMenuExampleState =
+        DropdownMenuExampleState();
     dropDownValue = dropdownMenuExampleState.dropdownValue;
     return dropdownMenuExampleState;
   }
 }
 
 class DropdownMenuExampleState extends State<DropdownMenuExample> {
-  String dropdownValue = list.first;
+  // String dropdownValue = list.first;
+  String dropdownValue = 'Select an option';
 
   String get DropdownValue => dropdownValue;
 
   @override
   Widget build(BuildContext context) {
     return DropdownButton<String>(
-      value: dropdownValue,
-      onChanged: (String? value) {
-        setState(() {
-          dropdownValue = value!;
-        });
-      },
-      items: list.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-    );
+        value: dropdownValue,
+        onChanged: (String? value) {
+          setState(() {
+            dropdownValue = value!;
+            setUserType(FirebaseAuth.instance.currentUser!.uid, dropdownValue);
+          });
+        },
+        items: [
+          // Add an additional item for the initial text
+          DropdownMenuItem<String>(
+            value: 'Select an option',
+            child: Text('Select an option'),
+          ),
+          ...list.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+        ]);
   }
 }

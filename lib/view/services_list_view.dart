@@ -351,6 +351,7 @@ class _CategoriesViewState extends State<CategoriesView> {
                 padding: const EdgeInsets.all(8.0),
                 child: SearchAnchor(builder:
                     (BuildContext context, SearchController controller) {
+                  //TODO: We can implement the location logic here to search services by location
                   return SearchBar(
                     hintText: "Search by category or rating",
                     controller: searchController,
@@ -558,7 +559,7 @@ class _CategoriesViewState extends State<CategoriesView> {
             onPressed: () async {
               String? userType = await profileController
                   .getUserType(FirebaseAuth.instance.currentUser!.uid);
-              if (userType! == "provider") {
+              if (userType! == "Service Associate") {
                 showDialog(
                   context: context,
                   builder: (context) =>
