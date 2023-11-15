@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "124846076490",
+    "project_id": "service-squad-517cf",
+    "storage_bucket": "service-squad-517cf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:124846076490:android:74d13200c75625ba402cb3",
+        "android_client_info": {
+          "package_name": "com.example.service_squad"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnRO4SruNuAVEFY-XBlGlY-UcnolU0JsI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

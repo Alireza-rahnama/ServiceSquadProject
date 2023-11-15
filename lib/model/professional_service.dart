@@ -7,7 +7,7 @@ class ProfessionalService {
   String serviceDescription;
   int? rating = 5;
   double? wage;
-
+//TODO: MAYBE ADD SOME INFO of the service technician that can be displayed on add cards
   ProfessionalService(
       {required this.category,
       required this.serviceDescription,
