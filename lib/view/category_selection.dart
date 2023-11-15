@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:service_squad/controller/professional_service_controller.dart';
@@ -17,11 +18,6 @@ class CategorySelection extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreenAccent),
-        cardColor: Color(0xFF008080),
-        useMaterial3: true,
-      ),
       home: CategoryView(),
     );
   }
@@ -56,10 +52,10 @@ class CategoryView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
 
       appBar: AppBar(
-          backgroundColor: Colors.black,
+          backgroundColor: Colors.deepPurple,
           // leading: IconButton(
           //   color: Colors.white,
           //     icon: Icon(Icons.add),
@@ -92,12 +88,15 @@ class CategoryView extends StatelessWidget {
             ),
             IconButton(
               color: Colors.white,
-              icon: const Icon(Icons.arrow_back_outlined),
-              tooltip: 'Go back',
-              onPressed: () {
+              icon: const Icon(Icons.logout),
+              tooltip: 'Log out',
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut();
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const AuthGate()),
+                  MaterialPageRoute(
+                    builder: (context) => AuthGate(),
+                  ),
                 );
               },
             ),
@@ -160,7 +159,7 @@ class CategoryView extends StatelessWidget {
                 image: DecorationImage(
                   image: AssetImage(gridData[index].imagePath),
                   fit: BoxFit.cover,
-                  opacity: 0.7,
+                  opacity: 1.0,
                 ),
               ),
               child: Column(
