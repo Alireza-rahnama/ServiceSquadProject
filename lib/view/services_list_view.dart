@@ -163,19 +163,11 @@ class _CategoriesViewState extends State<CategoriesView> {
   }
 
   void applyFilterAndUpdateState3() async {
-    List<String> months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec'
+    List<String> categories = [
+      'Snow Clearance',
+      'House Keeping',
+      'Handy Services',
+      'Lawn Mowing'
     ];
 
     final serviceEntries = selectedCategory != null
@@ -185,6 +177,7 @@ class _CategoriesViewState extends State<CategoriesView> {
         : await professionalServiceController
             .getAllProfessionalServices()
             .first;
+    print('length of serviceEntries is ${serviceEntries.length}');
     // final serviceEntries = await professionalServiceController
     //     .getAllAvailableProfessionalServiceCollections()
     //     .first;
@@ -319,7 +312,7 @@ class _CategoriesViewState extends State<CategoriesView> {
                   setState(() {
                     selectedCategory = category;
                   });
-                  print("selectedMonth is $selectedCategory");
+                  print("selectedCategory is $selectedCategory");
                   applyFilterAndUpdateState3();
                 },
                 icon: Icon(
