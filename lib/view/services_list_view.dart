@@ -144,7 +144,8 @@ class _CategoriesViewState extends State<CategoriesView> {
                         serviceDescription: descriptionEditingController.text,
                         wage: double.parse(wageEditingController.text),
                         category: professionalServiceEntry.category,
-                        id: professionalServiceEntry!.id));
+                        id: professionalServiceEntry!.id,
+                    rating: professionalServiceEntry.rating ));
 
                 updateState(professionalServiceEntry.category);
                 Navigator.of(context).pop();
