@@ -461,23 +461,33 @@ class _CategoriesViewState extends State<CategoriesView> {
                                         icon: Icon(Icons.delete),
                                         onPressed: () async {
                                           print(
-                                              'entry with id: ${entry!.id} was selected to delte');
+                                              'entry with id: ${entry!.id} was selected to delete');
                                           //TODO: IMPLEMENT OR NOT
-                                          await professionalServiceController
-                                              .deleteProfessionalService(
-                                                  entry!.id);
+                                          String? userType = await profileController
+                                              .getUserType(FirebaseAuth.instance.currentUser!.uid);
+                                          if (userType! == "Service Associate"){
+                                            await professionalServiceController
+                                                .deleteProfessionalService(
+                                                entry!.id);
 
-                                          final serviceEntries =
-                                              await professionalServiceController
-                                                  .getAllProfessionalServices()
-                                                  .first;
+                                            final serviceEntries =
+                                            await professionalServiceController
+                                                .getAllProfessionalServices()
+                                                .first;
 
-                                          setState(() {
-                                            // Initialize filteredEntries with a copy of diaryEntries
-                                            filteredEntries =
-                                                List<ProfessionalService>.from(
-                                                    serviceEntries);
-                                          });
+                                            setState(() {
+                                              // Initialize filteredEntries with a copy of diaryEntries
+                                              filteredEntries =
+                                              List<ProfessionalService>.from(
+                                                  serviceEntries);
+                                            });
+                                          }
+                                        },
+                                      ),
+                                      IconButton(
+                                        icon: Icon(Icons.calendar_today),
+                                        onPressed: () async {
+                                          //TODO: IMPLEMENT LOGIC AND VIEW Maybe only for client user type
                                         },
                                       ),
                                     ],
