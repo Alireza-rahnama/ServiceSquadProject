@@ -303,7 +303,7 @@ class ErrorDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text('Error Exception'),
-      content: const Text('Entry already exists for this date!'),
+      content: const Text('You are already providing this service, instead of creating new posting modify your existing ad!'),
       actions: <Widget>[
         TextButton(
           onPressed: () => Navigator.pop(context, 'OK'),

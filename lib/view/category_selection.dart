@@ -189,3 +189,23 @@ class CategoryView extends StatelessWidget {
     );
   }
 }
+
+//TODO: after user logs in we need to show this alert and ask users to complete their profile
+//userType is required for the level of access in the app
+class ErrorDialog extends StatelessWidget {
+  const ErrorDialog({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Error Exception'),
+      content: const Text('Please complete your profile to continue'),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(context, 'OK'),
+          child: const Text('OK'),
+        ),
+      ],
+    );
+  }
+}

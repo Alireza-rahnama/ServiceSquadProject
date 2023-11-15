@@ -1,3 +1,5 @@
+// import 'dart:ffi';
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,21 +11,22 @@ import 'package:pdf/widgets.dart' as pw;
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:service_squad/controller/professional_service_controller.dart';
+import 'package:service_squad/view/profile_view.dart';
 import 'package:service_squad/view/service_entry_view.dart';
 
 import '../controller/professional_service_controller.dart';
 import '../controller/professional_service_controller.dart';
 import '../controller/professional_service_controller.dart';
+import '../controller/profile_controller.dart';
 import '../model/professional_service.dart';
 import 'auth_gate.dart';
+import 'category_selection.dart';
 
 /// A stateless widget representing the main page where users can view
 /// and manage their cars after authentication.
 class CategoriesView extends StatefulWidget {
 // Constructor to create a HomePage widget.
-  CategoriesView({Key? key}) :
-
-  super(key: key);
+  CategoriesView({Key? key}) : super(key: key);
   bool isDark = false;
   String categoryToPopulate = '';
 
@@ -95,7 +98,7 @@ class _CategoriesViewState extends State<CategoriesView> {
         .serviceDescription; // Initialize the text field with existing content.
 
     TextEditingController wageEditingController = TextEditingController();
-    wageEditingController.text = professionalServiceEntry.wage as String;
+    wageEditingController.text = '${professionalServiceEntry!.wage}';
 
     ProfessionalServiceController professionalServiceController =
         ProfessionalServiceController();
@@ -133,21 +136,23 @@ class _CategoriesViewState extends State<CategoriesView> {
             TextButton(
               child: Text('Save'),
               onPressed: () async {
+                print(
+                    'professionalServiceEntrycategory is: ${professionalServiceEntry!.category}');
                 // Save the edited content to the diary entry.
-                print("long pressed!");
-                professionalServiceController.updateProfessionalService(
+                await professionalServiceController.updateProfessionalService(
                     ProfessionalService(
                         serviceDescription: descriptionEditingController.text,
                         wage: double.parse(wageEditingController.text),
-                        category: professionalServiceEntry.category));
+                        category: professionalServiceEntry.category,
+                        id: professionalServiceEntry!.id));
 
                 updateState(professionalServiceEntry.category);
                 Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                      content: Center(child: Text('Entry successfully saved!')),
-                      backgroundColor: Colors.deepPurple),
-                );
+                // ScaffoldMessenger.of(context).showSnackBar(
+                //   const SnackBar(
+                //       content: Center(child: Text('Entry successfully saved!')),
+                //       backgroundColor: Colors.deepPurple),
+                // );
               },
             ),
           ],
@@ -179,6 +184,9 @@ class _CategoriesViewState extends State<CategoriesView> {
         : await professionalServiceController
             .getAllProfessionalServices()
             .first;
+    // final serviceEntries = await professionalServiceController
+    //     .getAllAvailableProfessionalServiceCollections()
+    //     .first;
 
     setState(() {
       // Initialize filteredEntries with a copy of diaryEntries
@@ -197,7 +205,6 @@ class _CategoriesViewState extends State<CategoriesView> {
           return entry.category == selectedCategory;
         }).toList();
       }
-
     });
   }
 
@@ -210,6 +217,8 @@ class _CategoriesViewState extends State<CategoriesView> {
       filteredEntries = professionalServiceEntries;
     });
   }
+
+  final profileController = ProfileController();
 
   String convertIntMonthToStringRepresentation(int month) {
     String representation = '';
@@ -268,8 +277,21 @@ class _CategoriesViewState extends State<CategoriesView> {
     return Theme(
         data: themeData,
         child: Scaffold(
-        // App bar with a title and a logout button.
+          // App bar with a title and a logout button.
           appBar: AppBar(
+            leading: IconButton(
+              color: Colors.white,
+              icon: Icon(Icons.navigate_before),
+              // Sign out the user on pressing the logout button.
+              onPressed: () async {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CategorySelection(),
+                  ),
+                );
+              },
+            ),
             backgroundColor: Colors.deepPurple,
             title: Text("${categoryName}",
                 style: GoogleFonts.pacifico(
@@ -280,7 +302,7 @@ class _CategoriesViewState extends State<CategoriesView> {
               IconButton(
                 color: Colors.white,
                 icon: Icon(Icons.logout),
-              // Sign out the user on pressing the logout button.
+                // Sign out the user on pressing the logout button.
                 onPressed: () async {
                   await FirebaseAuth.instance.signOut();
                   Navigator.push(
@@ -378,7 +400,8 @@ class _CategoriesViewState extends State<CategoriesView> {
           // Body of the widget using a StreamBuilder to listen for changes
           // in the diary collection and reflect them in the UI in real-time.
           body: StreamBuilder<List<ProfessionalService>>(
-            stream: professionalServiceController.getAllProfessionalServices(),
+            stream: professionalServiceController
+                .getAllProfessionalServices(),
             builder: (context, snapshot) {
               // Show a loading indicator until data is fetched from Firestore.
               if (!snapshot.hasData) return CircularProgressIndicator();
@@ -394,7 +417,6 @@ class _CategoriesViewState extends State<CategoriesView> {
                 itemCount: professionalServices.length,
                 itemBuilder: (context, index) {
                   final entry = professionalServices[index];
-
                   if (lastCategory == null || entry.category != lastCategory) {
                     final headerText = entry.category;
                     lastCategory = entry.category!;
@@ -414,9 +436,9 @@ class _CategoriesViewState extends State<CategoriesView> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  // BuildImageFromUrl(entry), TODO: DO WEE= NEED AN IMAG HERE?
+                                  // BuildImageFromUrl(entry), TODO: DO WEE= NEED AN IMAGe HERE?
                                   Text(
-                                    entry.serviceDescription,
+                                    entry.category,
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -424,7 +446,7 @@ class _CategoriesViewState extends State<CategoriesView> {
                                   ),
                                   SizedBox(height: 15),
                                   Text(
-                                    '${entry.category}',
+                                    '${entry.serviceDescription}',
                                     style: TextStyle(fontSize: 14),
                                   ),
                                   SizedBox(height: 15),
@@ -436,23 +458,24 @@ class _CategoriesViewState extends State<CategoriesView> {
                                       IconButton(
                                         icon: Icon(Icons.delete),
                                         onPressed: () async {
+                                          print(
+                                              'entry with id: ${entry!.id} was selected to delte');
                                           //TODO: IMPLEMENT OR NOT
-                                          print("delete was pressed");
-                                          professionalServiceController
-                                              .deleteProfessionalService(entry!.id);
+                                          await professionalServiceController
+                                              .deleteProfessionalService(
+                                                  entry!.id);
 
                                           final serviceEntries =
-                                          await professionalServiceController
-                                              .getAllProfessionalServices()
-                                              .first;
+                                              await professionalServiceController
+                                                  .getAllProfessionalServices()
+                                                  .first;
 
                                           setState(() {
                                             // Initialize filteredEntries with a copy of diaryEntries
                                             filteredEntries =
-                                            List<ProfessionalService>.from(
-                                                serviceEntries);
+                                                List<ProfessionalService>.from(
+                                                    serviceEntries);
                                           });
-
                                         },
                                       ),
                                     ],
@@ -498,16 +521,21 @@ class _CategoriesViewState extends State<CategoriesView> {
                                   Spacer(),
                                   IconButton(
                                     icon: Icon(Icons.delete),
-                                    onPressed: () {
-                                      //TODO:LOGIC
+                                    onPressed: () async {
+                                      await professionalServiceController
+                                          .deleteProfessionalService(entry!.id);
 
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              CategoriesView(),
-                                        ),
-                                      );
+                                      final serviceEntries =
+                                          await professionalServiceController
+                                              .getAllProfessionalServices()
+                                              .first;
+
+                                      setState(() {
+                                        // Initialize filteredEntries with a copy of diaryEntries
+                                        filteredEntries =
+                                            List<ProfessionalService>.from(
+                                                serviceEntries);
+                                      });
                                     },
                                   ),
                                 ],
@@ -522,18 +550,52 @@ class _CategoriesViewState extends State<CategoriesView> {
               );
             },
           ),
+
 // Floating action button to open a dialog for adding a new diary
           floatingActionButton: FloatingActionButton(
-            onPressed: () {
-// Display the AddNewDiary when the button is pressed.
-              showDialog(
-                context: context,
-                builder: (context) => ServiceEntryView.withInheritedTheme(isDark, categoryName),
-              );
+            tooltip: "Add my service",
+            onPressed: () async {
+              String? userType = await profileController
+                  .getUserType(FirebaseAuth.instance.currentUser!.uid);
+              if (userType! == "provider") {
+                showDialog(
+                  context: context,
+                  builder: (context) =>
+                      ServiceEntryView.withInheritedTheme(isDark, categoryName),
+                );
+              } else {
+                print("userType wasnt provider!");
+              }
             },
             child: Icon(Icons.add),
           ),
         ));
+  }
+}
+
+Future<Widget> displayOrHideFloatingActionButtonBasedOnUserRole(
+    {required bool isDark,
+    required String categoryName,
+    required BuildContext context}) async {
+  ProfileController profileController = ProfileController();
+
+  String? userType = await profileController
+      .getUserType(FirebaseAuth.instance.currentUser!.uid);
+
+  if (userType! == "provider") {
+    return FloatingActionButton(
+        child: Icon(Icons.add),
+        tooltip: "Add new service",
+        onPressed: () async {
+          showDialog(
+            context: context,
+            builder: (context) =>
+                ServiceEntryView.withInheritedTheme(isDark, categoryName),
+          );
+        });
+  } else {
+    return SizedBox(height: 0.0);
+    print("userType wasnt provider!");
   }
 }
 //
