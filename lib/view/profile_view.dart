@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:service_squad/view/category_selection.dart';
 
-import '../model/professional_service.dart';
 
 // TODO iMPLEMENT THE UI  After user authentication is successful USERs MUST COMPLETe THEIR PROFILE IN THIS VIEW AND WE COLLECT MORE DATA ,AND set their role in Firestore either associate or custome
 void setUserType(String uid, String userType) {
@@ -156,18 +155,6 @@ class _ProfileViewState extends State<ProfileView> {
         TextButton(
           child: Text('Save'),
           onPressed: () async {
-            // Save the edited content to the diary entry.
-            // diaryController.updateDiary(
-            //     diaryEntry.id,
-            //     DiaryModel(
-            //         description: descriptionEditingController.text,
-            //         rating: int.parse(ratingEditingController.text),
-            //         dateTime: DateTime.parse(dateEditingController.text),
-            //         imagePath:
-            //         await _uploadImageToFirebaseAndReturnDownlaodUrl(
-            //             diaryEntry.imagePath),
-            //         id: diaryEntry.id));
-            // updateState();
             setEmail(FirebaseAuth.instance.currentUser!.uid,useremailAddressController.text);
             setMobileNumber(FirebaseAuth.instance.currentUser!.uid, mobilePhoneNumberController.text);
             setUserLocation(FirebaseAuth.instance.currentUser!.uid, userLocationController.text);

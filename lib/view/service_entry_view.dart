@@ -148,7 +148,6 @@ class _NewEntryViewState extends State<ServiceEntryView> {
                       ))),
               backgroundColor: Colors.deepPurple),
         );
-        print('isDark in diary entry view is: $isDark');
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -185,7 +184,7 @@ class _NewEntryViewState extends State<ServiceEntryView> {
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.deepPurple,
-            title: Text("Add Diary Entry",
+            title: Text("Add a $category service",
                 style: GoogleFonts.pacifico(
                   color: isDark ? Colors.black87 : Colors.white,
                   fontSize: 30.0,
@@ -196,10 +195,6 @@ class _NewEntryViewState extends State<ServiceEntryView> {
                 color: isDark ? Colors.black87 : Colors.white,
                 onPressed: () {
                   Navigator.of(context).pop();
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => DiaryLogView()),
-                  // );
                 }),
           ),
           body: Padding(

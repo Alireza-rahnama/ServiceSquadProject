@@ -1,22 +1,11 @@
-// import 'dart:ffi';
-
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
 import 'package:service_squad/controller/professional_service_controller.dart';
-import 'package:service_squad/view/profile_view.dart';
 import 'package:service_squad/view/service_entry_view.dart';
-
-import '../controller/professional_service_controller.dart';
-import '../controller/professional_service_controller.dart';
-import '../controller/professional_service_controller.dart';
 import '../controller/profile_controller.dart';
 import '../model/professional_service.dart';
 import 'auth_gate.dart';
@@ -34,7 +23,6 @@ class CategoriesView extends StatefulWidget {
       bool inheritedIsDark, String categoryName) {
     isDark = inheritedIsDark;
     categoryToPopulate = categoryName;
-    print("inherited isDark from DiaryEntryView is: $isDark");
   }
 
   @override
@@ -102,7 +90,6 @@ class _CategoriesViewState extends State<CategoriesView> {
 
     ProfessionalServiceController professionalServiceController =
         ProfessionalServiceController();
-    // List<DiaryModel> allEntries = ProfessionalServiceController.getUserDiaries() as List<DiaryModel>;
 
     showDialog(
       context: context,
@@ -138,7 +125,7 @@ class _CategoriesViewState extends State<CategoriesView> {
               onPressed: () async {
                 print(
                     'professionalServiceEntrycategory is: ${professionalServiceEntry!.category}');
-                // Save the edited content to the diary entry.
+                // Save the edited content to the service entry.
                 String location = await ProfileController()
                     .getUserLocation(FirebaseAuth.instance.currentUser!.uid);
                 await professionalServiceController.updateProfessionalService(
@@ -186,7 +173,7 @@ class _CategoriesViewState extends State<CategoriesView> {
     //     .first;
     String userLocation = await ProfileController().getUserLocation(FirebaseAuth.instance.currentUser!.uid);
     setState(() {
-      // Initialize filteredEntries with a copy of diaryEntries
+      // Initialize filteredEntries with a copy of serviceEntries
       filteredEntries = List<ProfessionalService>.from(serviceEntries);
       List<int> ratings = [1, 2, 3, 4, 5];
       String queryText = searchController.text.toLowerCase();
@@ -419,7 +406,7 @@ class _CategoriesViewState extends State<CategoriesView> {
           ),
 
           // Body of the widget using a StreamBuilder to listen for changes
-          // in the diary collection and reflect them in the UI in real-time.
+          // in the professionalServiceCollection  and reflect them in the UI in real-time.
           body: StreamBuilder<List<ProfessionalService>>(
             stream: professionalServiceController.getAllProfessionalServices(),
             builder: (context, snapshot) {
@@ -499,7 +486,7 @@ class _CategoriesViewState extends State<CategoriesView> {
                                                     .first;
 
                                             setState(() {
-                                              // Initialize filteredEntries with a copy of diaryEntries
+                                              // Initialize filteredEntries with a copy of serviceEntries
                                               filteredEntries = List<
                                                       ProfessionalService>.from(
                                                   serviceEntries);
@@ -566,7 +553,7 @@ class _CategoriesViewState extends State<CategoriesView> {
                                               .first;
 
                                       setState(() {
-                                        // Initialize filteredEntries with a copy of diaryEntries
+                                        // Initialize filteredEntries with a copy of serviceEntries
                                         filteredEntries =
                                             List<ProfessionalService>.from(
                                                 serviceEntries);
@@ -586,7 +573,7 @@ class _CategoriesViewState extends State<CategoriesView> {
             },
           ),
 
-// Floating action button to open a dialog for adding a new diary
+          // Floating action button to open a dialog for adding a new service entry of a specific service category
           floatingActionButton: FloatingActionButton(
             tooltip: "Add my service",
             onPressed: () async {
@@ -630,10 +617,9 @@ Future<Widget> displayOrHideFloatingActionButtonBasedOnUserRole(
         });
   } else {
     return SizedBox(height: 0.0);
-    print("userType wasnt provider!");
   }
 }
-//
+
 // Widget BuildImageFromUrl(ProfessionalService entry) {
 //   if (entry.imagePath != null) {
 //     // If entry.imagePath is not null, display the image from the network
@@ -703,58 +689,7 @@ class Month {
     return num;
   }
 }
-//
-// Future<void> exportToPDF(
-//     ProfessionalServiceController ProfessionalServiceController) async {
-//   // Create a new PDF document
-//   final pdf = pw.Document();
-//
-//   // Retrieve data from Hive
-//   final firebaseFetchedDiaries =
-//       await ProfessionalServiceController.getUserDiaries();
-//
-//   List<pw.Widget> list =
-//       await pdfTextChildren(firebaseFetchedDiaries as List<DiaryModel>);
-//
-// // In the Page build method:
-//   // Populate the PDF content with data
-//   pdf.addPage(
-//     pw.Page(
-//       build: (pw.Context context) {
-//         return pw.Column(
-//           children: list,
-//         );
-//       },
-//     ),
-//   );
 
-//   // Save the PDF file
-//   final directory = await getApplicationDocumentsDirectory();
-//   print(directory);
-//   final file = File('${directory.path}/hive_data.pdf');
-//   // final file = File('fonts/hive_data.pdf');
-//
-//   await file.writeAsBytes(await pdf.save());
-// }
-//
-// Future<List<pw.Widget>> pdfTextChildren(List<DiaryModel> entries) async {
-//   List<pw.Widget> textList = [];
-//
-//   final fontData = await rootBundle.load('fonts/Pacifico-Regular.ttf');
-//   final ttf = fontData.buffer.asUint8List();
-//   final font = pw.Font.ttf(ttf.buffer.asByteData());
-//
-//   for (DiaryModel entry in entries) {
-//     textList.add(
-//       pw.Text(
-//         'On ${DateFormat('yyyy-MM-dd').format(entry.dateTime)}, ${entry.description} was rated ${entry.rating} stars.',
-//         style: pw.TextStyle(font: font, fontSize: 12),
-//       ),
-//     );
-//   }
-//   return textList;
-// }
-//
 class DateHeader extends StatelessWidget {
   final String text;
 
