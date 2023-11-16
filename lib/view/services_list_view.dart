@@ -139,13 +139,16 @@ class _CategoriesViewState extends State<CategoriesView> {
                 print(
                     'professionalServiceEntrycategory is: ${professionalServiceEntry!.category}');
                 // Save the edited content to the diary entry.
+                String location = await ProfileController()
+                    .getUserLocation(FirebaseAuth.instance.currentUser!.uid);
                 await professionalServiceController.updateProfessionalService(
                     ProfessionalService(
                         serviceDescription: descriptionEditingController.text,
                         wage: double.parse(wageEditingController.text),
                         category: professionalServiceEntry.category,
                         id: professionalServiceEntry!.id,
-                    rating: professionalServiceEntry.rating ));
+                        rating: professionalServiceEntry.rating,
+                        location: location));
 
                 updateState(professionalServiceEntry.category);
                 Navigator.of(context).pop();
@@ -164,10 +167,10 @@ class _CategoriesViewState extends State<CategoriesView> {
 
   void applyFilterAndUpdateState3() async {
     List<String> categories = [
-      'Snow Clearance',
-      'House Keeping',
-      'Handy Services',
-      'Lawn Mowing'
+      "Snow Clearance",
+      "House Keeping",
+      "Handy Services",
+      "Lawn Mowing"
     ];
 
     final serviceEntries = selectedCategory != null
@@ -181,19 +184,42 @@ class _CategoriesViewState extends State<CategoriesView> {
     // final serviceEntries = await professionalServiceController
     //     .getAllAvailableProfessionalServiceCollections()
     //     .first;
-
+    String userLocation = await ProfileController().getUserLocation(FirebaseAuth.instance.currentUser!.uid);
     setState(() {
       // Initialize filteredEntries with a copy of diaryEntries
       filteredEntries = List<ProfessionalService>.from(serviceEntries);
+      List<int> ratings = [1, 2, 3, 4, 5];
+      String queryText = searchController.text.toLowerCase();
+      bool queryIsLocation = false;
 
+      print(
+          '!categories.contains(queryText): ${!categories.contains(queryText)}');
+      if (!categories.contains(queryText) &&
+          !ratings.contains(int.tryParse(queryText))) {
+        queryIsLocation = true;
+      }
+
+      print('queryText: $queryText');
+      print(
+          'categories.contains(queryText): ${categories.contains(queryText)}');
+      print(
+          'ratings.contains(int.tryParse(queryText)): ${ratings.contains(int.tryParse(queryText))}');
       // Filter based on the rating or category
       if (searchController.text.isNotEmpty) {
         filteredEntries = filteredEntries.where((entry) {
+          print('entry.location.toLowerCase() is ${userLocation}');
           return entry.category
                   .toLowerCase()
-                  .contains(searchController.text.toLowerCase()) ||
-              entry.rating == int.parse(searchController.text.toLowerCase());
+                  .contains(queryText.toLowerCase()) ||
+              entry.rating == int.tryParse(queryText) ||
+              entry.location.contains(queryText.toLowerCase());
         }).toList();
+        // } else if (queryIsLocation) {
+        //   print('queryIsLocation: ${queryIsLocation}');
+        //   filteredEntries = filteredEntries.where((entry) {
+        //     print('entry.Category is: ${entry.category}');
+        //     return entry.location.toLowerCase().contains(queryText.toLowerCase());
+        //   }).toList();
       } else {
         filteredEntries = filteredEntries.where((entry) {
           return entry.category == selectedCategory;
@@ -346,7 +372,7 @@ class _CategoriesViewState extends State<CategoriesView> {
                     (BuildContext context, SearchController controller) {
                   //TODO: We can implement the location logic here to search services by location
                   return SearchBar(
-                    hintText: "Search by category or rating",
+                    hintText: "Search by location, category, or rating",
                     controller: searchController,
                     padding: const MaterialStatePropertyAll<EdgeInsets>(
                         EdgeInsets.symmetric(horizontal: 16.0)),
@@ -395,8 +421,7 @@ class _CategoriesViewState extends State<CategoriesView> {
           // Body of the widget using a StreamBuilder to listen for changes
           // in the diary collection and reflect them in the UI in real-time.
           body: StreamBuilder<List<ProfessionalService>>(
-            stream: professionalServiceController
-                .getAllProfessionalServices(),
+            stream: professionalServiceController.getAllProfessionalServices(),
             builder: (context, snapshot) {
               // Show a loading indicator until data is fetched from Firestore.
               if (!snapshot.hasData) return CircularProgressIndicator();
@@ -456,22 +481,27 @@ class _CategoriesViewState extends State<CategoriesView> {
                                           print(
                                               'entry with id: ${entry!.id} was selected to delete');
                                           //TODO: IMPLEMENT OR NOT
-                                          String? userType = await profileController
-                                              .getUserType(FirebaseAuth.instance.currentUser!.uid);
-                                          if (userType! == "Service Associate"){
+                                          String? userType =
+                                              await profileController
+                                                  .getUserType(FirebaseAuth
+                                                      .instance
+                                                      .currentUser!
+                                                      .uid);
+                                          if (userType! ==
+                                              "Service Associate") {
                                             await professionalServiceController
                                                 .deleteProfessionalService(
-                                                entry!.id);
+                                                    entry!.id);
 
                                             final serviceEntries =
-                                            await professionalServiceController
-                                                .getAllProfessionalServices()
-                                                .first;
+                                                await professionalServiceController
+                                                    .getAllProfessionalServices()
+                                                    .first;
 
                                             setState(() {
                                               // Initialize filteredEntries with a copy of diaryEntries
-                                              filteredEntries =
-                                              List<ProfessionalService>.from(
+                                              filteredEntries = List<
+                                                      ProfessionalService>.from(
                                                   serviceEntries);
                                             });
                                           }

@@ -9,6 +9,8 @@ class UserProfileData {
   String? imagePath;
   String emailAddress;
   final mobilePhoneNumber;
+  final location;
+
 
   /// The unique identifier for the car.
   /// Might be `null` before saving to Firestore.
@@ -22,7 +24,8 @@ class UserProfileData {
       this.imagePath,
       this.id,
       required this.emailAddress,
-      required this.mobilePhoneNumber});
+      required this.mobilePhoneNumber,
+      required this.location});
 
   Map<String, dynamic> toMap() {
     return {
@@ -34,7 +37,8 @@ class UserProfileData {
       'userRating': userRating,
       'imagePath': imagePath,
       'emailAddress': emailAddress,
-      'mobilePhoneNumber': mobilePhoneNumber
+      'mobilePhoneNumber': mobilePhoneNumber,
+      'location': location
     };
   }
 
@@ -67,7 +71,8 @@ class UserProfileData {
       userRating: map['userRating'],
       imagePath: map['imagePath'],
         emailAddress: map['emailAddress'],
-      mobilePhoneNumber: map['mobilePhoneNumber']
+      mobilePhoneNumber: map['mobilePhoneNumber'],
+      location: map['location']
     );
   }
 }

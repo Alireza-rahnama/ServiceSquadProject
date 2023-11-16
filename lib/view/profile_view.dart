@@ -21,11 +21,40 @@ void setEmail(String uid, String email) {
       .set({'userEmail': email}, SetOptions(merge: true));
 }
 
+void setUserLocation(String uid, String location) {
+  FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
+      .set({'userLocation': location}, SetOptions(merge: true));
+}
+
 void setMobileNumber(String uid, String mobileNumber) {
   FirebaseFirestore.instance
       .collection('users')
       .doc(uid)
       .set({'mobileNumber': mobileNumber}, SetOptions(merge: true));
+}
+
+Future<String?> getUserLocation(String uid) async {
+  try {
+    DocumentSnapshot<Map<String, dynamic>> userSnapshot =
+    await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+    if (userSnapshot.exists) {
+      // Check if the 'userType' field exists in the document
+      if (userSnapshot.data()!.containsKey('userLocation')) {
+        // Return the user type
+        return userSnapshot.data()!['userLocation'];
+      }
+    }
+
+    // Return null if the user document or 'userType' field doesn't exist
+    return null;
+  } catch (e) {
+    // Handle any errors that occur during the process
+    print("Error getting user type: $e");
+    return null;
+  }
 }
 
 Future<String?> getUserType(String uid) async {
@@ -68,7 +97,7 @@ class _ProfileViewState extends State<ProfileView> {
   // final mobilePhoneNumber;
 
   TextEditingController userTypeControleer = TextEditingController();
-  TextEditingController userTypeController = TextEditingController();
+  TextEditingController userLocationController = TextEditingController();
   TextEditingController userAboutController = TextEditingController();
   TextEditingController useremailAddressController = TextEditingController();
   TextEditingController mobilePhoneNumberController = TextEditingController();
@@ -81,6 +110,11 @@ class _ProfileViewState extends State<ProfileView> {
       content: Column(children: [
         // Center(child:Text('Select your user type')),
         dropdownMenu,
+        TextField(
+          controller: userLocationController,
+          decoration: InputDecoration(labelText: "Seyt your location"),
+          maxLines: null, // Allows multiple lines of text.
+        ),
         TextField(
           controller: userAboutController,
           decoration: InputDecoration(labelText: "About Me"),
@@ -136,6 +170,7 @@ class _ProfileViewState extends State<ProfileView> {
             // updateState();
             setEmail(FirebaseAuth.instance.currentUser!.uid,useremailAddressController.text);
             setMobileNumber(FirebaseAuth.instance.currentUser!.uid, mobilePhoneNumberController.text);
+            setUserLocation(FirebaseAuth.instance.currentUser!.uid, userLocationController.text);
             Navigator.of(context).pop();
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(

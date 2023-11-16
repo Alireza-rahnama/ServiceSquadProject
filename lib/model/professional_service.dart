@@ -7,10 +7,13 @@ class ProfessionalService {
   String serviceDescription;
   int? rating = 5;
   double? wage;
+  String location;
+
 //TODO: MAYBE ADD SOME INFO of the service technician that can be displayed on add cards
   ProfessionalService(
       {required this.category,
       required this.serviceDescription,
+      required this.location,
       this.wage,
       this.rating,
       this.id}) {
@@ -23,7 +26,8 @@ class ProfessionalService {
       'category': category,
       'serviceDescription': serviceDescription,
       'wage': wage,
-      'rating': rating
+      'rating': rating,
+      'location' : location
     };
   }
 
@@ -34,6 +38,7 @@ class ProfessionalService {
         serviceDescription: map['serviceDescription'],
         wage: map['wage']?.toDouble(),
         // Use null-aware operator to handle null values
-        rating: map['rating']?.toInt());
+        rating: map['rating']?.toInt(),
+        location: map['location']);
   }
 }
