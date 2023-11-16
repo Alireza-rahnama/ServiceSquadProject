@@ -404,7 +404,7 @@ class _CategoriesViewState extends State<CategoriesView> {
               List<ProfessionalService> professionalServices =
                   (!filteredEntries.isEmpty) ? filteredEntries : snapshot.data!;
               // professionalServices
-              //     .sort((a, b) => (b.rating! as num).compareTo(a.rating! as num));
+              //     .sort((a, b) => (b.wage! as num).compareTo(a.wage! as num));
 
               String? lastCategory;
 

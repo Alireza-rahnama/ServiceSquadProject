@@ -25,9 +25,9 @@ class ServiceEntryView extends StatefulWidget {
 }
 
 class _NewEntryViewState extends State<ServiceEntryView> {
-  final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController categoryController = TextEditingController();
-  final TextEditingController wageController = TextEditingController();
+  late final TextEditingController descriptionController;
+  late final TextEditingController categoryController ;
+  late final TextEditingController wageController;
 
   double? wage;
   double rating = 5.0; // Initial rating value
@@ -43,6 +43,9 @@ class _NewEntryViewState extends State<ServiceEntryView> {
   _NewEntryViewState.withInheritedThemeAndCategory(bool isDark, String category) {
     this.isDark = isDark;
     this.category = category;
+    descriptionController = TextEditingController();
+    categoryController = TextEditingController(text: '${category}');
+    wageController = TextEditingController();
   }
 
   Future<void> _pickImageFromGallery() async {
