@@ -123,8 +123,7 @@ class _CategoriesViewState extends State<CategoriesView> {
             TextButton(
               child: Text('Save'),
               onPressed: () async {
-                print(
-                    'professionalServiceEntrycategory is: ${professionalServiceEntry!.category}');
+                print('professionalServiceEntrycategory is: ${professionalServiceEntry!.category}');
                 // Save the edited content to the service entry.
                 String location = await ProfileController()
                     .getUserLocation(FirebaseAuth.instance.currentUser!.uid);
@@ -138,12 +137,13 @@ class _CategoriesViewState extends State<CategoriesView> {
                         location: location));
 
                 updateState(professionalServiceEntry.category);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                      content: Center(child: Text('Entry successfully saved!')),
+                      backgroundColor: Colors.deepPurple),
+                );
                 Navigator.of(context).pop();
-                // ScaffoldMessenger.of(context).showSnackBar(
-                //   const SnackBar(
-                //       content: Center(child: Text('Entry successfully saved!')),
-                //       backgroundColor: Colors.deepPurple),
-                // );
+
               },
             ),
           ],
@@ -152,7 +152,7 @@ class _CategoriesViewState extends State<CategoriesView> {
     );
   }
 
-  void applyFilterAndUpdateState3() async {
+  void applyFilterAndUpdateState3(bool isOnSubmitted) async {
     List<String> categories = [
       "Snow Clearance",
       "House Keeping",
@@ -172,6 +172,8 @@ class _CategoriesViewState extends State<CategoriesView> {
     //     .getAllAvailableProfessionalServiceCollections()
     //     .first;
     String userLocation = await ProfileController().getUserLocation(FirebaseAuth.instance.currentUser!.uid);
+    bool isSnackBarDisplayed = false;
+
     setState(() {
       // Initialize filteredEntries with a copy of serviceEntries
       filteredEntries = List<ProfessionalService>.from(serviceEntries);
@@ -212,6 +214,23 @@ class _CategoriesViewState extends State<CategoriesView> {
           return entry.category == selectedCategory;
         }).toList();
       }
+
+      // Show a message if no matches are found
+      print('filteredEntries.length: ${filteredEntries.length}');
+      print('serviceEntries.length: ${serviceEntries.length}');
+
+      if (isOnSubmitted && searchController.text.isNotEmpty && !isSnackBarDisplayed &&
+          (filteredEntries.length == serviceEntries.length ||
+          filteredEntries.length ==0)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Center(child:Text('No match found!')),
+            duration: Duration(milliseconds: 1000),
+          ),
+        );
+        isSnackBarDisplayed = true;
+      }
+
     });
   }
 
@@ -326,7 +345,7 @@ class _CategoriesViewState extends State<CategoriesView> {
                     selectedCategory = category;
                   });
                   print("selectedCategory is $selectedCategory");
-                  applyFilterAndUpdateState3();
+                  applyFilterAndUpdateState3(false);
                 },
                 icon: Icon(
                   Icons.filter_list,
@@ -359,33 +378,36 @@ class _CategoriesViewState extends State<CategoriesView> {
                     (BuildContext context, SearchController controller) {
                   //TODO: We can implement the location logic here to search services by location
                   return SearchBar(
-                    hintText: "Search by location, category, or rating",
+                    hintText: "location, category, or rating",
                     controller: searchController,
                     padding: const MaterialStatePropertyAll<EdgeInsets>(
                         EdgeInsets.symmetric(horizontal: 16.0)),
                     onChanged: (_) async {
-                      applyFilterAndUpdateState3();
+                      applyFilterAndUpdateState3(false);
+                    },
+                    onSubmitted: (_) async {
+                      applyFilterAndUpdateState3(true);
                     },
                     leading: IconButton(
                         icon: Icon(Icons.search),
                         onPressed: () async {
-                          applyFilterAndUpdateState3();
+                          applyFilterAndUpdateState3(false);
                         }),
-                    trailing: <Widget>[
-                      Tooltip(
-                        message: 'Change brightness mode',
-                        child: IconButton(
-                          isSelected: isDark,
-                          onPressed: () {
-                            setState(() {
-                              isDark = !isDark;
-                            });
-                          },
-                          icon: const Icon(Icons.wb_sunny_outlined),
-                          selectedIcon: const Icon(Icons.brightness_2_outlined),
-                        ),
-                      )
-                    ],
+                    // trailing: <Widget>[
+                    //   Tooltip(
+                    //     message: 'Change brightness mode',
+                    //     child: IconButton(
+                    //       isSelected: isDark,
+                    //       onPressed: () {
+                    //         setState(() {
+                    //           isDark = !isDark;
+                    //         });
+                    //       },
+                    //       icon: const Icon(Icons.wb_sunny_outlined),
+                    //       selectedIcon: const Icon(Icons.brightness_2_outlined),
+                    //     ),
+                    //   )
+                    // ],
                   );
                 }, suggestionsBuilder:
                     (BuildContext context, SearchController controller) {
@@ -497,6 +519,8 @@ class _CategoriesViewState extends State<CategoriesView> {
                                       IconButton(
                                         icon: Icon(Icons.calendar_today),
                                         onPressed: () async {
+                                          print('${FirebaseAuth.instance.currentUser!.email}');
+                                          print('selectedCategory is ${selectedCategory}');
                                           //TODO: IMPLEMENT LOGIC AND VIEW Maybe only for client user type
                                         },
                                       ),
