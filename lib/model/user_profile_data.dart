@@ -10,9 +10,11 @@ class UserProfileData {
   String emailAddress;
   final mobilePhoneNumber;
   final location;
+
   /// The unique identifier for the user.
   /// Might be `null` before saving to Firestore.
   String? id;
+  String? technicianAlias;
 
   UserProfileData(
       {required this.userType,
@@ -21,6 +23,7 @@ class UserProfileData {
       this.userRating,
       this.imagePath,
       this.id,
+      this.technicianAlias,
       required this.emailAddress,
       required this.mobilePhoneNumber,
       required this.location});
@@ -36,10 +39,10 @@ class UserProfileData {
       'imagePath': imagePath,
       'emailAddress': emailAddress,
       'mobilePhoneNumber': mobilePhoneNumber,
-      'location': location
+      'location': location,
+      'technicianAlias' : technicianAlias
     };
   }
-
 
   /// Converts a Firestore `DocumentSnapshot` back into a `UserProfileData` object.
   ///
@@ -59,18 +62,18 @@ class UserProfileData {
     }
 
     return UserProfileData(
-      id: doc.id,
-      userType: map['userType'],
-      listOfOfferingProfessionalServices:
-          (map['listOfOfferingProfessionalServices'] as List<dynamic>?)
-              ?.map((serviceData) => ProfessionalService.fromMap(serviceData))
-              .toList(),
-      userAbout: map['userAbout'],
-      userRating: map['userRating'],
-      imagePath: map['imagePath'],
+        id: doc.id,
+        userType: map['userType'],
+        listOfOfferingProfessionalServices:
+            (map['listOfOfferingProfessionalServices'] as List<dynamic>?)
+                ?.map((serviceData) => ProfessionalService.fromMap(serviceData))
+                .toList(),
+        userAbout: map['userAbout'],
+        userRating: map['userRating'],
+        imagePath: map['imagePath'],
         emailAddress: map['emailAddress'],
-      mobilePhoneNumber: map['mobilePhoneNumber'],
-      location: map['location']
-    );
+        mobilePhoneNumber: map['mobilePhoneNumber'],
+        location: map['location'],
+        technicianAlias: map['technicianAlias']);
   }
 }

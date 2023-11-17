@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:service_squad/controller/professional_service_controller.dart';
+import 'package:service_squad/view/reviews_list_view.dart';
 import 'package:service_squad/view/service_entry_view.dart';
 import '../controller/profile_controller.dart';
 import '../model/professional_service.dart';
@@ -123,7 +124,8 @@ class _CategoriesViewState extends State<CategoriesView> {
             TextButton(
               child: Text('Save'),
               onPressed: () async {
-                print('professionalServiceEntrycategory is: ${professionalServiceEntry!.category}');
+                print(
+                    'professionalServiceEntrycategory is: ${professionalServiceEntry!.category}');
                 // Save the edited content to the service entry.
                 String location = await ProfileController()
                     .getUserLocation(FirebaseAuth.instance.currentUser!.uid);
@@ -134,7 +136,9 @@ class _CategoriesViewState extends State<CategoriesView> {
                         category: professionalServiceEntry.category,
                         id: professionalServiceEntry!.id,
                         rating: professionalServiceEntry.rating,
-                        location: location));
+                        location: location,
+                        technicianAlias:
+                            professionalServiceEntry.technicianAlias));
 
                 updateState(professionalServiceEntry.category);
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -143,7 +147,6 @@ class _CategoriesViewState extends State<CategoriesView> {
                       backgroundColor: Colors.deepPurple),
                 );
                 Navigator.of(context).pop();
-
               },
             ),
           ],
@@ -171,7 +174,8 @@ class _CategoriesViewState extends State<CategoriesView> {
     // final serviceEntries = await professionalServiceController
     //     .getAllAvailableProfessionalServiceCollections()
     //     .first;
-    String userLocation = await ProfileController().getUserLocation(FirebaseAuth.instance.currentUser!.uid);
+    String userLocation = await ProfileController()
+        .getUserLocation(FirebaseAuth.instance.currentUser!.uid);
     bool isSnackBarDisplayed = false;
 
     setState(() {
@@ -219,18 +223,19 @@ class _CategoriesViewState extends State<CategoriesView> {
       print('filteredEntries.length: ${filteredEntries.length}');
       print('serviceEntries.length: ${serviceEntries.length}');
 
-      if (isOnSubmitted && searchController.text.isNotEmpty && !isSnackBarDisplayed &&
+      if (isOnSubmitted &&
+          searchController.text.isNotEmpty &&
+          !isSnackBarDisplayed &&
           (filteredEntries.length == serviceEntries.length ||
-          filteredEntries.length ==0)) {
+              filteredEntries.length == 0)) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Center(child:Text('No match found!')),
+            content: Center(child: Text('No match found!')),
             duration: Duration(milliseconds: 1000),
           ),
         );
         isSnackBarDisplayed = true;
       }
-
     });
   }
 
@@ -465,13 +470,38 @@ class _CategoriesViewState extends State<CategoriesView> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  // BuildImageFromUrl(entry), TODO: DO WEE= NEED AN IMAGe HERE?
-                                  Text(
-                                    entry.category,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                  BuildImageFromUrl(entry),
+                                  //TODO: DO WEE= NEED AN IMAGe HERE?
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Technician: ${entry.technicianAlias}',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      IconButton(
+                                        icon: Icon(Icons.rate_review_rounded),
+                                        onPressed: () async {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => ReviewsView
+                                                  .forEachProfessionalService(
+                                                  isDark, entry),
+                                            ),
+                                          );
+                                          print(
+                                              '${FirebaseAuth.instance.currentUser!.email}');
+                                          print(
+                                              'selectedProfessionalServiceCategory is ${entry.category}');
+                                          //TODO: IMPLEMENT LOGIC AND VIEW Maybe only for client user type
+
+                                        },
+                                      )
+                                    ],
                                   ),
                                   SizedBox(height: 15),
                                   Text(
@@ -519,8 +549,10 @@ class _CategoriesViewState extends State<CategoriesView> {
                                       IconButton(
                                         icon: Icon(Icons.calendar_today),
                                         onPressed: () async {
-                                          print('${FirebaseAuth.instance.currentUser!.email}');
-                                          print('selectedCategory is ${selectedCategory}');
+                                          print(
+                                              '${FirebaseAuth.instance.currentUser!.email}');
+                                          print(
+                                              'selectedCategory is ${selectedCategory}');
                                           //TODO: IMPLEMENT LOGIC AND VIEW Maybe only for client user type
                                         },
                                       ),
@@ -607,7 +639,7 @@ class _CategoriesViewState extends State<CategoriesView> {
                 showDialog(
                   context: context,
                   builder: (context) =>
-                      ServiceEntryView.withInheritedTheme(isDark, categoryName),
+                      ServiceEntryView.withInheritedTheme(categoryName),
                 );
               } else {
                 print("userType wasnt provider!");
@@ -636,7 +668,7 @@ Future<Widget> displayOrHideFloatingActionButtonBasedOnUserRole(
           showDialog(
             context: context,
             builder: (context) =>
-                ServiceEntryView.withInheritedTheme(isDark, categoryName),
+                ServiceEntryView.withInheritedTheme(categoryName),
           );
         });
   } else {
@@ -644,29 +676,29 @@ Future<Widget> displayOrHideFloatingActionButtonBasedOnUserRole(
   }
 }
 
-// Widget BuildImageFromUrl(ProfessionalService entry) {
-//   if (entry.imagePath != null) {
-//     // If entry.imagePath is not null, display the image from the network
-//     // return Container(child: Image.network(entry.imagePath!),
-//     //     height: 100, fit: BoxFit.cover );
-//
-//     return Card(
-//       elevation: 4, // Add elevation for a card-like appearance
-//       child: ClipRRect(
-//         borderRadius: BorderRadius.circular(8), // Add rounded corners
-//         child: Image.network(
-//           entry.imagePath!,
-//           height: 200,
-//           width: 400, // Set a fixed size for the image
-//           fit: BoxFit.cover, // Adjust how the image is displayed
-//         ),
-//       ),
-//     );
-//   } else {
-//     // If entry.imagePath is null, display a placeholder or an empty container
-//     return Container(); // You can customize this to show a placeholder image
-//   }
-// }
+Widget BuildImageFromUrl(ProfessionalService entry) {
+  if (entry.imagePath != null) {
+    // If entry.imagePath is not null, display the image from the network
+    // return Container(child: Image.network(entry.imagePath!),
+    //     height: 100, fit: BoxFit.cover );
+
+    return Card(
+      elevation: 4, // Add elevation for a card-like appearance
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8.0), // Add rounded corners
+        child: Image.network(
+          entry.imagePath!,
+          height: 200,
+          width: 400, // Set a fixed size for the image
+          fit: BoxFit.cover, // Adjust how the image is displayed
+        ),
+      ),
+    );
+  } else {
+    // If entry.imagePath is null, display a placeholder or an empty container
+    return Container(); // You can customize this to show a placeholder image
+  }
+}
 
 Row RatingEvaluator(ProfessionalService entry) {
   switch (entry.rating) {

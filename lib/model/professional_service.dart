@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uuid/uuid.dart';
+
+import '../controller/profile_controller.dart';
 
 class ProfessionalService {
   // String id = Uuid().v4();
@@ -8,16 +11,24 @@ class ProfessionalService {
   int? rating = 5;
   double? wage;
   String location;
+  List<String?>? reviewList;
+  String technicianAlias;
+  String? imagePath;
 
 //TODO: MAYBE ADD SOME INFO of the service technician that can be displayed on add cards
-  ProfessionalService(
-      {required this.category,
-      required this.serviceDescription,
-      required this.location,
-      this.wage,
-      this.rating,
-      this.id}) {
+  ProfessionalService({
+    required this.technicianAlias,
+    required this.category,
+    required this.serviceDescription,
+    required this.location,
+    this.wage,
+    this.rating,
+    this.id,
+    this.reviewList,
+    this.imagePath,
+  }) {
     id = id ?? Uuid().v4();
+    reviewList = reviewList?? [];
   }
 
   Map<String, dynamic> toMap() {
@@ -27,7 +38,10 @@ class ProfessionalService {
       'serviceDescription': serviceDescription,
       'wage': wage,
       'rating': rating,
-      'location' : location
+      'location': location,
+      'reviewList': reviewList,
+      'technicianAlias': technicianAlias,
+      'imagePath': imagePath
     };
   }
 
@@ -39,6 +53,11 @@ class ProfessionalService {
         wage: map['wage']?.toDouble(),
         // Use null-aware operator to handle null values
         rating: map['rating']?.toInt(),
-        location: map['location']);
+        location: map['location'],
+        technicianAlias: map['technicianAlias']!,
+        imagePath: map['imagePath'],
+        reviewList: map['reviewList'] != null
+            ? List<String?>.from(map['reviewList'])
+            : []);
   }
 }
