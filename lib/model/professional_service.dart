@@ -1,3 +1,5 @@
+import 'dart:core';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uuid/uuid.dart';
 
@@ -12,23 +14,24 @@ class ProfessionalService {
   double? wage;
   String location;
   List<String?>? reviewList;
+  Map<String, int>? reviewsMap;
   String technicianAlias;
   String? imagePath;
 
 //TODO: MAYBE ADD SOME INFO of the service technician that can be displayed on add cards
-  ProfessionalService({
-    required this.technicianAlias,
-    required this.category,
-    required this.serviceDescription,
-    required this.location,
-    this.wage,
-    this.rating,
-    this.id,
-    this.reviewList,
-    this.imagePath,
-  }) {
+  ProfessionalService(
+      {required this.technicianAlias,
+      required this.category,
+      required this.serviceDescription,
+      required this.location,
+      this.wage,
+      this.rating,
+      this.id,
+      this.reviewList,
+      this.imagePath,
+      this.reviewsMap}) {
     id = id ?? Uuid().v4();
-    reviewList = reviewList?? [];
+    reviewList = reviewList ?? [];
   }
 
   Map<String, dynamic> toMap() {
@@ -41,7 +44,8 @@ class ProfessionalService {
       'location': location,
       'reviewList': reviewList,
       'technicianAlias': technicianAlias,
-      'imagePath': imagePath
+      'imagePath': imagePath,
+      'reviewsMap': reviewsMap
     };
   }
 
@@ -56,6 +60,9 @@ class ProfessionalService {
         location: map['location'],
         technicianAlias: map['technicianAlias']!,
         imagePath: map['imagePath'],
+        reviewsMap: map['reviewsMap'] != null
+            ? Map<String, int>.from(map['reviewsMap'])
+            : {},
         reviewList: map['reviewList'] != null
             ? List<String?>.from(map['reviewList'])
             : []);

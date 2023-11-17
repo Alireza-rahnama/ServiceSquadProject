@@ -490,7 +490,7 @@ class _CategoriesViewState extends State<CategoriesView> {
                                             MaterialPageRoute(
                                               builder: (context) => ReviewsView
                                                   .forEachProfessionalService(
-                                                  isDark, entry),
+                                                      isDark, entry),
                                             ),
                                           );
                                           print(
@@ -498,7 +498,6 @@ class _CategoriesViewState extends State<CategoriesView> {
                                           print(
                                               'selectedProfessionalServiceCategory is ${entry.category}');
                                           //TODO: IMPLEMENT LOGIC AND VIEW Maybe only for client user type
-
                                         },
                                       )
                                     ],
@@ -511,7 +510,8 @@ class _CategoriesViewState extends State<CategoriesView> {
                                   SizedBox(height: 15),
                                   Row(
                                     children: [
-                                      RatingEvaluator(entry),
+                                      // RatingEvaluator(entry),
+                                      RatingEvaluator2(entry),
                                       Spacer(),
                                       Spacer(),
                                       IconButton(
@@ -701,7 +701,25 @@ Widget BuildImageFromUrl(ProfessionalService entry) {
 }
 
 Row RatingEvaluator(ProfessionalService entry) {
-  switch (entry.rating) {
+  Map<String, int> reviewsMap = entry.reviewsMap ?? {};
+  int averageRating = 5;
+  final entryValueOrRatingList = reviewsMap!.values.toList();
+  print('entryValueOrRatingList.length ${entryValueOrRatingList.length}');
+  if (entryValueOrRatingList.isNotEmpty) {
+    // Calculate the average
+    int sum = 0;
+    for (int rate in entryValueOrRatingList) {
+      sum = sum + rate;
+    }
+    averageRating = (sum/entryValueOrRatingList.length).toInt();
+    // Now 'averageRating' contains the average of ratings in the list
+    print('Average Rating: $averageRating');
+  } else {
+    // Handle the case where the list is empty (to avoid division by zero)
+    print('No ratings available.');
+  }
+
+  switch (averageRating) {
     case (1):
       return Row(children: [
         Icon(Icons.star),
@@ -730,6 +748,108 @@ Row RatingEvaluator(ProfessionalService entry) {
       return Row(); // Handle other cases or return an empty row if the rating is not 1-5.
   }
 }
+
+Row RatingEvaluator2(ProfessionalService entry) {
+
+  Map<String, int> reviewsMap = entry.reviewsMap ?? {};
+  int averageRating = 5;
+  final entryValueOrRatingList = reviewsMap!.values.toList();
+  print('entryValueOrRatingList.length ${entryValueOrRatingList.length}');
+  if (entryValueOrRatingList.isNotEmpty) {
+    // Calculate the average
+    int sum = 0;
+    for (int rate in entryValueOrRatingList) {
+      sum = sum + rate;
+    }
+    averageRating = (sum/entryValueOrRatingList.length).toInt();
+    // Now 'averageRating' contains the average of ratings in the list
+    print('Average Rating: $averageRating');
+  } else {
+    // Handle the case where the list is empty (to avoid division by zero)
+    print('No ratings available.');
+  }
+
+  switch (averageRating) {
+    case (1):
+      return Row(children: [
+        Icon(
+          Icons.sentiment_very_dissatisfied,
+          color: Colors.red,
+        )
+      ]);
+    case (2):
+      return Row(children: [
+        Icon(
+          Icons.sentiment_dissatisfied,
+          color: Colors.yellow.shade700,
+        ),
+        Icon(
+          Icons.sentiment_dissatisfied,
+          color: Colors.yellow.shade700,
+        )
+      ]);
+    case (3):
+      return Row(children: [
+        Icon(
+          Icons.sentiment_neutral,
+          color: Colors.amber,
+        ),
+        Icon(
+          Icons.sentiment_neutral,
+          color: Colors.amber,
+        ),
+        Icon(
+          Icons.sentiment_neutral,
+          color: Colors.amber,
+        )
+      ]);
+    case (4):
+      return Row(children: [
+        Icon(
+          Icons.sentiment_satisfied,
+          color: Colors.lightGreen,
+        ),
+        Icon(
+          Icons.sentiment_satisfied,
+          color: Colors.lightGreen,
+        ),
+        Icon(
+          Icons.sentiment_satisfied,
+          color: Colors.lightGreen,
+        ),
+        Icon(
+          Icons.sentiment_satisfied,
+          color: Colors.lightGreen,
+        )
+      ]);
+    case (5):
+      return Row(children: [
+        Icon(
+          Icons.sentiment_very_satisfied,
+          color: Colors.green,
+        ),
+        Icon(
+          Icons.sentiment_very_satisfied,
+          color: Colors.green,
+        ),
+        Icon(
+          Icons.sentiment_very_satisfied,
+          color: Colors.green,
+        ),
+        Icon(
+          Icons.sentiment_very_satisfied,
+          color: Colors.green,
+        ),
+        Icon(
+          Icons.sentiment_very_satisfied,
+          color: Colors.green,
+        ),
+      ]);
+    default:
+      return Row(); // Handle other cases or return an empty row if the rating is not 1-5.
+  }
+}
+
 
 class Month {
   int num;

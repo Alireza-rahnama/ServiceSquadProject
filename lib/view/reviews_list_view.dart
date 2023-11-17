@@ -7,6 +7,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:service_squad/controller/professional_service_controller.dart';
 import 'package:service_squad/view/review_entry_view.dart';
 import 'package:service_squad/view/service_entry_view.dart';
+import 'package:service_squad/view/services_list_view.dart';
 import '../controller/profile_controller.dart';
 import '../model/professional_service.dart';
 import 'auth_gate.dart';
@@ -19,19 +20,23 @@ class ReviewsView extends StatefulWidget {
   ReviewsView({Key? key}) : super(key: key);
   bool isDark = false;
   List<String?>? reviewsList;
+  Map<String, int>? reviewsMap;
+
   late ProfessionalService professionalService;
 
   ReviewsView.forEachProfessionalService(
       bool inheritedIsDark, ProfessionalService professionalService) {
     isDark = inheritedIsDark;
     reviewsList = professionalService.reviewList ?? [];
+    reviewsMap = professionalService.reviewsMap ?? {};
+
     this.professionalService = professionalService;
   }
 
   @override
   State<ReviewsView> createState() =>
       _ReviewsViewState.withPersistedThemeAndCategory(
-          isDark, professionalService, reviewsList);
+          isDark, professionalService, reviewsList, reviewsMap);
 }
 
 class _ReviewsViewState extends State<ReviewsView> {
@@ -44,11 +49,12 @@ class _ReviewsViewState extends State<ReviewsView> {
   final TextEditingController searchController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
   late List<String?>? reviewsList;
+  late Map<String, int>? reviewsMap;
   XFile? _image;
   late ProfessionalService service;
 
   _ReviewsViewState.withPersistedThemeAndCategory(
-      this.isDark, this.service, this.reviewsList);
+      this.isDark, this.service, this.reviewsList, this.reviewsMap);
 
   Future<void> _pickImageFromGallery() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
@@ -315,14 +321,14 @@ class _ReviewsViewState extends State<ReviewsView> {
           appBar: AppBar(
             leading: IconButton(
               color: Colors.white,
-              icon: Icon(Icons.navigate_before),
+              icon: Icon(Icons.arrow_back_outlined),
               // Sign out the user on pressing the logout button.
               onPressed: () async {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CategorySelection(),
-                  ),
+                    builder: (context) => CategoriesView.WithPersistedThemeAndCategory(
+                        false, service.category),),
                 );
               },
             ),
@@ -341,10 +347,16 @@ class _ReviewsViewState extends State<ReviewsView> {
           ),
 
           body: ListView.builder(
-            itemCount: reviewsList!.length,
+            // itemCount: reviewsList!.length,
+            // itemCount: reviewsMap!.length,
+            itemCount: reviewsMap!.keys.length,
             itemBuilder: (context, index) {
-              print('entry = reviewsList![index]: ${reviewsList![index]}');
-              final entry = reviewsList![index];
+              // print('entry = reviewsList![index]: ${reviewsList![index]}');
+              // final entry = reviewsList![index];
+              // final entry = reviewsMap![index];
+
+              final entryKeyOrReview = reviewsMap!.keys.toList()[index];
+              final entryValueOrRating = reviewsMap![entryKeyOrReview];
               return Column(
                 children: [
                   Card(
@@ -361,14 +373,14 @@ class _ReviewsViewState extends State<ReviewsView> {
                           children: [
                             Row(children: [
                               Text(
-                                '${entry}',
+                                '${entryKeyOrReview}',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               Spacer(),
-                              RatingEvaluator(service),
+                              RatingEvaluator2(entryValueOrRating!),
                             ])
                           ],
                         ),
@@ -455,8 +467,39 @@ Widget BuildImageFromUrl(ProfessionalService entry) {
   }
 }
 
-Row RatingEvaluator(ProfessionalService entry) {
-  switch (entry.rating) {
+// Row RatingEvaluator(ProfessionalService entry) {
+//   switch (entry.rating) {
+//     case (1):
+//       return Row(children: [
+//         Icon(Icons.star),
+//       ]);
+//     case (2):
+//       return Row(children: [Icon(Icons.star), Icon(Icons.star)]);
+//     case (3):
+//       return Row(
+//           children: [Icon(Icons.star), Icon(Icons.star), Icon(Icons.star)]);
+//     case (4):
+//       return Row(children: [
+//         Icon(Icons.star),
+//         Icon(Icons.star),
+//         Icon(Icons.star),
+//         Icon(Icons.star)
+//       ]);
+//     case (5):
+//       return Row(children: [
+//         Icon(Icons.star),
+//         Icon(Icons.star),
+//         Icon(Icons.star),
+//         Icon(Icons.star),
+//         Icon(Icons.star)
+//       ]);
+//     default:
+//       return Row(); // Handle other cases or return an empty row if the rating is not 1-5.
+//   }
+// }
+
+Row RatingEvaluator(int entryRating) {
+  switch (entryRating) {
     case (1):
       return Row(children: [
         Icon(Icons.star),
@@ -480,6 +523,88 @@ Row RatingEvaluator(ProfessionalService entry) {
         Icon(Icons.star),
         Icon(Icons.star),
         Icon(Icons.star)
+      ]);
+    default:
+      return Row(); // Handle other cases or return an empty row if the rating is not 1-5.
+  }
+}
+
+Row RatingEvaluator2(int entryRating) {
+  switch (entryRating) {
+    case (1):
+      return Row(children: [
+        Icon(
+          Icons.sentiment_very_dissatisfied,
+          color: Colors.red,
+        )
+      ]);
+    case (2):
+      return Row(children: [
+        Icon(
+          Icons.sentiment_dissatisfied,
+          color: Colors.yellow.shade700,
+        ),
+        Icon(
+          Icons.sentiment_dissatisfied,
+          color: Colors.yellow.shade700,
+        )
+      ]);
+    case (3):
+      return Row(children: [
+        Icon(
+          Icons.sentiment_neutral,
+          color: Colors.amber,
+        ),
+        Icon(
+          Icons.sentiment_neutral,
+          color: Colors.amber,
+        ),
+        Icon(
+          Icons.sentiment_neutral,
+          color: Colors.amber,
+        )
+      ]);
+    case (4):
+      return Row(children: [
+        Icon(
+          Icons.sentiment_satisfied,
+          color: Colors.lightGreen,
+        ),
+        Icon(
+          Icons.sentiment_satisfied,
+          color: Colors.lightGreen,
+        ),
+        Icon(
+          Icons.sentiment_satisfied,
+          color: Colors.lightGreen,
+        ),
+        Icon(
+          Icons.sentiment_satisfied,
+          color: Colors.lightGreen,
+        )
+      ]);
+    case (5):
+      return Row(children: [
+        Icon(
+          Icons.sentiment_very_satisfied,
+          color: Colors.green,
+        ),
+        Icon(
+          Icons.sentiment_very_satisfied,
+          color: Colors.green,
+        ),
+        Icon(
+          Icons.sentiment_very_satisfied,
+          color: Colors.green,
+        ),
+        Icon(
+          Icons.sentiment_very_satisfied,
+          color: Colors.green,
+        ),
+        Icon(
+          Icons.sentiment_very_satisfied,
+          color: Colors.green,
+        ),
       ]);
     default:
       return Row(); // Handle other cases or return an empty row if the rating is not 1-5.

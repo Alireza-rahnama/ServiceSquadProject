@@ -63,12 +63,16 @@ class _NewEntryViewState extends State<ReviewEntryView> {
     List<String?> newReviewList = professionalService.reviewList ?? [];
     newReviewList.add(review);
 
+    Map<String, int> newReviewsMap = professionalService.reviewsMap ?? {};
+    newReviewsMap[review!] = rating!;
+
     ProfessionalService newProfessionalService = ProfessionalService(
         id: professionalService.id,
         category: professionalService.category,
         serviceDescription: professionalService.serviceDescription,
         wage: professionalService.wage,
         rating: rating,
+        reviewsMap: newReviewsMap,
         location: professionalService.location,
         technicianAlias: professionalService.technicianAlias!,
         imagePath: professionalService.imagePath,
@@ -126,8 +130,12 @@ class _NewEntryViewState extends State<ReviewEntryView> {
                   tooltip: 'Go back',
                   color: Colors.white,
                   onPressed: () {
-                    Navigator.of(context).pop();
-                  }),
+                    // Navigator.of(context).pop();
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                ReviewsView.forEachProfessionalService(false, service)));                  }),
             ),
             body: Padding(
                 padding: const EdgeInsets.all(16.0),
