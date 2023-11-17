@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
@@ -36,10 +37,9 @@ class _NewEntryViewState extends State<ReviewEntryView> {
   int? rating;
   final service;
 
-  _NewEntryViewState.withInheritedThemeAndCategory(bool isDark,
-      ProfessionalService professionalService) :
-        service = professionalService;
-
+  _NewEntryViewState.withInheritedThemeAndCategory(
+      bool isDark, ProfessionalService professionalService)
+      : service = professionalService;
 
   void _saveReviewEntry() async {
     ProfessionalService professionalService = service;
@@ -74,7 +74,8 @@ class _NewEntryViewState extends State<ReviewEntryView> {
         imagePath: professionalService.imagePath,
         reviewList: newReviewList);
 
-    professionalServiceController.updateProfessionalService(newProfessionalService);
+    professionalServiceController
+        .updateProfessionalService(newProfessionalService);
 
     reviewController.clear();
     ratingController.clear();
@@ -95,8 +96,7 @@ class _NewEntryViewState extends State<ReviewEntryView> {
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  ReviewsView.forEachProfessionalService(
-                      false, service)));
+                  ReviewsView.forEachProfessionalService(false, service)));
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -108,9 +108,8 @@ class _NewEntryViewState extends State<ReviewEntryView> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData themeData = ThemeData(
-        useMaterial3: true,
-        brightness: Brightness.light);
+    final ThemeData themeData =
+        ThemeData(useMaterial3: true, brightness: Brightness.light);
 
     return Theme(
         data: themeData,
@@ -133,45 +132,136 @@ class _NewEntryViewState extends State<ReviewEntryView> {
             body: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+
                   children: <Widget>[
+                    SizedBox(height: 150.0),
+
                     TextField(
                       controller: reviewController,
                       decoration: InputDecoration(
                         labelText: 'write a review',
                         hintText:
-                        'write a review', //TODO: BETTER MAKE IT A DROP DOWN OR RADIO BUTTON
+                            'write a review', //TODO: BETTER MAKE IT A DROP DOWN OR RADIO BUTTON
                       ),
                       maxLength: 50, // Set the maximum character limit
                       maxLines: null, // Allow multiple lines of text
                     ),
-                    TextField(
-                      controller: ratingController,
-                      decoration: InputDecoration(
-                          labelText: 'Rate your experience',
-                          hintText:
-                          'Rate your experience from 1 to 5,' //TODO: BETTER MAKE IT A DROP DOWN OR RADIO BUTTON
-                      ),
-                      maxLength: 50, // Set the maximum character limit
-                      maxLines: null, // Allow multiple lines of text
-                    ),
+                    // TextField(
+                    //   controller: ratingController,
+                    //   decoration: InputDecoration(
+                    //       labelText: 'Rate your experience',
+                    //       hintText:
+                    //           'Rate your experience from 1 to 5,' //TODO: BETTER MAKE IT A DROP DOWN OR RADIO BUTTON
+                    //       ),
+                    //   maxLength: 50, // Set the maximum character limit
+                    //   maxLines: null, // Allow multiple lines of text
+                    // ),
+                    SizedBox(height: 50,),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Text('Rate Your Day:'),
-                        Slider(
-                          value: rating?.toDouble() ?? 5.0, // Use rating as the initial value
-                          min: 1,
-                          max: 5,
-                          onChanged: (newRating) {
-                            setState(() {
-                              rating = newRating.round();
-                            });
+                        Text('Rate your experience:'),
+                        Spacer(),
+                        RatingBar.builder(
+                          initialRating: 3,
+                          itemCount: 5,
+                          itemBuilder: (context, index){
+                            switch (index) {
+                              case 0:
+                                return Icon(
+                                  Icons.sentiment_very_dissatisfied,
+                                  color: Colors.red,
+                                );
+                              case 1:
+                                return Icon(
+                                  Icons.sentiment_dissatisfied,
+                                  color: Colors.redAccent,
+                                );
+                              case 2:
+                                return Icon(
+                                  Icons.sentiment_neutral,
+                                  color: Colors.amber,
+                                );
+                              case 3:
+                                return Icon(
+                                  Icons.sentiment_satisfied,
+                                  color: Colors.lightGreen,
+                                );
+                              case 4:
+                                return Icon(
+                                  Icons.sentiment_very_satisfied,
+                                  color: Colors.green,
+                                );
+                              default:
+                                return Container(height: 0.0);
+                            }
+                          },
+                          onRatingUpdate: (ratingValue) {
+                            print(ratingValue);
+                            rating = ratingValue.toInt();
                           },
                         ),
                       ],
                     ),
-                    SizedBox(height: 10),
+                    // RatingBar.builder(
+                    //     initialRating: 3,
+                    //     itemCount: 5,
+                    //     itemBuilder: (context, index){
+                    //       switch (index) {
+                    //         case 0:
+                    //           return Icon(
+                    //             Icons.sentiment_very_dissatisfied,
+                    //             color: Colors.red,
+                    //           );
+                    //         case 1:
+                    //           return Icon(
+                    //             Icons.sentiment_dissatisfied,
+                    //             color: Colors.redAccent,
+                    //           );
+                    //         case 2:
+                    //           return Icon(
+                    //             Icons.sentiment_neutral,
+                    //             color: Colors.amber,
+                    //           );
+                    //         case 3:
+                    //           return Icon(
+                    //             Icons.sentiment_satisfied,
+                    //             color: Colors.lightGreen,
+                    //           );
+                    //         case 4:
+                    //           return Icon(
+                    //             Icons.sentiment_very_satisfied,
+                    //             color: Colors.green,
+                    //           );
+                    //         default:
+                    //           return Container(height: 0.0);
+                    //       }
+                    //     },
+                    //     onRatingUpdate: (ratingValue) {
+                    //       print(ratingValue);
+                    //       rating = ratingValue.toInt();
+                    //     },
+                    // ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: <Widget>[
+                    //     Text('Rate Your Day:'),
+                    //     Slider(
+                    //       value: rating?.toDouble() ?? 5.0,
+                    //       // Use rating as the initial value
+                    //       min: 1,
+                    //       max: 5,
+                    //       onChanged: (newRating) {
+                    //         setState(() {
+                    //           rating = newRating.round();
+                    //         });
+                    //       },
+                    //     ),
+                    //   ],
+                    // ),
+                    SizedBox(height: 50),
+                    // Container(height: 50.0,),
                     ElevatedButton(
                       onPressed: _saveReviewEntry,
                       child: Text('Save Entry'),
