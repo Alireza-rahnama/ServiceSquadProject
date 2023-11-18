@@ -13,24 +13,25 @@ import '../model/professional_service.dart';
 import 'services_list_view.dart';
 
 class ServiceEntryView extends StatefulWidget {
-  bool isDark;
   String category;
 
-  ServiceEntryView.withInheritedTheme(this.isDark, this.category);
+  ServiceEntryView.withInheritedTheme( this.category);
 
 
   @override
   // _NewEntryViewState createState() => _NewEntryViewState();
   _NewEntryViewState createState() =>
-      _NewEntryViewState.withInheritedThemeAndCategory(isDark, category);
+      _NewEntryViewState.withInheritedThemeAndCategory(category);
 }
 
 class _NewEntryViewState extends State<ServiceEntryView> {
   late final TextEditingController descriptionController;
   late final TextEditingController categoryController ;
+  late final TextEditingController technicianAliasController ;
   late final TextEditingController wageController;
 
   double? wage;
+  String? technicianAlias;
   double rating = 5.0; // Initial rating value
   late String serviceDescription;
   late String category;
@@ -41,11 +42,12 @@ class _NewEntryViewState extends State<ServiceEntryView> {
   XFile? _image;
   late bool isDark;
 
-  _NewEntryViewState.withInheritedThemeAndCategory(bool isDark, String category) {
-    this.isDark = isDark;
+  _NewEntryViewState.withInheritedThemeAndCategory(String category) {
+    this.isDark = false;
     this.category = category;
     descriptionController = TextEditingController();
     categoryController = TextEditingController(text: '${category}');
+    technicianAliasController = TextEditingController();
     wageController = TextEditingController();
   }
 
@@ -102,10 +104,12 @@ class _NewEntryViewState extends State<ServiceEntryView> {
   void _saveServiceEntry() async {
     serviceDescription = descriptionController.text;
     category = categoryController.text;
-    wage = double.parse(wageController.text);
+    wage = double.parse(wageController.text.isNotEmpty?wageController.text : '1.0');
+    technicianAlias = technicianAliasController.text?? 'Unspecified';
     String location = await ProfileController().getUserLocation(FirebaseAuth.instance.currentUser!.uid);
 
     imagePath = await _uploadImageToFirebaseAndReturnDownlaodUrl();
+    print('imagePath is : $imagePath');
     imagePathList.add(imagePath);
 
     if (serviceDescription == '') {
@@ -125,9 +129,11 @@ class _NewEntryViewState extends State<ServiceEntryView> {
     ProfessionalService professionalService = ProfessionalService(
         category: categoryController.text,
         serviceDescription: serviceDescription,
-        wage: double.parse(wageController.text),
+        wage: double.parse(wageController.text.isNotEmpty?wageController.text : '1.0'),
         rating: 5,
-    location: location);
+    location: location,
+    technicianAlias: technicianAlias!,
+    imagePath: imagePath);
 
     print('new professionalService location is: ${location}');
 
@@ -208,6 +214,16 @@ class _NewEntryViewState extends State<ServiceEntryView> {
                     labelText: '${category}',
                     hintText:
                         'Enter your service category', //TODO: BETTER MAKE IT A DROP DOWN OR RADIO BUTTON
+                  ),
+                  maxLength: 50, // Set the maximum character limit
+                  maxLines: null, // Allow multiple lines of text
+                ),
+                TextField(
+                  controller: technicianAliasController,
+                  decoration: InputDecoration(
+                    labelText: 'Enter your alias',
+                    hintText:
+                    'Enter the name you\'d like to be displayed on the ad,' //TODO: BETTER MAKE IT A DROP DOWN OR RADIO BUTTON
                   ),
                   maxLength: 50, // Set the maximum character limit
                   maxLines: null, // Allow multiple lines of text

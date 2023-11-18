@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:service_squad/controller/profile_controller.dart';
 import 'package:service_squad/view/category_selection.dart';
 
 
@@ -97,6 +98,7 @@ class _ProfileViewState extends State<ProfileView> {
 
   TextEditingController userTypeControleer = TextEditingController();
   TextEditingController userLocationController = TextEditingController();
+  TextEditingController userAliasController = TextEditingController();
   TextEditingController userAboutController = TextEditingController();
   TextEditingController useremailAddressController = TextEditingController();
   TextEditingController mobilePhoneNumberController = TextEditingController();
@@ -111,7 +113,12 @@ class _ProfileViewState extends State<ProfileView> {
         dropdownMenu,
         TextField(
           controller: userLocationController,
-          decoration: InputDecoration(labelText: "Seyt your location"),
+          decoration: InputDecoration(labelText: "Set your location"),
+          maxLines: null, // Allows multiple lines of text.
+        ),
+        TextField(
+          controller: userAliasController,
+          decoration: InputDecoration(labelText: "Set your alias"),
           maxLines: null, // Allows multiple lines of text.
         ),
         TextField(
@@ -158,6 +165,8 @@ class _ProfileViewState extends State<ProfileView> {
             setEmail(FirebaseAuth.instance.currentUser!.uid,useremailAddressController.text);
             setMobileNumber(FirebaseAuth.instance.currentUser!.uid, mobilePhoneNumberController.text);
             setUserLocation(FirebaseAuth.instance.currentUser!.uid, userLocationController.text);
+            ProfileController().setTechnicianAlias(FirebaseAuth.instance.currentUser!.uid, userAliasController.text);
+
             Navigator.of(context).pop();
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
