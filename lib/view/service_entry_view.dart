@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 import '../controller/professional_service_controller.dart';
+import '../controller/profile_controller.dart';
 import '../model/professional_service.dart';
 import 'services_list_view.dart';
 
@@ -102,6 +103,7 @@ class _NewEntryViewState extends State<ServiceEntryView> {
     serviceDescription = descriptionController.text;
     category = categoryController.text;
     wage = double.parse(wageController.text);
+    String location = await ProfileController().getUserLocation(FirebaseAuth.instance.currentUser!.uid);
 
     imagePath = await _uploadImageToFirebaseAndReturnDownlaodUrl();
     imagePathList.add(imagePath);
@@ -124,7 +126,10 @@ class _NewEntryViewState extends State<ServiceEntryView> {
         category: categoryController.text,
         serviceDescription: serviceDescription,
         wage: double.parse(wageController.text),
-        rating: 5);
+        rating: 5,
+    location: location);
+
+    print('new professionalService location is: ${location}');
 
     bool successfullyAdded = await professionalServiceController
         .addProfessionalService(professionalService);
@@ -143,7 +148,6 @@ class _NewEntryViewState extends State<ServiceEntryView> {
                       ))),
               backgroundColor: Colors.deepPurple),
         );
-        print('isDark in diary entry view is: $isDark');
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -180,7 +184,7 @@ class _NewEntryViewState extends State<ServiceEntryView> {
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.deepPurple,
-            title: Text("Add Diary Entry",
+            title: Text("Add a $category service",
                 style: GoogleFonts.pacifico(
                   color: isDark ? Colors.black87 : Colors.white,
                   fontSize: 30.0,
@@ -191,10 +195,6 @@ class _NewEntryViewState extends State<ServiceEntryView> {
                 color: isDark ? Colors.black87 : Colors.white,
                 onPressed: () {
                   Navigator.of(context).pop();
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => DiaryLogView()),
-                  // );
                 }),
           ),
           body: Padding(

@@ -1,22 +1,11 @@
-// import 'dart:ffi';
-
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
 import 'package:service_squad/controller/professional_service_controller.dart';
-import 'package:service_squad/view/profile_view.dart';
 import 'package:service_squad/view/service_entry_view.dart';
-
-import '../controller/professional_service_controller.dart';
-import '../controller/professional_service_controller.dart';
-import '../controller/professional_service_controller.dart';
 import '../controller/profile_controller.dart';
 import '../model/professional_service.dart';
 import 'auth_gate.dart';
@@ -34,7 +23,6 @@ class CategoriesView extends StatefulWidget {
       bool inheritedIsDark, String categoryName) {
     isDark = inheritedIsDark;
     categoryToPopulate = categoryName;
-    print("inherited isDark from DiaryEntryView is: $isDark");
   }
 
   @override
@@ -102,7 +90,6 @@ class _CategoriesViewState extends State<CategoriesView> {
 
     ProfessionalServiceController professionalServiceController =
         ProfessionalServiceController();
-    // List<DiaryModel> allEntries = ProfessionalServiceController.getUserDiaries() as List<DiaryModel>;
 
     showDialog(
       context: context,
@@ -136,24 +123,27 @@ class _CategoriesViewState extends State<CategoriesView> {
             TextButton(
               child: Text('Save'),
               onPressed: () async {
-                print(
-                    'professionalServiceEntrycategory is: ${professionalServiceEntry!.category}');
-                // Save the edited content to the diary entry.
+                print('professionalServiceEntrycategory is: ${professionalServiceEntry!.category}');
+                // Save the edited content to the service entry.
+                String location = await ProfileController()
+                    .getUserLocation(FirebaseAuth.instance.currentUser!.uid);
                 await professionalServiceController.updateProfessionalService(
                     ProfessionalService(
                         serviceDescription: descriptionEditingController.text,
                         wage: double.parse(wageEditingController.text),
                         category: professionalServiceEntry.category,
                         id: professionalServiceEntry!.id,
-                    rating: professionalServiceEntry.rating ));
+                        rating: professionalServiceEntry.rating,
+                        location: location));
 
                 updateState(professionalServiceEntry.category);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                      content: Center(child: Text('Entry successfully saved!')),
+                      backgroundColor: Colors.deepPurple),
+                );
                 Navigator.of(context).pop();
-                // ScaffoldMessenger.of(context).showSnackBar(
-                //   const SnackBar(
-                //       content: Center(child: Text('Entry successfully saved!')),
-                //       backgroundColor: Colors.deepPurple),
-                // );
+
               },
             ),
           ],
@@ -162,12 +152,12 @@ class _CategoriesViewState extends State<CategoriesView> {
     );
   }
 
-  void applyFilterAndUpdateState3() async {
+  void applyFilterAndUpdateState3(bool isOnSubmitted) async {
     List<String> categories = [
-      'Snow Clearance',
-      'House Keeping',
-      'Handy Services',
-      'Lawn Mowing'
+      "Snow Clearance",
+      "House Keeping",
+      "Handy Services",
+      "Lawn Mowing"
     ];
 
     final serviceEntries = selectedCategory != null
@@ -181,24 +171,66 @@ class _CategoriesViewState extends State<CategoriesView> {
     // final serviceEntries = await professionalServiceController
     //     .getAllAvailableProfessionalServiceCollections()
     //     .first;
+    String userLocation = await ProfileController().getUserLocation(FirebaseAuth.instance.currentUser!.uid);
+    bool isSnackBarDisplayed = false;
 
     setState(() {
-      // Initialize filteredEntries with a copy of diaryEntries
+      // Initialize filteredEntries with a copy of serviceEntries
       filteredEntries = List<ProfessionalService>.from(serviceEntries);
+      List<int> ratings = [1, 2, 3, 4, 5];
+      String queryText = searchController.text.toLowerCase();
+      bool queryIsLocation = false;
 
+      print(
+          '!categories.contains(queryText): ${!categories.contains(queryText)}');
+      if (!categories.contains(queryText) &&
+          !ratings.contains(int.tryParse(queryText))) {
+        queryIsLocation = true;
+      }
+
+      print('queryText: $queryText');
+      print(
+          'categories.contains(queryText): ${categories.contains(queryText)}');
+      print(
+          'ratings.contains(int.tryParse(queryText)): ${ratings.contains(int.tryParse(queryText))}');
       // Filter based on the rating or category
       if (searchController.text.isNotEmpty) {
         filteredEntries = filteredEntries.where((entry) {
+          print('entry.location.toLowerCase() is ${userLocation}');
           return entry.category
                   .toLowerCase()
-                  .contains(searchController.text.toLowerCase()) ||
-              entry.rating == int.parse(searchController.text.toLowerCase());
+                  .contains(queryText.toLowerCase()) ||
+              entry.rating == int.tryParse(queryText) ||
+              entry.location.contains(queryText.toLowerCase());
         }).toList();
+        // } else if (queryIsLocation) {
+        //   print('queryIsLocation: ${queryIsLocation}');
+        //   filteredEntries = filteredEntries.where((entry) {
+        //     print('entry.Category is: ${entry.category}');
+        //     return entry.location.toLowerCase().contains(queryText.toLowerCase());
+        //   }).toList();
       } else {
         filteredEntries = filteredEntries.where((entry) {
           return entry.category == selectedCategory;
         }).toList();
       }
+
+      // Show a message if no matches are found
+      print('filteredEntries.length: ${filteredEntries.length}');
+      print('serviceEntries.length: ${serviceEntries.length}');
+
+      if (isOnSubmitted && searchController.text.isNotEmpty && !isSnackBarDisplayed &&
+          (filteredEntries.length == serviceEntries.length ||
+          filteredEntries.length ==0)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Center(child:Text('No match found!')),
+            duration: Duration(milliseconds: 1000),
+          ),
+        );
+        isSnackBarDisplayed = true;
+      }
+
     });
   }
 
@@ -313,7 +345,7 @@ class _CategoriesViewState extends State<CategoriesView> {
                     selectedCategory = category;
                   });
                   print("selectedCategory is $selectedCategory");
-                  applyFilterAndUpdateState3();
+                  applyFilterAndUpdateState3(false);
                 },
                 icon: Icon(
                   Icons.filter_list,
@@ -346,33 +378,36 @@ class _CategoriesViewState extends State<CategoriesView> {
                     (BuildContext context, SearchController controller) {
                   //TODO: We can implement the location logic here to search services by location
                   return SearchBar(
-                    hintText: "Search by category or rating",
+                    hintText: "location, category, or rating",
                     controller: searchController,
                     padding: const MaterialStatePropertyAll<EdgeInsets>(
                         EdgeInsets.symmetric(horizontal: 16.0)),
                     onChanged: (_) async {
-                      applyFilterAndUpdateState3();
+                      applyFilterAndUpdateState3(false);
+                    },
+                    onSubmitted: (_) async {
+                      applyFilterAndUpdateState3(true);
                     },
                     leading: IconButton(
                         icon: Icon(Icons.search),
                         onPressed: () async {
-                          applyFilterAndUpdateState3();
+                          applyFilterAndUpdateState3(false);
                         }),
-                    trailing: <Widget>[
-                      Tooltip(
-                        message: 'Change brightness mode',
-                        child: IconButton(
-                          isSelected: isDark,
-                          onPressed: () {
-                            setState(() {
-                              isDark = !isDark;
-                            });
-                          },
-                          icon: const Icon(Icons.wb_sunny_outlined),
-                          selectedIcon: const Icon(Icons.brightness_2_outlined),
-                        ),
-                      )
-                    ],
+                    // trailing: <Widget>[
+                    //   Tooltip(
+                    //     message: 'Change brightness mode',
+                    //     child: IconButton(
+                    //       isSelected: isDark,
+                    //       onPressed: () {
+                    //         setState(() {
+                    //           isDark = !isDark;
+                    //         });
+                    //       },
+                    //       icon: const Icon(Icons.wb_sunny_outlined),
+                    //       selectedIcon: const Icon(Icons.brightness_2_outlined),
+                    //     ),
+                    //   )
+                    // ],
                   );
                 }, suggestionsBuilder:
                     (BuildContext context, SearchController controller) {
@@ -393,10 +428,9 @@ class _CategoriesViewState extends State<CategoriesView> {
           ),
 
           // Body of the widget using a StreamBuilder to listen for changes
-          // in the diary collection and reflect them in the UI in real-time.
+          // in the professionalServiceCollection  and reflect them in the UI in real-time.
           body: StreamBuilder<List<ProfessionalService>>(
-            stream: professionalServiceController
-                .getAllProfessionalServices(),
+            stream: professionalServiceController.getAllProfessionalServices(),
             builder: (context, snapshot) {
               // Show a loading indicator until data is fetched from Firestore.
               if (!snapshot.hasData) return CircularProgressIndicator();
@@ -456,22 +490,27 @@ class _CategoriesViewState extends State<CategoriesView> {
                                           print(
                                               'entry with id: ${entry!.id} was selected to delete');
                                           //TODO: IMPLEMENT OR NOT
-                                          String? userType = await profileController
-                                              .getUserType(FirebaseAuth.instance.currentUser!.uid);
-                                          if (userType! == "Service Associate"){
+                                          String? userType =
+                                              await profileController
+                                                  .getUserType(FirebaseAuth
+                                                      .instance
+                                                      .currentUser!
+                                                      .uid);
+                                          if (userType! ==
+                                              "Service Associate") {
                                             await professionalServiceController
                                                 .deleteProfessionalService(
-                                                entry!.id);
+                                                    entry!.id);
 
                                             final serviceEntries =
-                                            await professionalServiceController
-                                                .getAllProfessionalServices()
-                                                .first;
+                                                await professionalServiceController
+                                                    .getAllProfessionalServices()
+                                                    .first;
 
                                             setState(() {
-                                              // Initialize filteredEntries with a copy of diaryEntries
-                                              filteredEntries =
-                                              List<ProfessionalService>.from(
+                                              // Initialize filteredEntries with a copy of serviceEntries
+                                              filteredEntries = List<
+                                                      ProfessionalService>.from(
                                                   serviceEntries);
                                             });
                                           }
@@ -480,6 +519,8 @@ class _CategoriesViewState extends State<CategoriesView> {
                                       IconButton(
                                         icon: Icon(Icons.calendar_today),
                                         onPressed: () async {
+                                          print('${FirebaseAuth.instance.currentUser!.email}');
+                                          print('selectedCategory is ${selectedCategory}');
                                           //TODO: IMPLEMENT LOGIC AND VIEW Maybe only for client user type
                                         },
                                       ),
@@ -536,7 +577,7 @@ class _CategoriesViewState extends State<CategoriesView> {
                                               .first;
 
                                       setState(() {
-                                        // Initialize filteredEntries with a copy of diaryEntries
+                                        // Initialize filteredEntries with a copy of serviceEntries
                                         filteredEntries =
                                             List<ProfessionalService>.from(
                                                 serviceEntries);
@@ -556,7 +597,7 @@ class _CategoriesViewState extends State<CategoriesView> {
             },
           ),
 
-// Floating action button to open a dialog for adding a new diary
+          // Floating action button to open a dialog for adding a new service entry of a specific service category
           floatingActionButton: FloatingActionButton(
             tooltip: "Add my service",
             onPressed: () async {
@@ -600,10 +641,9 @@ Future<Widget> displayOrHideFloatingActionButtonBasedOnUserRole(
         });
   } else {
     return SizedBox(height: 0.0);
-    print("userType wasnt provider!");
   }
 }
-//
+
 // Widget BuildImageFromUrl(ProfessionalService entry) {
 //   if (entry.imagePath != null) {
 //     // If entry.imagePath is not null, display the image from the network
@@ -673,58 +713,7 @@ class Month {
     return num;
   }
 }
-//
-// Future<void> exportToPDF(
-//     ProfessionalServiceController ProfessionalServiceController) async {
-//   // Create a new PDF document
-//   final pdf = pw.Document();
-//
-//   // Retrieve data from Hive
-//   final firebaseFetchedDiaries =
-//       await ProfessionalServiceController.getUserDiaries();
-//
-//   List<pw.Widget> list =
-//       await pdfTextChildren(firebaseFetchedDiaries as List<DiaryModel>);
-//
-// // In the Page build method:
-//   // Populate the PDF content with data
-//   pdf.addPage(
-//     pw.Page(
-//       build: (pw.Context context) {
-//         return pw.Column(
-//           children: list,
-//         );
-//       },
-//     ),
-//   );
 
-//   // Save the PDF file
-//   final directory = await getApplicationDocumentsDirectory();
-//   print(directory);
-//   final file = File('${directory.path}/hive_data.pdf');
-//   // final file = File('fonts/hive_data.pdf');
-//
-//   await file.writeAsBytes(await pdf.save());
-// }
-//
-// Future<List<pw.Widget>> pdfTextChildren(List<DiaryModel> entries) async {
-//   List<pw.Widget> textList = [];
-//
-//   final fontData = await rootBundle.load('fonts/Pacifico-Regular.ttf');
-//   final ttf = fontData.buffer.asUint8List();
-//   final font = pw.Font.ttf(ttf.buffer.asByteData());
-//
-//   for (DiaryModel entry in entries) {
-//     textList.add(
-//       pw.Text(
-//         'On ${DateFormat('yyyy-MM-dd').format(entry.dateTime)}, ${entry.description} was rated ${entry.rating} stars.',
-//         style: pw.TextStyle(font: font, fontSize: 12),
-//       ),
-//     );
-//   }
-//   return textList;
-// }
-//
 class DateHeader extends StatelessWidget {
   final String text;
 
