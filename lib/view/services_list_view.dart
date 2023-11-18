@@ -65,31 +65,6 @@ class _CategoriesViewState extends State<CategoriesView> {
     });
   }
 
-  // filteredServicesByCategory()
-
-  // Future<String?> _uploadImageToFirebaseAndReturnDownlaodUrl async(
-  //     String? existingImagePath) async {
-  //   if (_image == null) return existingImagePath;
-  //   String? downloadURL = null;
-  //   final currentUser = FirebaseAuth.instance.currentUser;
-  //   if (currentUser == null) return null;
-  //   final firebaseStorageRef = FirebaseStorage.instance
-  //       .ref()
-  //       .child('images/${currentUser.uid}/${_image!.name}');
-  //
-  //   try {
-  //     final uploadTask = await firebaseStorageRef.putFile(File(_image!.path));
-  //     if (uploadTask.state == TaskState.success) {
-  //       downloadURL = await firebaseStorageRef.getDownloadURL();
-  //
-  //       print("Uploaded to: $downloadURL");
-  //     }
-  //   } catch (e) {
-  //     print("Failed to upload image: $e");
-  //   }
-  //   return downloadURL;
-  // }
-
   void _showEditDialog(BuildContext context,
       ProfessionalService professionalServiceEntry, int index) {
     TextEditingController descriptionEditingController =
@@ -163,42 +138,16 @@ class _CategoriesViewState extends State<CategoriesView> {
   }
 
   void applyFilterAndUpdateState3() async {
-    List<String> categories = [
-      'Snow Clearance',
-      'House Keeping',
-      'Handy Services',
-      'Lawn Mowing'
-    ];
-
     final serviceEntries = selectedCategory != null
         ? await professionalServiceController
-            .getProfessionalServices(selectedCategory!)
-            .first
+        .getProfessionalServices(selectedCategory!)
+        .first
         : await professionalServiceController
-            .getAllProfessionalServices()
-            .first;
-    print('length of serviceEntries is ${serviceEntries.length}');
-    // final serviceEntries = await professionalServiceController
-    //     .getAllAvailableProfessionalServiceCollections()
-    //     .first;
+        .getAllProfessionalServices()
+        .first;
 
     setState(() {
-      // Initialize filteredEntries with a copy of diaryEntries
       filteredEntries = List<ProfessionalService>.from(serviceEntries);
-
-      // Filter based on the rating or category
-      if (searchController.text.isNotEmpty) {
-        filteredEntries = filteredEntries.where((entry) {
-          return entry.category
-                  .toLowerCase()
-                  .contains(searchController.text.toLowerCase()) ||
-              entry.rating == int.parse(searchController.text.toLowerCase());
-        }).toList();
-      } else {
-        filteredEntries = filteredEntries.where((entry) {
-          return entry.category == selectedCategory;
-        }).toList();
-      }
     });
   }
 
@@ -312,7 +261,6 @@ class _CategoriesViewState extends State<CategoriesView> {
                   setState(() {
                     selectedCategory = category;
                   });
-                  print("selectedCategory is $selectedCategory");
                   applyFilterAndUpdateState3();
                 },
                 icon: Icon(
@@ -322,7 +270,7 @@ class _CategoriesViewState extends State<CategoriesView> {
                 itemBuilder: (BuildContext context) {
                   // Create a list of months for filtering
                   final List<String> serviceCategories = [
-                    'Housekeeping',
+                    'House Keeping',
                     'Snow Clearance',
                     'Handy Services',
                     'Lawn Mowing'
@@ -401,11 +349,9 @@ class _CategoriesViewState extends State<CategoriesView> {
               // Show a loading indicator until data is fetched from Firestore.
               if (!snapshot.hasData) return CircularProgressIndicator();
 
-              List<ProfessionalService> professionalServices =
-                  (!filteredEntries.isEmpty) ? filteredEntries : snapshot.data!;
-              // professionalServices
-              //     .sort((a, b) => (b.wage! as num).compareTo(a.wage! as num));
-
+              List<ProfessionalService> professionalServices = filteredEntries.isEmpty
+                  ? snapshot.data ?? []
+                  : filteredEntries;
               String? lastCategory;
 
               return ListView.builder(
@@ -603,30 +549,7 @@ Future<Widget> displayOrHideFloatingActionButtonBasedOnUserRole(
     print("userType wasnt provider!");
   }
 }
-//
-// Widget BuildImageFromUrl(ProfessionalService entry) {
-//   if (entry.imagePath != null) {
-//     // If entry.imagePath is not null, display the image from the network
-//     // return Container(child: Image.network(entry.imagePath!),
-//     //     height: 100, fit: BoxFit.cover );
-//
-//     return Card(
-//       elevation: 4, // Add elevation for a card-like appearance
-//       child: ClipRRect(
-//         borderRadius: BorderRadius.circular(8), // Add rounded corners
-//         child: Image.network(
-//           entry.imagePath!,
-//           height: 200,
-//           width: 400, // Set a fixed size for the image
-//           fit: BoxFit.cover, // Adjust how the image is displayed
-//         ),
-//       ),
-//     );
-//   } else {
-//     // If entry.imagePath is null, display a placeholder or an empty container
-//     return Container(); // You can customize this to show a placeholder image
-//   }
-// }
+
 
 Row RatingEvaluator(ProfessionalService entry) {
   switch (entry.rating) {
@@ -673,58 +596,7 @@ class Month {
     return num;
   }
 }
-//
-// Future<void> exportToPDF(
-//     ProfessionalServiceController ProfessionalServiceController) async {
-//   // Create a new PDF document
-//   final pdf = pw.Document();
-//
-//   // Retrieve data from Hive
-//   final firebaseFetchedDiaries =
-//       await ProfessionalServiceController.getUserDiaries();
-//
-//   List<pw.Widget> list =
-//       await pdfTextChildren(firebaseFetchedDiaries as List<DiaryModel>);
-//
-// // In the Page build method:
-//   // Populate the PDF content with data
-//   pdf.addPage(
-//     pw.Page(
-//       build: (pw.Context context) {
-//         return pw.Column(
-//           children: list,
-//         );
-//       },
-//     ),
-//   );
 
-//   // Save the PDF file
-//   final directory = await getApplicationDocumentsDirectory();
-//   print(directory);
-//   final file = File('${directory.path}/hive_data.pdf');
-//   // final file = File('fonts/hive_data.pdf');
-//
-//   await file.writeAsBytes(await pdf.save());
-// }
-//
-// Future<List<pw.Widget>> pdfTextChildren(List<DiaryModel> entries) async {
-//   List<pw.Widget> textList = [];
-//
-//   final fontData = await rootBundle.load('fonts/Pacifico-Regular.ttf');
-//   final ttf = fontData.buffer.asUint8List();
-//   final font = pw.Font.ttf(ttf.buffer.asByteData());
-//
-//   for (DiaryModel entry in entries) {
-//     textList.add(
-//       pw.Text(
-//         'On ${DateFormat('yyyy-MM-dd').format(entry.dateTime)}, ${entry.description} was rated ${entry.rating} stars.',
-//         style: pw.TextStyle(font: font, fontSize: 12),
-//       ),
-//     );
-//   }
-//   return textList;
-// }
-//
 class DateHeader extends StatelessWidget {
   final String text;
 

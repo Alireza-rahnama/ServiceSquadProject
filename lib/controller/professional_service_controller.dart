@@ -31,7 +31,6 @@ class ProfessionalServiceController {
   Future<bool> addProfessionalService(
       ProfessionalService professionalServiceEntry) async {
     bool shouldAdd = true;
-
     final snapshot =
         await getAllProfessionalServices().first; // Wait for the first snapshot
 
@@ -42,7 +41,6 @@ class ProfessionalServiceController {
         break;
       }
     }
-
     if (shouldAdd) {
       await individualUserProfessionalServiceCollection
           .add(professionalServiceEntry.toMap());
@@ -52,54 +50,6 @@ class ProfessionalServiceController {
         .add(professionalServiceEntry.toMap());
     return shouldAdd;
   }
-
-  /// Updates details of an existing [professionalService] in Firestore.
-  // Future<void> updateProfessionalService(
-  //     ProfessionalService professionalService) async {
-  //   try {
-  //     return await professionalServiceCollection
-  //         .doc(professionalService.category)
-  //         .update(professionalService.toMap());
-  //   } catch (e) {
-  //     // Handle other errors
-  //     print('Error: $e');
-  //   }
-  // }
-
-  // Future<void> updateProfessionalService(
-  //     ProfessionalService professionalService) async {
-  //   try {
-  //     // Query the collection to find the document ID based on the category
-  //     QuerySnapshot querySnapshot =
-  //         await individualUserProfessionalServiceCollection
-  //             .where('id', isEqualTo: professionalService.id)
-  //             .get();
-  //
-  //     QuerySnapshot querySnapshot2 =
-  //         await allProfessionalServiceCollectionToDisplayToCustomers
-  //             .where('id', isEqualTo: professionalService.id)
-  //             .get();
-  //
-  //     if (querySnapshot.docs.isNotEmpty) {
-  //       // Update the first document found (assuming category is unique)
-  //       String documentId = querySnapshot.docs.first.id;
-  //       await individualUserProfessionalServiceCollection
-  //           .doc(documentId)
-  //           .update(professionalService.toMap());
-  //
-  //       String documentId2 = querySnapshot2.docs.first.id;
-  //       await individualUserProfessionalServiceCollection
-  //           .doc(documentId2)
-  //           .update(professionalService.toMap());
-  //     } else {
-  //       print(
-  //           'Document not found for category: ${professionalService.category}');
-  //     }
-  //   } catch (e) {
-  //     // Handle other errors
-  //     print('Error: $e');
-  //   }
-  // }
 
   Future<void> updateProfessionalService(
       ProfessionalService professionalService) async {
@@ -140,12 +90,6 @@ class ProfessionalServiceController {
       print('Error: $e');
     }
   }
-
-
-  /// Deletes a car with the specified [id] from Firestore.
-  // Future<void> deleteProfessionalService(String? id) async {
-  //   return await individualUserProfessionalServiceCollection.doc(id).delete();
-  // }
 
   Future<void> deleteProfessionalService(String? id) async {
     try {
