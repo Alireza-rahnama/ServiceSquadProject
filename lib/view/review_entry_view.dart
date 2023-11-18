@@ -152,19 +152,9 @@ class _NewEntryViewState extends State<ReviewEntryView> {
                         hintText:
                             'write a review', //TODO: BETTER MAKE IT A DROP DOWN OR RADIO BUTTON
                       ),
-                      maxLength: 50, // Set the maximum character limit
+                      maxLength: 100, // Set the maximum character limit
                       maxLines: null, // Allow multiple lines of text
                     ),
-                    // TextField(
-                    //   controller: ratingController,
-                    //   decoration: InputDecoration(
-                    //       labelText: 'Rate your experience',
-                    //       hintText:
-                    //           'Rate your experience from 1 to 5,' //TODO: BETTER MAKE IT A DROP DOWN OR RADIO BUTTON
-                    //       ),
-                    //   maxLength: 50, // Set the maximum character limit
-                    //   maxLines: null, // Allow multiple lines of text
-                    // ),
                     SizedBox(height: 50,),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

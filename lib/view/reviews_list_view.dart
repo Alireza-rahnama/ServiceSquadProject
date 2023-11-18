@@ -371,7 +371,7 @@ class _ReviewsViewState extends State<ReviewsView> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(children: [
+                            // Column(children: [
                               Text(
                                 '${entryKeyOrReview}',
                                 style: TextStyle(
@@ -379,9 +379,11 @@ class _ReviewsViewState extends State<ReviewsView> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Spacer(),
-                              RatingEvaluator2(entryValueOrRating!),
-                            ])
+                              // Spacer(),
+                        Row(children: [SizedBox(height: 10,), Spacer(),RatingEvaluator2(entryValueOrRating!)])
+                            // SizedBox(height: 10,),
+                            //   RatingEvaluator2(entryValueOrRating!),
+                            // ])
                           ],
                         ),
                       ),
