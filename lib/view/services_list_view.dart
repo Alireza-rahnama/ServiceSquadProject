@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:service_squad/controller/professional_service_controller.dart';
+import 'package:service_squad/view/book_service_view.dart';
 import 'package:service_squad/view/reviews_list_view.dart';
 import 'package:service_squad/view/service_entry_view.dart';
 import '../controller/profile_controller.dart';
@@ -553,7 +554,19 @@ class _CategoriesViewState extends State<CategoriesView> {
                                               '${FirebaseAuth.instance.currentUser!.email}');
                                           print(
                                               'selectedCategory is ${selectedCategory}');
+
                                           //TODO: IMPLEMENT LOGIC AND VIEW Maybe only for client user type
+                                          // Maybe show booked clients to service providers.
+                                          String? userType = await profileController
+                                              .getUserType(FirebaseAuth.instance.currentUser!.uid);
+                                          if (userType != null && userType == "Client") {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => BookServiceView(),
+                                              ),
+                                            );
+                                          }
                                         },
                                       ),
                                     ],
