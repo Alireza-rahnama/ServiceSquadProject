@@ -363,7 +363,6 @@ class _CategoriesViewState extends State<CategoriesView> {
                     'Snow Clearance',
                     'Handy Services',
                     'Lawn Mowing'
-                    // December
                   ];
 
                   return serviceCategories.map((String category) {

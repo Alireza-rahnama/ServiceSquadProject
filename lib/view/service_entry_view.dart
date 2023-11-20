@@ -127,7 +127,8 @@ class _NewEntryViewState extends State<ServiceEntryView> {
     }
 
     ProfessionalService professionalService = ProfessionalService(
-        category: categoryController.text,
+        // category: categoryController.text,
+        category: category,
         serviceDescription: serviceDescription,
         wage: double.parse(wageController.text.isNotEmpty?wageController.text : '1.0'),
         rating: 5,
@@ -204,9 +205,9 @@ class _NewEntryViewState extends State<ServiceEntryView> {
                 }),
           ),
           body: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(10.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 TextField(
                   controller: categoryController,
@@ -223,32 +224,32 @@ class _NewEntryViewState extends State<ServiceEntryView> {
                   decoration: InputDecoration(
                     labelText: 'Enter your alias',
                     hintText:
-                    'Enter the name you\'d like to be displayed on the ad,' //TODO: BETTER MAKE IT A DROP DOWN OR RADIO BUTTON
+                    'Enter the name you\'d like to be displayed' //TODO: BETTER MAKE IT A DROP DOWN OR RADIO BUTTON
                   ),
                   maxLength: 50, // Set the maximum character limit
                   maxLines: null, // Allow multiple lines of text
                 ),
-                Text('Enter your service category',
-                    style: TextStyle(
-                      color: Colors.grey, // Customize the hint text color
-                      fontSize: 12, // Customize the hint text font size
-                    )),
-                SizedBox(height: 20),
+                // Text('Enter your service category',
+                //     style: TextStyle(
+                //       color: Colors.grey, // Customize the hint text color
+                //       fontSize: 12, // Customize the hint text font size
+                //     )),
+                SizedBox(height: 5),
                 TextField(
                   controller: wageController,
                   decoration: InputDecoration(
-                    labelText: 'wage',
-                    hintText: 'Enter your hourly rate',
+                    labelText: 'Enter your hourly rate',
+                      hintText: 'Hourly wage',
                   ),
                   maxLength: 140, // Set the maximum character limit
                   maxLines: null, // Allow multiple lines of text
                 ),
-                Text('Enter your hourly rate',
-                    style: TextStyle(
-                      color: Colors.grey, // Customize the hint text color
-                      fontSize: 12, // Customize the hint text font size
-                    )),
-                SizedBox(height: 20),
+                // Text('Enter your hourly rate',
+                //     style: TextStyle(
+                //       color: Colors.grey, // Customize the hint text color
+                //       fontSize: 12, // Customize the hint text font size
+                //     )),
+                SizedBox(height: 5),
                 TextField(
                   controller: descriptionController,
                   decoration: InputDecoration(
@@ -259,29 +260,24 @@ class _NewEntryViewState extends State<ServiceEntryView> {
                   maxLength: 50, // Set the maximum character limit
                   maxLines: null, // Allow multiple lines of text
                 ),
-                Text('Enter your service category',
-                    style: TextStyle(
-                      color: Colors.grey, // Customize the hint text color
-                      fontSize: 12, // Customize the hint text font size
-                    )),
-                SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text('Rate Your Day: ${rating.toInt()} Stars'),
-                    Slider(
-                      value: rating,
-                      min: 1,
-                      max: 5,
-                      onChanged: (newRating) {
-                        setState(() {
-                          rating = newRating;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
+                SizedBox(height: 5),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: <Widget>[
+                //     Text('Rate Your Day: ${rating.toInt()} Stars'),
+                //     Slider(
+                //       value: rating,
+                //       min: 1,
+                //       max: 5,
+                //       onChanged: (newRating) {
+                //         setState(() {
+                //           rating = newRating;
+                //         });
+                //       },
+                //     ),
+                //   ],
+                // ),
+                SizedBox(height: 5),
                 // Row(
                 //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 //   children: <Widget>[
@@ -298,12 +294,7 @@ class _NewEntryViewState extends State<ServiceEntryView> {
                   onPressed: _pickImageFromGallery,
                   child: Text('Add Image from Gallery'),
                 ),
-                SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: _pickImageFromCamera,
-                  child: Text('Add Image from Camera'),
-                ),
-                SizedBox(height: 10),
+                SizedBox(height: 5),
                 ElevatedButton(
                   onPressed: _saveServiceEntry,
                   child: Text('Save Entry'),
