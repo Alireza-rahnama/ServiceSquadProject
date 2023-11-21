@@ -15,8 +15,7 @@ import 'services_list_view.dart';
 class ServiceEntryView extends StatefulWidget {
   String category;
 
-  ServiceEntryView.withInheritedTheme( this.category);
-
+  ServiceEntryView.withInheritedTheme(this.category);
 
   @override
   // _NewEntryViewState createState() => _NewEntryViewState();
@@ -26,8 +25,10 @@ class ServiceEntryView extends StatefulWidget {
 
 class _NewEntryViewState extends State<ServiceEntryView> {
   late final TextEditingController descriptionController;
-  late final TextEditingController categoryController ;
-  late final TextEditingController technicianAliasController ;
+  late final TextEditingController categoryController;
+
+  late final TextEditingController technicianAliasController;
+
   late final TextEditingController wageController;
 
   double? wage;
@@ -104,9 +105,11 @@ class _NewEntryViewState extends State<ServiceEntryView> {
   void _saveServiceEntry() async {
     serviceDescription = descriptionController.text;
     category = categoryController.text;
-    wage = double.parse(wageController.text.isNotEmpty?wageController.text : '1.0');
-    technicianAlias = technicianAliasController.text?? 'Unspecified';
-    String location = await ProfileController().getUserLocation(FirebaseAuth.instance.currentUser!.uid);
+    wage = double.parse(
+        wageController.text.isNotEmpty ? wageController.text : '1.0');
+    technicianAlias = technicianAliasController.text ?? 'Unspecified';
+    String location = await ProfileController()
+        .getUserLocation(FirebaseAuth.instance.currentUser!.uid);
 
     imagePath = await _uploadImageToFirebaseAndReturnDownlaodUrl();
     print('imagePath is : $imagePath');
@@ -130,11 +133,12 @@ class _NewEntryViewState extends State<ServiceEntryView> {
         // category: categoryController.text,
         category: category,
         serviceDescription: serviceDescription,
-        wage: double.parse(wageController.text.isNotEmpty?wageController.text : '1.0'),
+        wage: double.parse(
+            wageController.text.isNotEmpty ? wageController.text : '1.0'),
         rating: 5,
-    location: location,
-    technicianAlias: technicianAlias!,
-    imagePath: imagePath);
+        location: location,
+        technicianAlias: technicianAlias!,
+        imagePath: imagePath);
 
     print('new professionalService location is: ${location}');
 
@@ -189,120 +193,85 @@ class _NewEntryViewState extends State<ServiceEntryView> {
     return Theme(
         data: themeData,
         child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.deepPurple,
-            title: Text("Add a $category service",
-                style: GoogleFonts.pacifico(
+            appBar: AppBar(
+              backgroundColor: Colors.deepPurple,
+              title: Text("Add a $category service",
+                  style: GoogleFonts.pacifico(
+                    color: isDark ? Colors.black87 : Colors.white,
+                    fontSize: 30.0,
+                  )),
+              leading: IconButton(
+                  icon: Icon(Icons.arrow_back_outlined),
+                  tooltip: 'Go back',
                   color: isDark ? Colors.black87 : Colors.white,
-                  fontSize: 30.0,
-                )),
-            leading: IconButton(
-                icon: Icon(Icons.arrow_back_outlined),
-                tooltip: 'Go back',
-                color: isDark ? Colors.black87 : Colors.white,
-                onPressed: () {
-                  Navigator.of(context).pop();
-                }),
-          ),
-          body: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                TextField(
-                  controller: categoryController,
-                  decoration: InputDecoration(
-                    labelText: '${category}',
-                    hintText:
-                        'Enter your service category', //TODO: BETTER MAKE IT A DROP DOWN OR RADIO BUTTON
-                  ),
-                  maxLength: 50, // Set the maximum character limit
-                  maxLines: null, // Allow multiple lines of text
-                ),
-                TextField(
-                  controller: technicianAliasController,
-                  decoration: InputDecoration(
-                    labelText: 'Enter your alias',
-                    hintText:
-                    'Enter the name you\'d like to be displayed' //TODO: BETTER MAKE IT A DROP DOWN OR RADIO BUTTON
-                  ),
-                  maxLength: 50, // Set the maximum character limit
-                  maxLines: null, // Allow multiple lines of text
-                ),
-                // Text('Enter your service category',
-                //     style: TextStyle(
-                //       color: Colors.grey, // Customize the hint text color
-                //       fontSize: 12, // Customize the hint text font size
-                //     )),
-                SizedBox(height: 5),
-                TextField(
-                  controller: wageController,
-                  decoration: InputDecoration(
-                    labelText: 'Enter your hourly rate',
-                      hintText: 'Hourly wage',
-                  ),
-                  maxLength: 140, // Set the maximum character limit
-                  maxLines: null, // Allow multiple lines of text
-                ),
-                // Text('Enter your hourly rate',
-                //     style: TextStyle(
-                //       color: Colors.grey, // Customize the hint text color
-                //       fontSize: 12, // Customize the hint text font size
-                //     )),
-                SizedBox(height: 5),
-                TextField(
-                  controller: descriptionController,
-                  decoration: InputDecoration(
-                    labelText: 'Service Description',
-                    hintText:
-                        'Enter the service description', //TODO: BETTER MAKE IT A DROP DOWN OR RADIO BUTTON
-                  ),
-                  maxLength: 50, // Set the maximum character limit
-                  maxLines: null, // Allow multiple lines of text
-                ),
-                SizedBox(height: 5),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: <Widget>[
-                //     Text('Rate Your Day: ${rating.toInt()} Stars'),
-                //     Slider(
-                //       value: rating,
-                //       min: 1,
-                //       max: 5,
-                //       onChanged: (newRating) {
-                //         setState(() {
-                //           rating = newRating;
-                //         });
-                //       },
-                //     ),
-                //   ],
-                // ),
-                SizedBox(height: 5),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: <Widget>[
-                //     Text('Date: ${selectedDate.toLocal()}'.split(' ')[0]),
-                //     ElevatedButton(
-                //       onPressed: () => _selectDate(context),
-                //       child: Text(
-                //           '${DateFormat('yyyy-MM-dd').format(selectedDate)}'),
-                //     ),
-                //   ],
-                // ),
-                // SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _pickImageFromGallery,
-                  child: Text('Add Image from Gallery'),
-                ),
-                SizedBox(height: 5),
-                ElevatedButton(
-                  onPressed: _saveServiceEntry,
-                  child: Text('Save Entry'),
-                ),
-              ],
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  }),
             ),
-          ),
-        ));
+            body: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: ListView(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      TextField(
+                        controller: categoryController,
+                        decoration: InputDecoration(
+                          labelText: '${category}',
+                          hintText:
+                              'Enter your service category', //TODO: BETTER MAKE IT A DROP DOWN OR RADIO BUTTON
+                        ),
+                        maxLength: 50, // Set the maximum character limit
+                        maxLines: null, // Allow multiple lines of text
+                      ),
+                      TextField(
+                        controller: technicianAliasController,
+                        decoration: InputDecoration(
+                            labelText: 'Enter your alias',
+                            hintText:
+                                'Enter the name you\'d like to be displayed' //TODO: BETTER MAKE IT A DROP DOWN OR RADIO BUTTON
+                            ),
+                        maxLength: 50, // Set the maximum character limit
+                        maxLines: null, // Allow multiple lines of text
+                      ),
+                      SizedBox(height: 5),
+                      TextField(
+                        controller: wageController,
+                        decoration: InputDecoration(
+                          labelText: 'Enter your hourly rate',
+                          hintText: 'Hourly wage',
+                        ),
+                        maxLength: 140, // Set the maximum character limit
+                        maxLines: null, // Allow multiple lines of text
+                      ),
+                      SizedBox(height: 5),
+                      TextField(
+                        controller: descriptionController,
+                        decoration: InputDecoration(
+                          labelText: 'Service Description',
+                          hintText:
+                              'Enter the service description', //TODO: BETTER MAKE IT A DROP DOWN OR RADIO BUTTON
+                        ),
+                        maxLength: 50, // Set the maximum character limit
+                        maxLines: null, // Allow multiple lines of text
+                      ),
+                      SizedBox(height: 5),
+                      SizedBox(height: 5),
+                      ElevatedButton(
+                        onPressed: _pickImageFromGallery,
+                        child: Text('Add Image from Gallery'),
+                      ),
+                      SizedBox(height: 5),
+                      ElevatedButton(
+                        onPressed: _saveServiceEntry,
+                        child: Text('Save Entry'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            )));
   }
 }
 
@@ -313,7 +282,8 @@ class ErrorDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text('Error Exception'),
-      content: const Text('You are already providing this service, instead of creating new posting modify your existing ad!'),
+      content: const Text(
+          'You are already providing this service, instead of creating new posting modify your existing ad!'),
       actions: <Widget>[
         TextButton(
           onPressed: () => Navigator.pop(context, 'OK'),
