@@ -1,12 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:service_squad/controller/professional_service_controller.dart';
 import 'package:service_squad/view/profile_view.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:service_squad/view/service_entry_view.dart';
-
 import '../model/grid_item_data.dart';
 import 'auth_gate.dart';
 import 'services_list_view.dart';

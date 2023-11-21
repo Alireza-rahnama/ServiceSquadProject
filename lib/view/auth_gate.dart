@@ -2,9 +2,6 @@ import 'package:flutter/material.dart'hide EmailAuthProvider;
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:service_squad/view/category_selection.dart';
-import 'package:service_squad/view/profile_view.dart';
-
-
 
 
 
@@ -34,14 +31,6 @@ class AuthGate extends StatelessWidget {
                 ),
               );
             },
-            // subtitleBuilder: (context, action) {
-            //   return Padding(
-            //     padding: const EdgeInsets.symmetric(vertical: 8.0),
-            //     child: action == AuthAction.signIn
-            //         ? const Text('Welcome to Dear Diary, please sign in!')
-            //         : const Text('Welcome to Dear Diary, please sign up!'),
-            //   );
-            // },
             footerBuilder: (context, action) {
               return const Padding(
                 padding: EdgeInsets.only(top: 16),
