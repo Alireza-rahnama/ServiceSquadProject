@@ -9,7 +9,7 @@ class ProfessionalServiceController {
   /// The currently authenticated user from Firebase.
   final user = FirebaseAuth.instance.currentUser;
 
-  /// A reference to the Firestore collection where the perfessional services for
+  /// A reference to the Firestore collection where the cars for
   /// the current user are stored.
   late final CollectionReference individualUserProfessionalServiceCollection;
   /// A reference to the Firestore collection where the perfessional services to
