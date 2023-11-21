@@ -70,5 +70,6 @@ dependencies {
     // Import the BoM for the Firebase platform
     implementation platform('com.google.firebase:firebase-bom:32.1.0')
     implementation 'com.google.firebase:firebase-messaging'
+    implementation 'com.android.support:multidex:1.0.3'
 
 }

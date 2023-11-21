@@ -308,6 +308,12 @@
       "languageVersion": "2.19"
     },
     {
+      "name": "flutter_rating_bar",
+      "rootUri": "file:///C:/Users/David/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_rating_bar-4.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
       "name": "flutter_svg",
       "rootUri": "file:///C:/Users/David/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_svg-2.0.9",
       "packageUri": "lib/",
@@ -644,7 +650,7 @@
       "languageVersion": "3.2"
     }
   ],
-  "generated": "2023-11-21T01:30:01.987301Z",
+  "generated": "2023-11-21T02:34:09.186313Z",
   "generator": "pub",
   "generatorVersion": "3.2.0"
 }
