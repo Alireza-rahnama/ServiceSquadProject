@@ -9,10 +9,12 @@ class UserProfileData {
   String? imagePath;
   String emailAddress;
   final mobilePhoneNumber;
+  final location;
 
-  /// The unique identifier for the car.
+  /// The unique identifier for the user.
   /// Might be `null` before saving to Firestore.
   String? id;
+  String? technicianAlias;
 
   UserProfileData(
       {required this.userType,
@@ -21,8 +23,10 @@ class UserProfileData {
       this.userRating,
       this.imagePath,
       this.id,
+      this.technicianAlias,
       required this.emailAddress,
-      required this.mobilePhoneNumber});
+      required this.mobilePhoneNumber,
+      required this.location});
 
   Map<String, dynamic> toMap() {
     return {
@@ -34,15 +38,16 @@ class UserProfileData {
       'userRating': userRating,
       'imagePath': imagePath,
       'emailAddress': emailAddress,
-      'mobilePhoneNumber': mobilePhoneNumber
+      'mobilePhoneNumber': mobilePhoneNumber,
+      'location': location,
+      'technicianAlias' : technicianAlias
     };
   }
 
-
-  /// Converts a Firestore `DocumentSnapshot` back into a `Todo` object.
+  /// Converts a Firestore `DocumentSnapshot` back into a `UserProfileData` object.
   ///
   /// This static method handles the **deserialization** process. It extracts the
-  /// data from the Firestore document and constructs a `Todo` object. By providing
+  /// data from the Firestore document and constructs a `UserProfileData` object. By providing
   /// this method, it offers an encapsulated way to transform Firestore data back
   /// into custom Dart objects, making CRUD (Create, Read, Update, Delete) operations
   /// easier and more intuitive.
@@ -57,17 +62,18 @@ class UserProfileData {
     }
 
     return UserProfileData(
-      id: doc.id,
-      userType: map['userType'],
-      listOfOfferingProfessionalServices:
-          (map['listOfOfferingProfessionalServices'] as List<dynamic>?)
-              ?.map((serviceData) => ProfessionalService.fromMap(serviceData))
-              .toList(),
-      userAbout: map['userAbout'],
-      userRating: map['userRating'],
-      imagePath: map['imagePath'],
+        id: doc.id,
+        userType: map['userType'],
+        listOfOfferingProfessionalServices:
+            (map['listOfOfferingProfessionalServices'] as List<dynamic>?)
+                ?.map((serviceData) => ProfessionalService.fromMap(serviceData))
+                .toList(),
+        userAbout: map['userAbout'],
+        userRating: map['userRating'],
+        imagePath: map['imagePath'],
         emailAddress: map['emailAddress'],
-      mobilePhoneNumber: map['mobilePhoneNumber']
-    );
+        mobilePhoneNumber: map['mobilePhoneNumber'],
+        location: map['location'],
+        technicianAlias: map['technicianAlias']);
   }
 }
