@@ -10,6 +10,8 @@ class UserProfileData {
   String emailAddress;
   final mobilePhoneNumber;
 
+  // String fcmToken;  // David: add fcmToken
+
   /// The unique identifier for the car.
   /// Might be `null` before saving to Firestore.
   String? id;
@@ -22,7 +24,10 @@ class UserProfileData {
       this.imagePath,
       this.id,
       required this.emailAddress,
-      required this.mobilePhoneNumber});
+      required this.mobilePhoneNumber,
+      
+      // required this.fcmToken
+    });
 
   Map<String, dynamic> toMap() {
     return {
@@ -34,7 +39,8 @@ class UserProfileData {
       'userRating': userRating,
       'imagePath': imagePath,
       'emailAddress': emailAddress,
-      'mobilePhoneNumber': mobilePhoneNumber
+      'mobilePhoneNumber': mobilePhoneNumber,
+      // 'fcmToken': fcmToken,
     };
   }
 
@@ -67,7 +73,8 @@ class UserProfileData {
       userRating: map['userRating'],
       imagePath: map['imagePath'],
         emailAddress: map['emailAddress'],
-      mobilePhoneNumber: map['mobilePhoneNumber']
+      mobilePhoneNumber: map['mobilePhoneNumber'],
+      // fcmToken: map['fcmToken'] ?? '' // Retrieve fcmToken, default to empty string if not found
     );
   }
 }

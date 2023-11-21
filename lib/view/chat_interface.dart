@@ -285,4 +285,3 @@ void sendPushMessage(String token, String message) async {
     super.dispose();
   }
 }
-

@@ -6,9 +6,11 @@ import 'package:service_squad/view/profile_view.dart';
 
 
 
+
+
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
-
+  
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(

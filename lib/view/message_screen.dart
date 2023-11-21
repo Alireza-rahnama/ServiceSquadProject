@@ -56,6 +56,9 @@ class _MessageScreenState extends State<MessageScreen> {
     });
   }
 
+  // Check if the widget is still mounted before navigating
+  if (!mounted) return;
+
   // Navigate to the chat interface
   Navigator.push(
     context,

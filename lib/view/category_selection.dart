@@ -11,7 +11,11 @@ import '../model/grid_item_data.dart';
 import 'auth_gate.dart';
 import 'services_list_view.dart';
 
+import 'message_screen.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 class CategorySelection extends StatelessWidget {
+  
   const CategorySelection({super.key});
 
   @override
@@ -23,9 +27,14 @@ class CategorySelection extends StatelessWidget {
   }
 }
 
-class CategoryView extends StatelessWidget {
+class CategoryView extends StatefulWidget {
   CategoryView({super.key});
 
+  @override
+  State<CategoryView> createState() => _CategoryViewState();
+}
+
+class _CategoryViewState extends State<CategoryView> {
   final List<GridItemData> gridData = [
     GridItemData(
       imagePath: 'assets/house_keeping.jpeg',
@@ -48,6 +57,40 @@ class CategoryView extends StatelessWidget {
       text: 'Handy \n Services',
     ),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    updateFcmToken();  // Call the method to update the token
+  }
+  
+  Future<void> updateFcmToken() async {
+  String? userEmail = FirebaseAuth.instance.currentUser?.email;
+  if (userEmail != null) {
+    String? token = await FirebaseMessaging.instance.getToken();
+    print('START TO GET TOKENTOKENTOKENTOKENTOKEN  ${token}');
+
+    QuerySnapshot userDocs = await FirebaseFirestore.instance.collection('users')
+                                          .where('email', isEqualTo: userEmail)
+                                          .get();
+    
+    if (userDocs.docs.isEmpty) {
+      // Create the document if it doesn't exist
+      await FirebaseFirestore.instance.collection('users').add({
+        'email': userEmail,
+        'fcmToken': token,
+        // add other user details as necessary
+      });
+    } else {
+      // Update the document
+      if (token != null) {
+        DocumentReference userDocRef = userDocs.docs.first.reference;
+        await userDocRef.update({'fcmToken': token});
+      }
+    }
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +118,19 @@ class CategoryView extends StatelessWidget {
               )
           ),
           actions: <Widget>[
+
+            // David: add a Message Icon
+            IconButton(
+              icon: Icon(Icons.inbox_outlined,color: Colors.white,),
+              onPressed: () {
+                Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MessageScreen()),
+                );
+              }
+              ),
+            // David: till here
+
             IconButton(
               color: Colors.white,
               icon: const Icon(Icons.person),
@@ -100,6 +156,8 @@ class CategoryView extends StatelessWidget {
                 );
               },
             ),
+
+            
           ]),
       body: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
