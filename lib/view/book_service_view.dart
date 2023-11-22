@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:service_squad/view/book_service_address_view.dart';
 
 import 'auth_gate.dart';
 
@@ -12,18 +13,19 @@ class BookServiceView extends StatefulWidget {
 }
 
 class _BookServiceViewState extends State<BookServiceView> {
-  late Widget currentWidget;
+  late Widget _currentWidget;
   int? startTime;
   int? endTime;
-  TextEditingController startTimeController = TextEditingController();
-  TextEditingController endTimeController = TextEditingController();
+  TextEditingController _startTimeController = TextEditingController();
+  TextEditingController _endTimeController = TextEditingController();
+  DateTime selectedDate = DateTime.now();
 
-  Widget? bottomNavBar;
+  Widget? _bottomNavBar;
 
   @override
   void initState() {
     super.initState();
-    currentWidget = selectDateWidget();
+    _currentWidget = selectDateWidget();
   }
 
   @override
@@ -36,9 +38,9 @@ class _BookServiceViewState extends State<BookServiceView> {
       } else {
         strMinutes = "$minutes";
       }
-      startTimeController.text = "${(startTime! / 2).floor()}:$strMinutes";
+      _startTimeController.text = "${(startTime! / 2).floor()}:$strMinutes";
     } else {
-      startTimeController.text = "";
+      _startTimeController.text = "";
     }
 
     if (endTime != null) {
@@ -49,9 +51,9 @@ class _BookServiceViewState extends State<BookServiceView> {
       } else {
         strMinutes = "$minutes";
       }
-      endTimeController.text = "${(endTime! / 2).floor()}:$strMinutes";
+      _endTimeController.text = "${(endTime! / 2).floor()}:$strMinutes";
     } else {
-      endTimeController.text = "";
+      _endTimeController.text = "";
     }
 
     return Scaffold(
@@ -86,10 +88,10 @@ class _BookServiceViewState extends State<BookServiceView> {
           Expanded(
             child: SingleChildScrollView(
               padding: EdgeInsets.all(12.0),
-              child: currentWidget,
+              child: _currentWidget,
             ),
           ),
-          if (bottomNavBar != null) bottomNavBar!,
+          if (_bottomNavBar != null) _bottomNavBar!,
         ],
       ),
     );
@@ -101,7 +103,8 @@ class _BookServiceViewState extends State<BookServiceView> {
       children: [
         const Text("Select a date:"),
         CalendarDatePicker(
-          initialDate: DateTime.now(),
+          initialDate: selectedDate,
+          currentDate: selectedDate,
           firstDate: DateTime.now(),
           lastDate: DateTime.utc(
             DateTime.now().year + 1,
@@ -109,6 +112,7 @@ class _BookServiceViewState extends State<BookServiceView> {
             DateTime.now().day,
           ),
           onDateChanged: (DateTime date) {
+            selectedDate = date;
             print(date);
           }
         ),
@@ -116,8 +120,8 @@ class _BookServiceViewState extends State<BookServiceView> {
           child: ElevatedButton.icon(
             onPressed: () {
               setState(() {
-                currentWidget = selectTimeWidget();
-                bottomNavBar = timeNavBar();
+                _currentWidget = selectTimeWidget();
+                _bottomNavBar = timeNavBar();
               });
             },
             label: const Text("Next"),
@@ -155,7 +159,7 @@ class _BookServiceViewState extends State<BookServiceView> {
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                   child: TextField(
-                    controller: startTimeController,
+                    controller: _startTimeController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       enabled: false,
@@ -169,7 +173,7 @@ class _BookServiceViewState extends State<BookServiceView> {
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                   child: TextField(
-                    controller: endTimeController,
+                    controller: _endTimeController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       enabled: false,
@@ -208,8 +212,8 @@ class _BookServiceViewState extends State<BookServiceView> {
                     child: ElevatedButton.icon(
                       onPressed: () {
                         setState(() {
-                          currentWidget = selectDateWidget();
-                          bottomNavBar = null;
+                          _currentWidget = selectDateWidget();
+                          _bottomNavBar = null;
                         });
                       },
                       label: const Text("Go back"),
@@ -221,9 +225,21 @@ class _BookServiceViewState extends State<BookServiceView> {
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton.icon(
                       onPressed: () {
-                        setState(() {
-                          currentWidget = selectTimeWidget();
-                        });
+                        if (startTime != null && endTime != null) {
+                          // Go to next screen to get address.
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      BookServiceAddressView()
+                              )
+                          );
+                        } else {
+                          const snackBar = SnackBar(
+                            content: Text('Please select an available time.'),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        }
                       },
                       label: const Text("Next"),
                       icon: Icon(Icons.chevron_right),
@@ -286,7 +302,9 @@ class _BookServiceViewState extends State<BookServiceView> {
       if (startTime == null) {
         startTime = time;
       } else {
-        endTime = time;
+        if (time > startTime!) {
+          endTime = time;
+        }
       }
     });
   }
