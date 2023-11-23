@@ -4,11 +4,12 @@ import 'package:flutter/services.dart';
 import '../model/professional_service.dart';
 
 /// A service class that provides methods to perform CRUD operations
+/// on user's cars stored in Firestore.
 class ProfessionalServiceController {
   /// The currently authenticated user from Firebase.
   final user = FirebaseAuth.instance.currentUser;
 
-  /// A reference to the Firestore collection where the perfessional services for
+  /// A reference to the Firestore collection where the cars for
   /// the current user are stored.
   late final CollectionReference individualUserProfessionalServiceCollection;
   /// A reference to the Firestore collection where the perfessional services to
@@ -16,6 +17,7 @@ class ProfessionalServiceController {
   late final CollectionReference allProfessionalServiceCollectionToDisplayToCustomers;
 
   /// Constructor initializes the reference to the Firestore collection
+/// specific to the current user's car details.
   ProfessionalServiceController() {
     individualUserProfessionalServiceCollection = FirebaseFirestore.instance
         .collection('users')
@@ -95,6 +97,7 @@ class ProfessionalServiceController {
 
   Future<void> deleteProfessionalService(String? id) async {
     try {
+      // Query the collection to find the document ID based on the ID
       QuerySnapshot querySnapshot =
       await individualUserProfessionalServiceCollection
           .where('id', isEqualTo: id!)
