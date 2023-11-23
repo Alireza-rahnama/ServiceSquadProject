@@ -7,11 +7,13 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:service_squad/controller/professional_service_controller.dart';
 import 'package:service_squad/view/review_entry_view.dart';
 import 'package:service_squad/view/service_entry_view.dart';
-import 'package:service_squad/view/services_list_view.dart';
+import 'package:service_squad/view_2.0/main_view.dart';
+// import 'package:service_squad/view/services_list_view.dart';
+//import 'package:service_squad/view_2.0/services_list_view_2.0.dart';
 import '../controller/profile_controller.dart';
 import '../model/professional_service.dart';
 import 'auth_gate.dart';
-import 'category_selection.dart';
+//import 'category_selection.dart';
 
 /// A stateless widget representing the main page where users can view
 /// and manage their cars after authentication.
@@ -319,19 +321,19 @@ class _ReviewsViewState extends State<ReviewsView> {
         child: Scaffold(
           // App bar with a title and a logout button.
           appBar: AppBar(
-            leading: IconButton(
-              color: Colors.white,
-              icon: Icon(Icons.arrow_back_outlined),
-              // Sign out the user on pressing the logout button.
-              onPressed: () async {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CategoriesView.WithPersistedThemeAndCategory(
-                        false, service.category),),
-                );
-              },
-            ),
+            // leading: IconButton(
+            //   color: Colors.white,
+            //   icon: Icon(Icons.arrow_back_outlined),
+            //   // Sign out the user on pressing the logout button.
+            //   onPressed: () async {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //         builder: (context) => CategoriesView.WithPersistedThemeAndCategory(
+            //             false, service.category),),
+            //     );
+            //   },
+            // ),
             backgroundColor: Colors.deepPurple,
             title: Text("Reviews",
                 style: GoogleFonts.pacifico(
