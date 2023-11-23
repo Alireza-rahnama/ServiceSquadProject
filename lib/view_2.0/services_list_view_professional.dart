@@ -515,10 +515,11 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  BuildImageFromUrl(entry),
+                                  // BuildImageFromUrl(entry),
                                   //TODO: DO WEE= NEED AN IMAGe HERE?
                                   Row(
                                     children: [
+                                      // BuildImageFromUrl(entry),
                                       Text(
                                         'Technician: ${entry.technicianAlias}',
                                         style: TextStyle(
@@ -527,6 +528,8 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
                                         ),
                                       ),
                                       Spacer(),
+                                      BuildImageFromUrl(entry),
+
                                       // IconButton(
                                       //   icon: Icon(Icons.rate_review_rounded),
                                       //   onPressed: () async {

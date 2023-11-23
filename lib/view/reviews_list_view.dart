@@ -12,6 +12,7 @@ import 'package:service_squad/view_2.0/main_view.dart';
 //import 'package:service_squad/view_2.0/services_list_view_2.0.dart';
 import '../controller/profile_controller.dart';
 import '../model/professional_service.dart';
+import '../view_2.0/services_list_view_2.0.dart';
 import 'auth_gate.dart';
 //import 'category_selection.dart';
 
@@ -321,19 +322,19 @@ class _ReviewsViewState extends State<ReviewsView> {
         child: Scaffold(
           // App bar with a title and a logout button.
           appBar: AppBar(
-            // leading: IconButton(
-            //   color: Colors.white,
-            //   icon: Icon(Icons.arrow_back_outlined),
-            //   // Sign out the user on pressing the logout button.
-            //   onPressed: () async {
-            //     Navigator.push(
-            //       context,
-            //       MaterialPageRoute(
-            //         builder: (context) => CategoriesView.WithPersistedThemeAndCategory(
-            //             false, service.category),),
-            //     );
-            //   },
-            // ),
+            leading: IconButton(
+              color: Colors.white,
+              icon: Icon(Icons.arrow_back_outlined),
+              // Sign out the user on pressing the logout button.
+              onPressed: () async {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CategoriesView.WithPersistedThemeAndCategory(
+                        false, service.category),),
+                );
+              },
+            ),
             backgroundColor: Colors.deepPurple,
             title: Text("Reviews",
                 style: GoogleFonts.pacifico(
@@ -431,7 +432,7 @@ Future<Widget> displayOrHideFloatingActionButtonBasedOnUserRole(
   String? userType = await profileController
       .getUserType(FirebaseAuth.instance.currentUser!.uid);
 
-  if (userType! == "provider") {
+  if (userType! == "Service Associate") {
     return FloatingActionButton(
         child: Icon(Icons.add),
         tooltip: "Add new service",
@@ -453,18 +454,27 @@ Widget BuildImageFromUrl(ProfessionalService entry) {
     // return Container(child: Image.network(entry.imagePath!),
     //     height: 100, fit: BoxFit.cover );
 
-    return Card(
-      elevation: 4, // Add elevation for a card-like appearance
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(8.0), // Add rounded corners
+    // return Card(
+    //   elevation: 4, // Add elevation for a card-like appearance
+    //   child: ClipRRect(
+    //     borderRadius: BorderRadius.circular(360.0), // Add rounded corners
+    //     child: Image.network(
+    //       entry.imagePath!,
+    //       height: 50,
+    //       width: 500, // Set a fixed size for the image
+    //       fit: BoxFit.cover, // Adjust how the image is displayed
+    //     ),
+    //   ),
+    // );
+    return  Center(child:ClipOval(
         child: Image.network(
           entry.imagePath!,
-          height: 200,
-          width: 400, // Set a fixed size for the image
-          fit: BoxFit.cover, // Adjust how the image is displayed
+          height: 65, // Set the desired height
+          width: 65, // Take the available width
+          fit: BoxFit.fill, // Adjust how the image is displayed
         ),
-      ),
-    );
+
+    ));
   } else {
     // If entry.imagePath is null, display a placeholder or an empty container
     return Container(); // You can customize this to show a placeholder image

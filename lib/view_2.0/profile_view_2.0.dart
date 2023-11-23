@@ -137,7 +137,24 @@ class _ProfileViewState extends State<ProfileView> {
                   ),
                 ],
               ),
-              //DropdownMenuExample(), // Dropdown for user type
+              SizedBox(),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: userLocationController,
+                      decoration: InputDecoration(labelText: "Set your location"),
+                    ),
+                  ),
+                  Text(
+                    '*',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 20.0,
+                    ),
+                  ),
+                ],
+              ),
               TextField(
                 controller: userAliasController,
                 decoration: InputDecoration(labelText: "Set your alias"),

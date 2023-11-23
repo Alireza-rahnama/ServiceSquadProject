@@ -220,7 +220,7 @@ class _NewEntryViewState extends State<ServiceEntryView> {
                       TextField(
                         controller: categoryController,
                         decoration: InputDecoration(
-                          labelText: '${category}',
+                          labelText: 'Enter your service category',
                           hintText:
                               'Enter your service category', //TODO: BETTER MAKE IT A DROP DOWN OR RADIO BUTTON
                         ),
@@ -244,7 +244,7 @@ class _NewEntryViewState extends State<ServiceEntryView> {
                           labelText: 'Enter your hourly rate',
                           hintText: 'Hourly wage',
                         ),
-                        maxLength: 140, // Set the maximum character limit
+                        // maxLength: 140, // Set the maximum character limit
                         maxLines: null, // Allow multiple lines of text
                       ),
                       SizedBox(height: 5),
@@ -255,7 +255,7 @@ class _NewEntryViewState extends State<ServiceEntryView> {
                           hintText:
                               'Enter the service description', //TODO: BETTER MAKE IT A DROP DOWN OR RADIO BUTTON
                         ),
-                        maxLength: 50, // Set the maximum character limit
+                        maxLength: 100, // Set the maximum character limit
                         maxLines: null, // Allow multiple lines of text
                       ),
                       SizedBox(height: 5),
@@ -263,6 +263,10 @@ class _NewEntryViewState extends State<ServiceEntryView> {
                       ElevatedButton(
                         onPressed: _pickImageFromGallery,
                         child: Text('Add Image from Gallery'),
+                      ),
+                      ElevatedButton(
+                        onPressed: _pickImageFromCamera,
+                        child: Text('Add Image from Camera'),
                       ),
                       SizedBox(height: 5),
                       ElevatedButton(

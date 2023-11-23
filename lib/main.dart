@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:service_squad/controller/professional_service_controller.dart';
 import 'package:service_squad/view/auth_gate.dart';
 import 'firebase_options.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -18,7 +19,11 @@ Future<void> main() async {
   // Initialize Notification Service
   NotificationService notificationService = NotificationService();
   await notificationService.init();
-  
+
+  //Just for testing Phase TODO: REMOVE AFTER
+  // ProfessionalServiceController professionalServiceController = ProfessionalServiceController();
+  // professionalServiceController.clearAllDocsInAllProfessionalServiceCollectionToDisplayToCustomers();
+
   runApp(const MainApp());
 }
 
