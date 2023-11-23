@@ -4,9 +4,11 @@ import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:service_squad/view/category_selection.dart';
 import 'package:service_squad/view_2.0/main_view.dart';
 
+
+
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
-
+  
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
