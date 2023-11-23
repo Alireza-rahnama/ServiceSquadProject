@@ -10,7 +10,10 @@ import 'dart:io';
 import '../controller/professional_service_controller.dart';
 import '../controller/profile_controller.dart';
 import '../model/professional_service.dart';
-import 'services_list_view.dart';
+//import 'services_list_view.dart';
+//import 'package:service_squad/view_2.0/services_list_view_2.0.dart';
+//import 'package:service_squad/view_2.0/services_list_view_professional.dart';
+import 'package:service_squad/view_2.0/main_view.dart';
 
 class ServiceEntryView extends StatefulWidget {
   String category;
@@ -163,8 +166,7 @@ class _NewEntryViewState extends State<ServiceEntryView> {
             context,
             MaterialPageRoute(
               builder: (context) =>
-                  CategoriesView.WithPersistedThemeAndCategory(
-                      isDark, category),
+                  MainScreen() //With Persisted Theme and Category Removed for now
             ));
       } else if (!successfullyAdded) {
         // Show the error dialog when the button is pressed

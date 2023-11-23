@@ -33,7 +33,6 @@ class ProfessionalServiceController {
   Future<bool> addProfessionalService(
       ProfessionalService professionalServiceEntry) async {
     bool shouldAdd = true;
-
     final snapshot =
         await getAllProfessionalServices().first; // Wait for the first snapshot
 
@@ -44,7 +43,6 @@ class ProfessionalServiceController {
         break;
       }
     }
-
     if (shouldAdd) {
       await individualUserProfessionalServiceCollection
           .add(professionalServiceEntry.toMap());

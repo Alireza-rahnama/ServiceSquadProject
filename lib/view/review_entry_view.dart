@@ -14,7 +14,7 @@ import 'dart:io';
 import '../controller/professional_service_controller.dart';
 import '../controller/profile_controller.dart';
 import '../model/professional_service.dart';
-import 'services_list_view.dart';
+//import 'services_list_view.dart';
 
 class ReviewEntryView extends StatefulWidget {
   bool isDark;
