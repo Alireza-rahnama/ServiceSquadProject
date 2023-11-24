@@ -107,7 +107,7 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('My Profile'),
+      title: Center(child:Text('My Profile')),
       content: Column(children: [
         // Center(child:Text('Select your user type')),
         dropdownMenu,

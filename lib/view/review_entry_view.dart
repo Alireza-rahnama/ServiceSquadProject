@@ -119,9 +119,9 @@ class _NewEntryViewState extends State<ReviewEntryView> {
             appBar: AppBar(
               backgroundColor: Colors.deepPurple,
               title: Center(child: Text("Add a Review",
-                  style: GoogleFonts.righteous(
+                  style: GoogleFonts.lilitaOne(
                     color: Colors.white,
-                    fontSize: 30.0,
+                    fontSize: 48.0,
                   ))),
               // leadingWidth: 0.0,
               leading: IconButton(

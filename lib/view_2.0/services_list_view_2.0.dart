@@ -29,7 +29,7 @@ class CategoriesView extends StatefulWidget {
           isDark, categoryToPopulate);
 }
 
-class _CategoriesViewState extends State<CategoriesView> {
+class _CategoriesViewState extends State<CategoriesView>{
 // Instance of CarService to interact with Firestore for CRUD operations on cars.
   final ProfessionalServiceController professionalServiceController =
       ProfessionalServiceController();
@@ -262,7 +262,7 @@ class _CategoriesViewState extends State<CategoriesView> {
       print(
           'ratings.contains(int.tryParse(queryText)): ${ratings.contains(int.tryParse(queryText))}');
       // Filter based on the rating or category
-      if (searchController.text.isNotEmpty) {
+      if (searchController.text.isNotEmpty && queryIsLocation) {
         filteredEntries = filteredEntries.where((entry) {
           print('entry.location.toLowerCase() is ${userLocation}');
           return entry.location.contains(queryText.toLowerCase());
@@ -373,9 +373,9 @@ class _CategoriesViewState extends State<CategoriesView> {
               automaticallyImplyLeading: false,
               title: Center(
                   child: Text("Services",
-                      style: GoogleFonts.righteous(
+                      style: GoogleFonts.lilitaOne(
                         color: Colors.white,
-                        fontSize: 28.0,
+                        fontSize: 48.0,
                       ))),
               backgroundColor: Colors.deepPurple,
               bottom: PreferredSize(
@@ -543,6 +543,14 @@ class _CategoriesViewState extends State<CategoriesView> {
                                     ],
                                   ),
                                   SizedBox(height: 15),
+                                  Text(
+                                    'Location: ${entry.location}',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  SizedBox(height: 15),
+
                                   Text(
                                     '${entry.serviceDescription}',
                                     style: TextStyle(fontSize: 14),
@@ -872,7 +880,7 @@ class DateHeader extends StatelessWidget {
     return Container(
         padding: EdgeInsets.all(8.0),
         child: Text(text,
-            style: GoogleFonts.righteous(
+            style: GoogleFonts.lilitaOne(
               color: Colors.deepPurple,
               fontSize: 30.0,
             )));

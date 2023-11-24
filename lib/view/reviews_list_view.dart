@@ -8,6 +8,7 @@ import 'package:service_squad/controller/professional_service_controller.dart';
 import 'package:service_squad/view/review_entry_view.dart';
 import 'package:service_squad/view/service_entry_view.dart';
 import 'package:service_squad/view_2.0/main_view.dart';
+
 // import 'package:service_squad/view/services_list_view.dart';
 //import 'package:service_squad/view_2.0/services_list_view_2.0.dart';
 import '../controller/profile_controller.dart';
@@ -27,8 +28,8 @@ class ReviewsView extends StatefulWidget {
 
   late ProfessionalService professionalService;
 
-  ReviewsView.forEachProfessionalService(
-      bool inheritedIsDark, ProfessionalService professionalService) {
+  ReviewsView.forEachProfessionalService(bool inheritedIsDark,
+      ProfessionalService professionalService) {
     isDark = inheritedIsDark;
     reviewsList = professionalService.reviewList ?? [];
     reviewsMap = professionalService.reviewsMap ?? {};
@@ -45,7 +46,7 @@ class ReviewsView extends StatefulWidget {
 class _ReviewsViewState extends State<ReviewsView> {
 // Instance of CarService to interact with Firestore for CRUD operations on cars.
   final ProfessionalServiceController professionalServiceController =
-      ProfessionalServiceController();
+  ProfessionalServiceController();
   String? selectedCategory;
   bool isDark;
   List<ProfessionalService> filteredEntries = [];
@@ -56,8 +57,8 @@ class _ReviewsViewState extends State<ReviewsView> {
   XFile? _image;
   late ProfessionalService service;
 
-  _ReviewsViewState.withPersistedThemeAndCategory(
-      this.isDark, this.service, this.reviewsList, this.reviewsMap);
+  _ReviewsViewState.withPersistedThemeAndCategory(this.isDark, this.service,
+      this.reviewsList, this.reviewsMap);
 
   Future<void> _pickImageFromGallery() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
@@ -94,7 +95,7 @@ class _ReviewsViewState extends State<ReviewsView> {
   void _showEditDialog(BuildContext context,
       ProfessionalService professionalServiceEntry, int index) {
     TextEditingController descriptionEditingController =
-        TextEditingController();
+    TextEditingController();
     descriptionEditingController.text = professionalServiceEntry
         .serviceDescription; // Initialize the text field with existing content.
 
@@ -102,7 +103,7 @@ class _ReviewsViewState extends State<ReviewsView> {
     wageEditingController.text = '${professionalServiceEntry!.wage}';
 
     ProfessionalServiceController professionalServiceController =
-        ProfessionalServiceController();
+    ProfessionalServiceController();
 
     showDialog(
       context: context,
@@ -137,7 +138,8 @@ class _ReviewsViewState extends State<ReviewsView> {
               child: Text('Save'),
               onPressed: () async {
                 print(
-                    'professionalServiceEntrycategory is: ${professionalServiceEntry!.category}');
+                    'professionalServiceEntrycategory is: ${professionalServiceEntry!
+                        .category}');
                 // Save the edited content to the service entry.
                 String location = await ProfileController()
                     .getUserLocation(FirebaseAuth.instance.currentUser!.uid);
@@ -150,7 +152,7 @@ class _ReviewsViewState extends State<ReviewsView> {
                         rating: professionalServiceEntry.rating,
                         location: location,
                         technicianAlias:
-                            professionalServiceEntry.technicianAlias));
+                        professionalServiceEntry.technicianAlias));
 
                 updateState(professionalServiceEntry.category);
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -177,11 +179,11 @@ class _ReviewsViewState extends State<ReviewsView> {
 
     final serviceEntries = selectedCategory != null
         ? await professionalServiceController
-            .getProfessionalServices(selectedCategory!)
-            .first
+        .getProfessionalServices(selectedCategory!)
+        .first
         : await professionalServiceController
-            .getAllProfessionalServices()
-            .first;
+        .getAllProfessionalServices()
+        .first;
     print('length of serviceEntries is ${serviceEntries.length}');
     // final serviceEntries = await professionalServiceController
     //     .getAllAvailableProfessionalServiceCollections()
@@ -198,7 +200,8 @@ class _ReviewsViewState extends State<ReviewsView> {
       bool queryIsLocation = false;
 
       print(
-          '!categories.contains(queryText): ${!categories.contains(queryText)}');
+          '!categories.contains(queryText): ${!categories.contains(
+              queryText)}');
       if (!categories.contains(queryText) &&
           !ratings.contains(int.tryParse(queryText))) {
         queryIsLocation = true;
@@ -208,14 +211,15 @@ class _ReviewsViewState extends State<ReviewsView> {
       print(
           'categories.contains(queryText): ${categories.contains(queryText)}');
       print(
-          'ratings.contains(int.tryParse(queryText)): ${ratings.contains(int.tryParse(queryText))}');
+          'ratings.contains(int.tryParse(queryText)): ${ratings.contains(
+              int.tryParse(queryText))}');
       // Filter based on the rating or category
       if (searchController.text.isNotEmpty) {
         filteredEntries = filteredEntries.where((entry) {
           print('entry.location.toLowerCase() is ${userLocation}');
           return entry.category
-                  .toLowerCase()
-                  .contains(queryText.toLowerCase()) ||
+              .toLowerCase()
+              .contains(queryText.toLowerCase()) ||
               entry.rating == int.tryParse(queryText) ||
               entry.location.contains(queryText.toLowerCase());
         }).toList();
@@ -322,6 +326,8 @@ class _ReviewsViewState extends State<ReviewsView> {
         child: Scaffold(
           // App bar with a title and a logout button.
           appBar: AppBar(
+            centerTitle: true,
+            automaticallyImplyLeading: false,
             leading: IconButton(
               color: Colors.white,
               icon: Icon(Icons.arrow_back_outlined),
@@ -330,17 +336,19 @@ class _ReviewsViewState extends State<ReviewsView> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CategoriesView.WithPersistedThemeAndCategory(
-                        false, service.category),),
+                    // builder: (context) => CategoriesView.WithPersistedThemeAndCategory(
+                    //     false, service.category),),
+                      builder: (context) => MainScreen()),
                 );
               },
             ),
             backgroundColor: Colors.deepPurple,
-            title: Text("Reviews",
-                style: GoogleFonts.pacifico(
-                  color: Colors.white,
-                  fontSize: 28.0,
-                )),
+            title: Center(
+                child: Text("Reviews",
+                    style: GoogleFonts.lilitaOne(
+                      color: Colors.white,
+                      fontSize: 48.0,
+                    ))),
             bottom: PreferredSize(
               preferredSize: Size.fromHeight(48.0),
               child: Padding(
@@ -348,85 +356,86 @@ class _ReviewsViewState extends State<ReviewsView> {
               ),
             ),
           ),
-
           body: ListView.builder(
-            // itemCount: reviewsList!.length,
-            // itemCount: reviewsMap!.length,
-            itemCount: reviewsMap!.keys.length,
-            itemBuilder: (context, index) {
-              // print('entry = reviewsList![index]: ${reviewsList![index]}');
-              // final entry = reviewsList![index];
-              // final entry = reviewsMap![index];
+    // itemCount: reviewsList!.length,
+    // itemCount: reviewsMap!.length,
+    itemCount: reviewsMap!.keys.length,
+    itemBuilder: (context, index) {
+    // print('entry = reviewsList![index]: ${reviewsList![index]}');
+    // final entry = reviewsList![index];
+    // final entry = reviewsMap![index];
 
-              final entryKeyOrReview = reviewsMap!.keys.toList()[index];
-              final entryValueOrRating = reviewsMap![entryKeyOrReview];
-              return Column(
-                children: [
-                  Card(
-                    margin: EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                      onLongPress: () {
-                        // Perform your action here when the Card is long-pressed.
-                        return;
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Column(children: [
-                              Text(
-                                '${entryKeyOrReview}',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              // Spacer(),
-                        Row(children: [SizedBox(height: 10,), Spacer(),RatingEvaluator2(entryValueOrRating!)])
-                            // SizedBox(height: 10,),
-                            //   RatingEvaluator2(entryValueOrRating!),
-                            // ])
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              );
-              // }
-            },
-          ),
-          // Floating action button to open a dialog for adding a new service entry of a specific service category
-          floatingActionButton: FloatingActionButton(
-            tooltip: "Add a review",
-            onPressed: () async {
-              String? userType = await profileController
-                  .getUserType(FirebaseAuth.instance.currentUser!.uid);
-              // if (userType! != "Service Associate") {
-              //   () async {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                    builder: (context) =>
-                        ReviewEntryView.withInheritedTheme(isDark, service)),
-              );
-              print('reached on press!');
-              // Navigator.of(context).pop();
-              // };
-              // } else {
-              //   print("userType was service associate!");
-              // }
-            },
-            child: Icon(Icons.add),
-          ),
-        ));
+    final entryKeyOrReview = reviewsMap!.keys.toList()[index];
+    final entryValueOrRating = reviewsMap![entryKeyOrReview];
+    return Column(
+    children: [
+    Card(
+    margin: EdgeInsets.all(8.0),
+    child: GestureDetector(
+    onLongPress: () {
+    // Perform your action here when the Card is long-pressed.
+    return;
+    },
+    child: Padding(
+    padding: const EdgeInsets.all(16.0),
+    child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+    // Column(children: [
+    Text(
+    '${entryKeyOrReview}',
+    style: TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+    ),
+    ),
+    // Spacer(),
+    Row(children: [SizedBox(height: 10,), Spacer(),RatingEvaluator2(entryValueOrRating!)])
+    // SizedBox(height: 10,),
+    //   RatingEvaluator2(entryValueOrRating!),
+    // ])
+    ],
+    ),
+    ),
+    ),
+    ),
+    ],
+    );
+    // }
+    },
+    ),
+    // Floating action button to open a dialog for adding a new service entry of a specific service category
+    floatingActionButton: FloatingActionButton(
+    tooltip: "Add a review",
+    onPressed: () async {
+    String? userType = await profileController
+        .getUserType(FirebaseAuth.instance.currentUser!.uid);
+    // if (userType! != "Service Associate") {
+    //   () async {
+    Navigator.of(context).push(
+    MaterialPageRoute(
+    builder: (context) =>
+    ReviewEntryView.withInheritedTheme(isDark, service)),
+    );
+    print('reached on press!');
+    // Navigator.of(context).pop();
+    // };
+    // } else {
+    //   print("userType was service associate!");
+    // }
+    },
+    child: Icon(Icons.add),
+    )
+    ,
+    )
+    );
   }
 }
 
 Future<Widget> displayOrHideFloatingActionButtonBasedOnUserRole(
     {required bool isDark,
-    required String categoryName,
-    required BuildContext context}) async {
+      required String categoryName,
+      required BuildContext context}) async {
   ProfileController profileController = ProfileController();
 
   String? userType = await profileController
@@ -466,13 +475,13 @@ Widget BuildImageFromUrl(ProfessionalService entry) {
     //     ),
     //   ),
     // );
-    return  Center(child:ClipOval(
-        child: Image.network(
-          entry.imagePath!,
-          height: 65, // Set the desired height
-          width: 65, // Take the available width
-          fit: BoxFit.fill, // Adjust how the image is displayed
-        ),
+    return Center(child: ClipOval(
+      child: Image.network(
+        entry.imagePath!,
+        height: 65, // Set the desired height
+        width: 65, // Take the available width
+        fit: BoxFit.fill, // Adjust how the image is displayed
+      ),
 
     ));
   } else {

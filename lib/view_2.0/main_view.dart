@@ -68,7 +68,7 @@ class _MainScreenState extends State<MainScreen> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Please select a User Type in Profile and Click Save'),
+          content: Center(child: Text('Please select a User Type and Location in Profile and Click Save to Continue!')),
           backgroundColor: Colors.red,
         ),
       );

@@ -10,7 +10,6 @@ import 'package:service_squad/view_2.0/main_view.dart';
 import '../model/user_profile_data.dart';
 import '../view/auth_gate.dart';
 
-
 // TODO iMPLEMENT THE UI  After user authentication is successful USERs MUST COMPLETe THEIR PROFILE IN THIS VIEW AND WE COLLECT MORE DATA ,AND set their role in Firestore either associate or custome
 void setUserType(String uid, String userType) {
   FirebaseFirestore.instance
@@ -43,7 +42,7 @@ void setMobileNumber(String uid, String mobileNumber) {
 Future<String?> getUserLocation(String uid) async {
   try {
     DocumentSnapshot<Map<String, dynamic>> userSnapshot =
-    await FirebaseFirestore.instance.collection('users').doc(uid).get();
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
 
     if (userSnapshot.exists) {
       // Check if the 'userType' field exists in the document
@@ -84,9 +83,6 @@ Future<String?> getUserType(String uid) async {
   }
 }
 
-
-
-
 //TODO if the registration is completed then redirect to the category grid view
 //TODO if the user is an associate when each grid is pressed pop up a new screen allowing to create a new posting of that category type
 
@@ -106,20 +102,22 @@ class _ProfileViewState extends State<ProfileView> {
   TextEditingController mobilePhoneNumberController = TextEditingController();
   DropdownMenuExample dropdownMenu = DropdownMenuExample();
 
+  //TODO: BESIDES UTTING RED ATERICS ALERT THE USER NOT TO LEAVE LOCATION AND USER TYPE EMPTY
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-        backgroundColor: Colors.deepPurple,
-        title: Text(
-        "My Profile",
-        style: GoogleFonts.pacifico(
-        color: Colors.white,
-        fontSize: 30.0,))
-        ),
+      appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.deepPurple,
+          title: Center(
+              child: Text("My Profile",
+                  style: GoogleFonts.lilitaOne(
+                    color: Colors.white,
+                    fontSize: 48.0,
+                  )))),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(48.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -143,7 +141,8 @@ class _ProfileViewState extends State<ProfileView> {
                   Expanded(
                     child: TextField(
                       controller: userLocationController,
-                      decoration: InputDecoration(labelText: "Set your location"),
+                      decoration:
+                          InputDecoration(labelText: "Set your location"),
                     ),
                   ),
                   Text(
@@ -171,7 +170,7 @@ class _ProfileViewState extends State<ProfileView> {
                 controller: mobilePhoneNumberController,
                 decoration: InputDecoration(labelText: "Edit your number"),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 40),
               ElevatedButton(
                 child: Text('Save'),
                 onPressed: () async {
