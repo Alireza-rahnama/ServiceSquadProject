@@ -12,6 +12,8 @@ import '../model/professional_service.dart';
 import 'package:service_squad/view/auth_gate.dart';
 import 'package:service_squad/view/category_selection.dart';
 
+import '../view/book_service_view.dart';
+
 class CategoriesView extends StatefulWidget {
   CategoriesView({Key? key}) : super(key: key);
   bool isDark = false;
@@ -608,6 +610,23 @@ class _CategoriesViewState extends State<CategoriesView>{
                                           print(
                                               'selectedCategory is ${selectedCategory}');
                                           //TODO: IMPLEMENT LOGIC AND VIEW Maybe only for client user type
+                                          print(
+                                              '${FirebaseAuth.instance.currentUser!.email}');
+                                          print(
+                                              'selectedCategory is ${selectedCategory}');
+
+                                          //TODO: IMPLEMENT LOGIC AND VIEW Maybe only for client user type
+                                          // Maybe show booked clients to service providers.
+                                          String? userType = await profileController
+                                              .getUserType(FirebaseAuth.instance.currentUser!.uid);
+                                          if (userType != null && userType == "Client") {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => BookServiceView(service: entry,),
+                                              ),
+                                            );
+                                          }
                                         },
                                       ),
                                     ],
