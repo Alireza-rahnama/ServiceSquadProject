@@ -1,12 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:service_squad/view/book_service_address_view.dart';
 
-import 'auth_gate.dart';
-
 class BookServiceView extends StatefulWidget {
-  const BookServiceView({super.key});
+  final service;
+  const BookServiceView({super.key, required this.service});
 
   @override
   State<BookServiceView> createState() => _BookServiceViewState();
@@ -66,22 +64,6 @@ class _BookServiceViewState extends State<BookServiceView> {
             fontSize: 30.0,
           )
         ),
-        actions: <Widget>[
-          IconButton(
-            color: Colors.white,
-            icon: const Icon(Icons.logout),
-            tooltip: 'Log out',
-            onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AuthGate(),
-                ),
-              );
-            },
-          ),
-        ]
       ),
       body: Column(
         children: [
@@ -226,12 +208,22 @@ class _BookServiceViewState extends State<BookServiceView> {
                     child: ElevatedButton.icon(
                       onPressed: () {
                         if (startTime != null && endTime != null) {
+                          DateTime bookingStart = DateTime(selectedDate.year,
+                              selectedDate.month,
+                              selectedDate.day,
+                              (startTime! / 2).floor(),
+                              startTime! % 2);
+                          DateTime bookingEnd = DateTime(selectedDate.year,
+                              selectedDate.month,
+                              selectedDate.day,
+                              (endTime! / 2).floor(),
+                              endTime! % 2);
                           // Go to next screen to get address.
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      BookServiceAddressView()
+                                      BookServiceAddressView(service: widget.service, bookingStart: bookingStart, bookingEnd: bookingEnd)
                               )
                           );
                         } else {

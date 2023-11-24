@@ -1,17 +1,32 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:service_squad/model/professional_service.dart';
+import 'package:service_squad/model/service_booking_data.dart';
 
-import 'auth_gate.dart';
+import 'checkout_view.dart';
 
 class BookServiceAddressView extends StatefulWidget {
-  const BookServiceAddressView({super.key});
+  final ProfessionalService service;
+  final DateTime bookingStart;
+  final DateTime bookingEnd;
+  const BookServiceAddressView({super.key,
+    required this.service,
+    required this.bookingStart,
+    required this.bookingEnd});
 
   @override
   State<BookServiceAddressView> createState() => _BookServiceAddressViewState();
 }
 
 class _BookServiceAddressViewState extends State<BookServiceAddressView> {
+
+  TextEditingController addr1Controller = TextEditingController();
+  TextEditingController addr2Controller = TextEditingController();
+  TextEditingController cityController = TextEditingController();
+  TextEditingController provinceController = TextEditingController();
+  TextEditingController postalCodeController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,22 +39,6 @@ class _BookServiceAddressViewState extends State<BookServiceAddressView> {
               fontSize: 30.0,
             )
         ),
-        actions: <Widget>[
-          IconButton(
-            color: Colors.white,
-            icon: const Icon(Icons.logout),
-            tooltip: 'Log out',
-            onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AuthGate(),
-                ),
-              );
-            },
-          ),
-        ]
       ),
       // todo: add scrollable
       body: Column(
@@ -48,6 +47,7 @@ class _BookServiceAddressViewState extends State<BookServiceAddressView> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
+              controller: addr1Controller,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 alignLabelWithHint: false,
@@ -60,6 +60,7 @@ class _BookServiceAddressViewState extends State<BookServiceAddressView> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
+              controller: addr2Controller,
               decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: "Address line 2"
@@ -69,6 +70,7 @@ class _BookServiceAddressViewState extends State<BookServiceAddressView> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
+              controller: cityController,
               decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: "City"
@@ -78,6 +80,7 @@ class _BookServiceAddressViewState extends State<BookServiceAddressView> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
+              controller: provinceController,
               decoration: InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: "Province"
@@ -85,7 +88,25 @@ class _BookServiceAddressViewState extends State<BookServiceAddressView> {
             ),
           ),
           ElevatedButton.icon(
-            onPressed: () {},
+            onPressed: () {
+              String address = "${addr1Controller.text}, ${addr2Controller.text}, ${cityController.text}, ${provinceController.text}";
+              final bookingData = ServiceBookingData(
+                  serviceID: widget.service.id,
+                  serviceDocID: 1, //  TODO: unimplemented
+                  bookingStart: widget.bookingStart,
+                  bookingEnd: widget.bookingEnd,
+                  dateCreated: DateTime.now(),
+                  clientID: FirebaseAuth.instance.currentUser!.uid,
+                  address: address
+              );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        CheckoutView(service: widget.service, booking: bookingData,)
+                )
+              );
+            },
             label: const Text("Proceed to checkout"),
             icon: Icon(Icons.chevron_right),
           ),

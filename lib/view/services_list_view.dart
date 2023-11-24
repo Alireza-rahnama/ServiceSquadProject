@@ -563,7 +563,7 @@ class _CategoriesViewState extends State<CategoriesView> {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => BookServiceView(),
+                                                builder: (context) => BookServiceView(service: entry,),
                                               ),
                                             );
                                           }
