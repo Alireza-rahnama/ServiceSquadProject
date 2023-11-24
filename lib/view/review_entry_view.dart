@@ -14,7 +14,7 @@ import 'dart:io';
 import '../controller/professional_service_controller.dart';
 import '../controller/profile_controller.dart';
 import '../model/professional_service.dart';
-import 'services_list_view.dart';
+//import 'services_list_view.dart';
 
 class ReviewEntryView extends StatefulWidget {
   bool isDark;
@@ -115,27 +115,29 @@ class _NewEntryViewState extends State<ReviewEntryView> {
     final ThemeData themeData =
         ThemeData(useMaterial3: true, brightness: Brightness.light);
 
-    return Theme(
-        data: themeData,
-        child: Scaffold(
+    return Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.deepPurple,
-              title: Text("Add a review",
-                  style: GoogleFonts.pacifico(
+              title: Center(child: Text("Add a Review",
+                  style: GoogleFonts.lilitaOne(
                     color: Colors.white,
-                    fontSize: 30.0,
-                  )),
+                    fontSize: 48.0,
+                  ))),
+              // leadingWidth: 0.0,
               leading: IconButton(
                   icon: Icon(Icons.arrow_back_outlined),
                   tooltip: 'Go back',
                   color: Colors.white,
                   onPressed: () {
+                    print('pressed arrow_back_outlined in add a review');
                     // Navigator.of(context).pop();
-                    Navigator.push(
+
+                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                ReviewsView.forEachProfessionalService(false, service)));                  }),
+                                ReviewsView.forEachProfessionalService(false, service)),);
+                  },),
             ),
             body: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -265,7 +267,7 @@ class _NewEntryViewState extends State<ReviewEntryView> {
                       child: Text('Save Entry'),
                     ),
                   ],
-                ))));
+                )));
   }
 }
 

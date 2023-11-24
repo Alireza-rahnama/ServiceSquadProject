@@ -4,11 +4,12 @@ import 'package:flutter/services.dart';
 import '../model/professional_service.dart';
 
 /// A service class that provides methods to perform CRUD operations
+/// on user's cars stored in Firestore.
 class ProfessionalServiceController {
   /// The currently authenticated user from Firebase.
   final user = FirebaseAuth.instance.currentUser;
 
-  /// A reference to the Firestore collection where the perfessional services for
+  /// A reference to the Firestore collection where the cars for
   /// the current user are stored.
   late final CollectionReference individualUserProfessionalServiceCollection;
   /// A reference to the Firestore collection where the perfessional services to
@@ -16,6 +17,7 @@ class ProfessionalServiceController {
   late final CollectionReference allProfessionalServiceCollectionToDisplayToCustomers;
 
   /// Constructor initializes the reference to the Firestore collection
+/// specific to the current user's car details.
   ProfessionalServiceController() {
     individualUserProfessionalServiceCollection = FirebaseFirestore.instance
         .collection('users')
@@ -31,7 +33,6 @@ class ProfessionalServiceController {
   Future<bool> addProfessionalService(
       ProfessionalService professionalServiceEntry) async {
     bool shouldAdd = true;
-
     final snapshot =
         await getAllProfessionalServices().first; // Wait for the first snapshot
 
@@ -42,7 +43,6 @@ class ProfessionalServiceController {
         break;
       }
     }
-
     if (shouldAdd) {
       await individualUserProfessionalServiceCollection
           .add(professionalServiceEntry.toMap());
@@ -51,6 +51,40 @@ class ProfessionalServiceController {
     await allProfessionalServiceCollectionToDisplayToCustomers
         .add(professionalServiceEntry.toMap());
     return shouldAdd;
+  }
+
+  //For testing and admin use only to clear the docs in the collection
+  Future<void> clearAllDocsInAllProfessionalServiceCollectionToDisplayToCustomers() async {
+    try {
+      // Get all documents in the collection
+      QuerySnapshot querySnapshot = await individualUserProfessionalServiceCollection.get();
+
+      // Iterate through the documents and delete each one
+      for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+        await documentSnapshot.reference.delete();
+      }
+
+      print("All documents deleted successfully.");
+    } catch (error) {
+      print("Error clearing documents: $error");
+    }
+  }
+
+  //For testing and admin use only to clear the docs in the collection
+  Future<void> clearAllDocsInIndividualUserProfessionalServiceCollection() async {
+    try {
+      // Get all documents in the collection
+      QuerySnapshot querySnapshot = await allProfessionalServiceCollectionToDisplayToCustomers.get();
+
+      // Iterate through the documents and delete each one
+      for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+        await documentSnapshot.reference.delete();
+      }
+
+      print("All documents deleted successfully.");
+    } catch (error) {
+      print("Error clearing documents: $error");
+    }
   }
 
   Future<void> updateProfessionalService(
@@ -95,6 +129,7 @@ class ProfessionalServiceController {
 
   Future<void> deleteProfessionalService(String? id) async {
     try {
+      // Query the collection to find the document ID based on the ID
       QuerySnapshot querySnapshot =
       await individualUserProfessionalServiceCollection
           .where('id', isEqualTo: id!)
