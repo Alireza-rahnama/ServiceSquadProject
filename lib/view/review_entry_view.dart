@@ -51,12 +51,12 @@ class _NewEntryViewState extends State<ReviewEntryView> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Center(
-                child: Text('Review can not b empty!',
+                child: Text('Review can not be left empty!',
                     style: TextStyle(
                       color: Colors.white, // Customize the hint text color
                       fontSize: 12, // Customize the hint text font size
                     ))),
-            backgroundColor: Colors.deepPurple),
+            backgroundColor: Colors.red),
       );
       return;
     }
@@ -94,7 +94,7 @@ class _NewEntryViewState extends State<ReviewEntryView> {
                       color: Colors.white, // Customize the hint text color
                       fontSize: 12, // Customize the hint text font size
                     ))),
-            backgroundColor: Colors.deepPurple),
+            backgroundColor: Colors.green),
       );
       Navigator.push(
           context,
@@ -105,7 +105,7 @@ class _NewEntryViewState extends State<ReviewEntryView> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Unexpected error ocured: $e'),
-            backgroundColor: Colors.deepPurple),
+            backgroundColor: Colors.red),
       );
     }
   }
