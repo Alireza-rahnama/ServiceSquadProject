@@ -509,6 +509,11 @@ class _CategoriesViewState extends State<CategoriesView>{
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   BuildImageFromUrl(entry),
+                                  Center(child: Text('${entry.category}',
+                                      style: GoogleFonts.lilitaOne(
+                                        color: Colors.deepPurple,
+                                        fontSize: 30.0,
+                                      ))),
                                   Row(
                                     children: [
                                       // BuildImageFromUrl(entry),
