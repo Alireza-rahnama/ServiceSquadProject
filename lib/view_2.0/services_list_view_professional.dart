@@ -383,9 +383,9 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
           appBar: AppBar(
               automaticallyImplyLeading: false,
               title: Center(child:Text("My Services",
-                  style: GoogleFonts.pacifico(
+                  style: GoogleFonts.lilitaOne(
                     color: Colors.white,
-                    fontSize: 28.0,
+                    fontSize: 48.0,
                   ))),
               backgroundColor: Colors.deepPurple,
               // bottom: PreferredSize(
@@ -515,10 +515,11 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  BuildImageFromUrl(entry),
+                                  // BuildImageFromUrl(entry),
                                   //TODO: DO WEE= NEED AN IMAGe HERE?
                                   Row(
                                     children: [
+                                      // BuildImageFromUrl(entry),
                                       Text(
                                         'Technician: ${entry.technicianAlias}',
                                         style: TextStyle(
@@ -527,6 +528,8 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
                                         ),
                                       ),
                                       Spacer(),
+                                      BuildImageFromUrl(entry),
+
                                       // IconButton(
                                       //   icon: Icon(Icons.rate_review_rounded),
                                       //   onPressed: () async {
@@ -876,7 +879,7 @@ class DateHeader extends StatelessWidget {
     return Container(
         padding: EdgeInsets.all(8.0),
         child: Text(text,
-            style: GoogleFonts.pacifico(
+            style: GoogleFonts.lilitaOne(
               color: Colors.deepPurple,
               fontSize: 30.0,
             )));

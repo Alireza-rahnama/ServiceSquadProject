@@ -6,14 +6,15 @@ class MessagesView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.deepPurple,
-        title: Text(
+        title: Center(child: Text(
           "My Messages",
-          style: GoogleFonts.pacifico(
+          style: GoogleFonts.lilitaOne(
             color: Colors.white,
-            fontSize: 30.0,
+            fontSize: 48.0,
           ),
-        ),
+        ),)
       ),
       body: Center(
         child: Column(

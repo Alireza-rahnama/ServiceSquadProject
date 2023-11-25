@@ -12,26 +12,27 @@ import '../model/professional_service.dart';
 import 'package:service_squad/view/auth_gate.dart';
 import 'package:service_squad/view/category_selection.dart';
 
-
 class CategoriesView extends StatefulWidget {
   CategoriesView({Key? key}) : super(key: key);
   bool isDark = false;
   String categoryToPopulate = '';
-  CategoriesView.WithPersistedThemeAndCategory(bool inheritedIsDark,
-      String categoryName) {
+
+  CategoriesView.WithPersistedThemeAndCategory(
+      bool inheritedIsDark, String categoryName) {
     isDark = inheritedIsDark;
     categoryToPopulate = categoryName;
   }
+
   @override
   State<CategoriesView> createState() =>
       _CategoriesViewState.withPersistedThemeAndCategory(
           isDark, categoryToPopulate);
 }
 
-class _CategoriesViewState extends State<CategoriesView> {
+class _CategoriesViewState extends State<CategoriesView>{
 // Instance of CarService to interact with Firestore for CRUD operations on cars.
   final ProfessionalServiceController professionalServiceController =
-  ProfessionalServiceController();
+      ProfessionalServiceController();
   String? selectedCategory;
   bool isDark;
   List<ProfessionalService> filteredEntries = [];
@@ -40,8 +41,8 @@ class _CategoriesViewState extends State<CategoriesView> {
   String categoryName;
   XFile? _image;
 
-  _CategoriesViewState.withPersistedThemeAndCategory(this.isDark,
-      this.categoryName);
+  _CategoriesViewState.withPersistedThemeAndCategory(
+      this.isDark, this.categoryName);
 
   Future<void> _pickImageFromGallery() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
@@ -53,7 +54,7 @@ class _CategoriesViewState extends State<CategoriesView> {
   void _showEditDialog(BuildContext context,
       ProfessionalService professionalServiceEntry, int index) {
     TextEditingController descriptionEditingController =
-    TextEditingController();
+        TextEditingController();
     descriptionEditingController.text = professionalServiceEntry
         .serviceDescription; // Initialize the text field with existing content.
 
@@ -61,7 +62,7 @@ class _CategoriesViewState extends State<CategoriesView> {
     wageEditingController.text = '${professionalServiceEntry!.wage}';
 
     ProfessionalServiceController professionalServiceController =
-    ProfessionalServiceController();
+        ProfessionalServiceController();
 
     showDialog(
       context: context,
@@ -96,8 +97,7 @@ class _CategoriesViewState extends State<CategoriesView> {
               child: Text('Save'),
               onPressed: () async {
                 print(
-                    'professionalServiceEntrycategory is: ${professionalServiceEntry!
-                        .category}');
+                    'professionalServiceEntrycategory is: ${professionalServiceEntry!.category}');
                 // Save the edited content to the service entry.
                 String location = await ProfileController()
                     .getUserLocation(FirebaseAuth.instance.currentUser!.uid);
@@ -110,7 +110,7 @@ class _CategoriesViewState extends State<CategoriesView> {
                         rating: professionalServiceEntry.rating,
                         location: location,
                         technicianAlias:
-                        professionalServiceEntry.technicianAlias));
+                            professionalServiceEntry.technicianAlias));
 
                 updateState(professionalServiceEntry.category);
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -138,12 +138,12 @@ class _CategoriesViewState extends State<CategoriesView> {
 
     final serviceEntries = selectedCategory != null
         ? await professionalServiceController
-        .getProfessionalServices(selectedCategory!)
-        .first
+            .getProfessionalServices(selectedCategory!)
+            .first
         : await professionalServiceController
-        //.getAllProfessionalServices()
-        .getAllAvailableProfessionalServiceCollections()
-        .first;
+            //.getAllProfessionalServices()
+            .getAllAvailableProfessionalServiceCollections()
+            .first;
     print('length of serviceEntries is ${serviceEntries.length}');
     // final serviceEntries = await professionalServiceController
     //     .getAllAvailableProfessionalServiceCollections()
@@ -160,8 +160,7 @@ class _CategoriesViewState extends State<CategoriesView> {
       bool queryIsLocation = false;
 
       print(
-          '!categories.contains(queryText): ${!categories.contains(
-              queryText)}');
+          '!categories.contains(queryText): ${!categories.contains(queryText)}');
       if (!categories.contains(queryText) &&
           !ratings.contains(int.tryParse(queryText))) {
         queryIsLocation = true;
@@ -171,15 +170,14 @@ class _CategoriesViewState extends State<CategoriesView> {
       print(
           'categories.contains(queryText): ${categories.contains(queryText)}');
       print(
-          'ratings.contains(int.tryParse(queryText)): ${ratings.contains(
-              int.tryParse(queryText))}');
+          'ratings.contains(int.tryParse(queryText)): ${ratings.contains(int.tryParse(queryText))}');
       // Filter based on the rating or category
       if (searchController.text.isNotEmpty) {
         filteredEntries = filteredEntries.where((entry) {
           print('entry.location.toLowerCase() is ${userLocation}');
           return entry.category
-              .toLowerCase()
-              .contains(queryText.toLowerCase()) ||
+                  .toLowerCase()
+                  .contains(queryText.toLowerCase()) ||
               entry.rating == int.tryParse(queryText) ||
               entry.location.contains(queryText.toLowerCase());
         }).toList();
@@ -230,12 +228,12 @@ class _CategoriesViewState extends State<CategoriesView> {
 
     final serviceEntries = selectedCategory != null
         ? await professionalServiceController
-        .getProfessionalServices(selectedCategory!)
-        .first
+            .getProfessionalServices(selectedCategory!)
+            .first
         : await professionalServiceController
-        //.getAllProfessionalServices()
-        .getAllAvailableProfessionalServiceCollections()
-        .first;
+            //.getAllProfessionalServices()
+            .getAllAvailableProfessionalServiceCollections()
+            .first;
     print('length of serviceEntries is ${serviceEntries.length}');
     // final serviceEntries = await professionalServiceController
     //     .getAllAvailableProfessionalServiceCollections()
@@ -252,8 +250,7 @@ class _CategoriesViewState extends State<CategoriesView> {
       bool queryIsLocation = false;
 
       print(
-          '!categories.contains(queryText): ${!categories.contains(
-              queryText)}');
+          '!categories.contains(queryText): ${!categories.contains(queryText)}');
       if (!categories.contains(queryText) &&
           !ratings.contains(int.tryParse(queryText))) {
         queryIsLocation = true;
@@ -263,10 +260,9 @@ class _CategoriesViewState extends State<CategoriesView> {
       print(
           'categories.contains(queryText): ${categories.contains(queryText)}');
       print(
-          'ratings.contains(int.tryParse(queryText)): ${ratings.contains(
-              int.tryParse(queryText))}');
+          'ratings.contains(int.tryParse(queryText)): ${ratings.contains(int.tryParse(queryText))}');
       // Filter based on the rating or category
-      if (searchController.text.isNotEmpty) {
+      if (searchController.text.isNotEmpty && queryIsLocation) {
         filteredEntries = filteredEntries.where((entry) {
           print('entry.location.toLowerCase() is ${userLocation}');
           return entry.location.contains(queryText.toLowerCase());
@@ -364,7 +360,8 @@ class _CategoriesViewState extends State<CategoriesView> {
       // useMaterial3: true,
       brightness: isDark ? Brightness.dark : Brightness.light,
       snackBarTheme: SnackBarThemeData(
-        backgroundColor: Colors.deepPurple, // Example color, ensure it's not conflicting
+        backgroundColor:
+            Colors.deepPurple, // Example color, ensure it's not conflicting
       ),
     );
 
@@ -374,11 +371,12 @@ class _CategoriesViewState extends State<CategoriesView> {
           // App bar with a title and a logout button.
           appBar: AppBar(
               automaticallyImplyLeading: false,
-              title: Center(child:Text("Services",
-                  style: GoogleFonts.pacifico(
-                    color: Colors.white,
-                    fontSize: 28.0,
-                  ))),
+              title: Center(
+                  child: Text("Services",
+                      style: GoogleFonts.lilitaOne(
+                        color: Colors.white,
+                        fontSize: 48.0,
+                      ))),
               backgroundColor: Colors.deepPurple,
               bottom: PreferredSize(
                 preferredSize: Size.fromHeight(60.0),
@@ -393,28 +391,30 @@ class _CategoriesViewState extends State<CategoriesView> {
                           child: SearchAnchor(builder: (BuildContext context,
                               SearchController controller) {
                             //TODO: We can implement the location logic here to search services by location
-                            return Expanded(
-                              child: Container(
-                                constraints: BoxConstraints(maxWidth: 345), // Adjust the maximum width as needed
-                                child: SearchBar(
-                                  hintText: "location... ",
-                                  controller: searchController,
-                                  padding: const MaterialStatePropertyAll<EdgeInsets>(
-                                    EdgeInsets.symmetric(horizontal: 16.0),
-                                  ),
-                                  onChanged: (_) async {
-                                    applySearchBarLocationBasedQueryAndUpdateState(false);
-                                  },
-                                  onSubmitted: (_) async {
-                                    applySearchBarLocationBasedQueryAndUpdateState(true);
-                                  },
-                                  leading: IconButton(
-                                    icon: Icon(Icons.search),
-                                    onPressed: () async {
+                            return Container(
+                              constraints: BoxConstraints(maxWidth: 345),
+                              child: Column(
+                                children: [
+                                  SearchBar(
+                                    hintText: "location... ",
+                                    controller: searchController,
+                                    padding: const MaterialStatePropertyAll<EdgeInsets>(
+                                      EdgeInsets.symmetric(horizontal: 16.0),
+                                    ),
+                                    onChanged: (_) async {
                                       applySearchBarLocationBasedQueryAndUpdateState(false);
                                     },
+                                    onSubmitted: (_) async {
+                                      applySearchBarLocationBasedQueryAndUpdateState(true);
+                                    },
+                                    leading: IconButton(
+                                      icon: Icon(Icons.search),
+                                      onPressed: () async {
+                                        applySearchBarLocationBasedQueryAndUpdateState(false);
+                                      },
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
                             );
                           }, suggestionsBuilder: (BuildContext context,
@@ -466,19 +466,20 @@ class _CategoriesViewState extends State<CategoriesView> {
                     ],
                   ),
                 ),
-              )
-          ),
+              )),
 
           // Body of the widget using a StreamBuilder to listen for changes
           // in the professionalServiceCollection  and reflect them in the UI in real-time.
           body: StreamBuilder<List<ProfessionalService>>(
-            stream: professionalServiceController.getAllAvailableProfessionalServiceCollections(),//getAllProfessionalServices(),
+            stream: professionalServiceController
+                .getAllAvailableProfessionalServiceCollections(),
+            //getAllProfessionalServices(),
             builder: (context, snapshot) {
               // Show a loading indicator until data is fetched from Firestore.
               if (!snapshot.hasData) return CircularProgressIndicator();
 
               List<ProfessionalService> professionalServices =
-              (!filteredEntries.isEmpty) ? filteredEntries : snapshot.data!;
+                  (!filteredEntries.isEmpty) ? filteredEntries : snapshot.data!;
               // professionalServices
               //     .sort((a, b) => (b.wage! as num).compareTo(a.wage! as num));
 
@@ -508,13 +509,20 @@ class _CategoriesViewState extends State<CategoriesView> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   BuildImageFromUrl(entry),
-                                  //TODO: DO WEE= NEED AN IMAGe HERE?
+                                  Center(child: Text('${entry.category}',
+                                      style: GoogleFonts.lilitaOne(
+                                        color: Colors.deepPurple,
+                                        fontSize: 30.0,
+                                      ))),
                                   Row(
                                     children: [
+                                      // BuildImageFromUrl(entry),
+                                      // Icon(Icons.face),
+                                      // Spacer(),
                                       Text(
                                         'Technician: ${entry.technicianAlias}',
                                         style: TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 18,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -527,7 +535,7 @@ class _CategoriesViewState extends State<CategoriesView> {
                                             MaterialPageRoute(
                                               builder: (context) => ReviewsView
                                                   .forEachProfessionalService(
-                                                  isDark, entry),
+                                                      isDark, entry),
                                             ),
                                           );
                                           print(
@@ -541,8 +549,22 @@ class _CategoriesViewState extends State<CategoriesView> {
                                   ),
                                   SizedBox(height: 15),
                                   Text(
+                                    'Location: ${entry.location}',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  SizedBox(height: 15),
+
+                                  Text(
                                     '${entry.serviceDescription}',
                                     style: TextStyle(fontSize: 14),
+                                  ),
+                                  SizedBox(height: 15),
+                                  Text(
+                                    'Service Hourly Rate: ${entry.wage}',
+                                    style: TextStyle(fontSize: 14,
+                                      fontWeight: FontWeight.bold,),
                                   ),
                                   SizedBox(height: 15),
                                   Row(
@@ -641,15 +663,15 @@ class _CategoriesViewState extends State<CategoriesView> {
                                           .deleteProfessionalService(entry!.id);
 
                                       final serviceEntries =
-                                      await professionalServiceController
-                                          .getAllAvailableProfessionalServiceCollections()//.getAllProfessionalServices()
-                                          .first;
+                                          await professionalServiceController
+                                              .getAllAvailableProfessionalServiceCollections() //.getAllProfessionalServices()
+                                              .first;
 
                                       setState(() {
                                         // Initialize filteredEntries with a copy of serviceEntries
                                         filteredEntries =
-                                        List<ProfessionalService>.from(
-                                            serviceEntries);
+                                            List<ProfessionalService>.from(
+                                                serviceEntries);
                                       });
                                     },
                                   ),
@@ -685,13 +707,9 @@ class _CategoriesViewState extends State<CategoriesView> {
           //   child: Icon(Icons.add),
           // )
           // ,
-        )
-    );
+        ));
   }
 }
-
-
-
 
 Row RatingEvaluator(ProfessionalService entry) {
   Map<String, int> reviewsMap = entry.reviewsMap ?? {};
@@ -867,7 +885,7 @@ class DateHeader extends StatelessWidget {
     return Container(
         padding: EdgeInsets.all(8.0),
         child: Text(text,
-            style: GoogleFonts.pacifico(
+            style: GoogleFonts.lilitaOne(
               color: Colors.deepPurple,
               fontSize: 30.0,
             )));

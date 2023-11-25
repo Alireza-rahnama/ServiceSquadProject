@@ -53,6 +53,40 @@ class ProfessionalServiceController {
     return shouldAdd;
   }
 
+  //For testing and admin use only to clear the docs in the collection
+  Future<void> clearAllDocsInAllProfessionalServiceCollectionToDisplayToCustomers() async {
+    try {
+      // Get all documents in the collection
+      QuerySnapshot querySnapshot = await individualUserProfessionalServiceCollection.get();
+
+      // Iterate through the documents and delete each one
+      for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+        await documentSnapshot.reference.delete();
+      }
+
+      print("All documents deleted successfully.");
+    } catch (error) {
+      print("Error clearing documents: $error");
+    }
+  }
+
+  //For testing and admin use only to clear the docs in the collection
+  Future<void> clearAllDocsInIndividualUserProfessionalServiceCollection() async {
+    try {
+      // Get all documents in the collection
+      QuerySnapshot querySnapshot = await allProfessionalServiceCollectionToDisplayToCustomers.get();
+
+      // Iterate through the documents and delete each one
+      for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+        await documentSnapshot.reference.delete();
+      }
+
+      print("All documents deleted successfully.");
+    } catch (error) {
+      print("Error clearing documents: $error");
+    }
+  }
+
   Future<void> updateProfessionalService(
       ProfessionalService professionalService) async {
     try {

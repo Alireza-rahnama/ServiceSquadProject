@@ -10,6 +10,7 @@ import 'dart:io';
 import '../controller/professional_service_controller.dart';
 import '../controller/profile_controller.dart';
 import '../model/professional_service.dart';
+
 //import 'services_list_view.dart';
 //import 'package:service_squad/view_2.0/services_list_view_2.0.dart';
 //import 'package:service_squad/view_2.0/services_list_view_professional.dart';
@@ -110,7 +111,12 @@ class _NewEntryViewState extends State<ServiceEntryView> {
     category = categoryController.text;
     wage = double.parse(
         wageController.text.isNotEmpty ? wageController.text : '1.0');
-    technicianAlias = technicianAliasController.text ?? 'Unspecified';
+    // technicianAlias = technicianAliasController.text ?? 'Unspecified';
+    technicianAlias = technicianAliasController.text != ''
+        ? technicianAliasController.text
+        : await ProfileController()
+            .gettechnicianAlias(FirebaseAuth.instance.currentUser!.uid);
+
     String location = await ProfileController()
         .getUserLocation(FirebaseAuth.instance.currentUser!.uid);
 
@@ -165,9 +171,9 @@ class _NewEntryViewState extends State<ServiceEntryView> {
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  MainScreen() //With Persisted Theme and Category Removed for now
-            ));
+                builder: (context) =>
+                    MainScreen() //With Persisted Theme and Category Removed for now
+                ));
       } else if (!successfullyAdded) {
         // Show the error dialog when the button is pressed
         showDialog(
@@ -197,10 +203,10 @@ class _NewEntryViewState extends State<ServiceEntryView> {
         child: Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.deepPurple,
-              title: Text("Add a $category service",
-                  style: GoogleFonts.pacifico(
+              title: Text("Add a Service",
+                  style: GoogleFonts.lilitaOne(
                     color: isDark ? Colors.black87 : Colors.white,
-                    fontSize: 30.0,
+                    fontSize: 48.0,
                   )),
               leading: IconButton(
                   icon: Icon(Icons.arrow_back_outlined),
@@ -220,7 +226,7 @@ class _NewEntryViewState extends State<ServiceEntryView> {
                       TextField(
                         controller: categoryController,
                         decoration: InputDecoration(
-                          labelText: '${category}',
+                          labelText: 'Enter your service category',
                           hintText:
                               'Enter your service category', //TODO: BETTER MAKE IT A DROP DOWN OR RADIO BUTTON
                         ),
@@ -244,7 +250,7 @@ class _NewEntryViewState extends State<ServiceEntryView> {
                           labelText: 'Enter your hourly rate',
                           hintText: 'Hourly wage',
                         ),
-                        maxLength: 140, // Set the maximum character limit
+                        // maxLength: 140, // Set the maximum character limit
                         maxLines: null, // Allow multiple lines of text
                       ),
                       SizedBox(height: 5),
@@ -255,7 +261,7 @@ class _NewEntryViewState extends State<ServiceEntryView> {
                           hintText:
                               'Enter the service description', //TODO: BETTER MAKE IT A DROP DOWN OR RADIO BUTTON
                         ),
-                        maxLength: 50, // Set the maximum character limit
+                        maxLength: 100, // Set the maximum character limit
                         maxLines: null, // Allow multiple lines of text
                       ),
                       SizedBox(height: 5),
@@ -263,6 +269,10 @@ class _NewEntryViewState extends State<ServiceEntryView> {
                       ElevatedButton(
                         onPressed: _pickImageFromGallery,
                         child: Text('Add Image from Gallery'),
+                      ),
+                      ElevatedButton(
+                        onPressed: _pickImageFromCamera,
+                        child: Text('Add Image from Camera'),
                       ),
                       SizedBox(height: 5),
                       ElevatedButton(
