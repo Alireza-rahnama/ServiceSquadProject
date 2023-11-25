@@ -3,6 +3,7 @@ import 'package:service_squad/view_2.0/profile_view_2.0.dart';
 import 'package:service_squad/view_2.0/messages_view.dart';
 import 'package:service_squad/view_2.0/services_list_view_2.0.dart';
 import 'package:service_squad/view_2.0/services_list_view_professional.dart';
+import 'package:service_squad/view/message_screen.dart';
 
 
 
@@ -31,7 +32,8 @@ class _MainScreenState extends State<MainScreen> {
 
   List<Widget> get _children => [
     getServicesView(),
-    MessagesView(),
+    //MessagesView(),
+    MessageScreen(),
     ProfileView(),
   ];
 
