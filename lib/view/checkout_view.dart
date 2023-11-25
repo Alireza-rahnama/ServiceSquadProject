@@ -30,12 +30,23 @@ class CheckoutView extends StatelessWidget {
           children: [
             const Text("Item 1"),
             ElevatedButton(
-              child: Text("Pay \$20"),
+              child: Text("Proceed to pay"),
               onPressed: () async {
-                await PaymentService.initPayment(
+
+                await PaymentService.payBooking(
+                    email: FirebaseAuth.instance.currentUser!.email!,
+                    serviceID: service.id!,
+                    bookingStart: booking.bookingStart.millisecondsSinceEpoch,
+                    bookingLength: booking.bookingLength,
+                    clientID: FirebaseAuth.instance.currentUser!.uid,
+                    address: booking.address,
+                    context: context
+                );
+
+                /*await PaymentService.initPayment(
                     email: FirebaseAuth.instance.currentUser!.email!,
                     amount: 2000,
-                    context: context);
+                    context: context);*/
               },
             ),
           ],

@@ -223,7 +223,11 @@ class _BookServiceViewState extends State<BookServiceView> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      BookServiceAddressView(service: widget.service, bookingStart: bookingStart, bookingEnd: bookingEnd)
+                                      BookServiceAddressView(
+                                          service: widget.service,
+                                          bookingStart: bookingStart,
+                                          bookingLength: endTime! - startTime!,
+                                      )
                               )
                           );
                         } else {

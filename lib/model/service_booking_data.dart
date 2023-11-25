@@ -2,20 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ServiceBookingData {
   final id;
-  final serviceID;
-  final serviceDocID;
-  final bookingStart;
-  final bookingEnd;
-  final dateCreated;
-  final clientID;
-  final address;
+  final String serviceID;
+  final DateTime bookingStart;
+  final int bookingLength;
+  final DateTime dateCreated;
+  final String clientID;
+  final String address;
 
   ServiceBookingData(
       {this.id,
         required this.serviceID,
-        required this.serviceDocID,
         required this.bookingStart,
-        required this.bookingEnd,
+        required this.bookingLength,
         required this.dateCreated,
         required this.clientID,
         required this.address,});
@@ -23,9 +21,8 @@ class ServiceBookingData {
   Map<String, dynamic> toMap() {
     return {
       'serviceID': serviceID,
-      'serviceDocID': serviceDocID,
       'bookingStart': bookingStart,
-      'bookingEnd': bookingEnd,
+      'bookingLength': bookingLength,
       'dateCreated': dateCreated,
       'clientID': clientID,
       'address': address,
@@ -52,9 +49,8 @@ class ServiceBookingData {
     return ServiceBookingData(
         id: doc.id,
         serviceID: map['userType'],
-        serviceDocID: map['serviceDocID'],
         bookingStart: map['bookingStart'],
-        bookingEnd: map['bookingEnd'],
+        bookingLength: map['bookingLength'],
         dateCreated: map['dateCreated'],
         clientID: map['clientID'],
         address: map['address'],);

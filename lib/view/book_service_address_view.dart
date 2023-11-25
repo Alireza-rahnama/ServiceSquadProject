@@ -9,11 +9,11 @@ import 'checkout_view.dart';
 class BookServiceAddressView extends StatefulWidget {
   final ProfessionalService service;
   final DateTime bookingStart;
-  final DateTime bookingEnd;
+  final int bookingLength;
   const BookServiceAddressView({super.key,
     required this.service,
     required this.bookingStart,
-    required this.bookingEnd});
+    required this.bookingLength});
 
   @override
   State<BookServiceAddressView> createState() => _BookServiceAddressViewState();
@@ -91,10 +91,9 @@ class _BookServiceAddressViewState extends State<BookServiceAddressView> {
             onPressed: () {
               String address = "${addr1Controller.text}, ${addr2Controller.text}, ${cityController.text}, ${provinceController.text}";
               final bookingData = ServiceBookingData(
-                  serviceID: widget.service.id,
-                  serviceDocID: 1, //  TODO: unimplemented
+                  serviceID: widget.service.id!,
                   bookingStart: widget.bookingStart,
-                  bookingEnd: widget.bookingEnd,
+                  bookingLength: widget.bookingLength,
                   dateCreated: DateTime.now(),
                   clientID: FirebaseAuth.instance.currentUser!.uid,
                   address: address
