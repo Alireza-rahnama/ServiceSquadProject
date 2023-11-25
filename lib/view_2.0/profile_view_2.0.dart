@@ -238,8 +238,8 @@ class _ProfileViewState extends State<ProfileView> {
 
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Profile info was successfully updated!'),
-                      backgroundColor: Colors.deepPurple,
+                      content: Center(child:Text('Profile info was successfully updated!')),
+                      backgroundColor: Colors.green,
                     ),
                   );
                 },

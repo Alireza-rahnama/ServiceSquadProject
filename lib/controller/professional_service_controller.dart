@@ -176,7 +176,7 @@ class ProfessionalServiceController {
       return snapshot.docs
           .map((doc) =>
               ProfessionalService.fromMap(doc.data() as Map<String, dynamic>))
-          .where((service) => service.category == CategoryNameToRetrieve)
+          .where((service) => service.category.toLowerCase() == CategoryNameToRetrieve.toLowerCase())
           .toList();
     });
   }

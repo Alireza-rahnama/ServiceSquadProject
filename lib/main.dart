@@ -20,7 +20,7 @@ Future<void> main() async {
   NotificationService notificationService = NotificationService();
   await notificationService.init();
 
-  //Just for testing Phase TODO: REMOVE AFTER
+  // //Just for testing Phase TODO: REMOVE AFTER
   // ProfessionalServiceController professionalServiceController = ProfessionalServiceController();
   // professionalServiceController.clearAllDocsInAllProfessionalServiceCollectionToDisplayToCustomers();
 

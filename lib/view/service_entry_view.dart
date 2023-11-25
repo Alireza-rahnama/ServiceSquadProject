@@ -133,7 +133,7 @@ class _NewEntryViewState extends State<ServiceEntryView> {
                       color: Colors.white, // Customize the hint text color
                       fontSize: 12, // Customize the hint text font size
                     ))),
-            backgroundColor: Colors.deepPurple),
+            backgroundColor: Colors.red),
       );
       return;
     }
