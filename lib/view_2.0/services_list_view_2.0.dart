@@ -31,7 +31,7 @@ class CategoriesView extends StatefulWidget {
           isDark, categoryToPopulate);
 }
 
-class _CategoriesViewState extends State<CategoriesView>{
+class _CategoriesViewState extends State<CategoriesView> {
 // Instance of CarService to interact with Firestore for CRUD operations on cars.
   final ProfessionalServiceController professionalServiceController =
       ProfessionalServiceController();
@@ -118,7 +118,7 @@ class _CategoriesViewState extends State<CategoriesView>{
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                       content: Center(child: Text('Entry successfully saved!')),
-                      backgroundColor: Colors.deepPurple),
+                      backgroundColor: Colors.green),
                 );
                 Navigator.of(context).pop();
               },
@@ -228,7 +228,7 @@ class _CategoriesViewState extends State<CategoriesView>{
       "Lawn Mowing"
     ];
 
-    final serviceEntries = selectedCategory != null
+    final serviceEntries = selectedCategory != null && selectedCategory != ''
         ? await professionalServiceController
             .getProfessionalServices(selectedCategory!)
             .first
@@ -264,21 +264,31 @@ class _CategoriesViewState extends State<CategoriesView>{
       print(
           'ratings.contains(int.tryParse(queryText)): ${ratings.contains(int.tryParse(queryText))}');
       // Filter based on the rating or category
-      if (searchController.text.isNotEmpty && queryIsLocation) {
+      if (searchController.text != '' && queryIsLocation) {
         filteredEntries = filteredEntries.where((entry) {
-          print('entry.location.toLowerCase() is ${userLocation}');
-          return entry.location.contains(queryText.toLowerCase());
+          print(
+              'entry.location.toLowerCase() is ${entry.location.toLowerCase()}');
+          return entry.location.toLowerCase().contains(queryText.toLowerCase());
         }).toList();
       }
-      if (selectedCategory != null) {
+      if (selectedCategory != null &&
+          selectedCategory != '' &&
+          searchController.text != '' &&
+          queryIsLocation &&
+          isOnSubmitted) {
+        print(
+            'in filtering stage selectedCategory is: ${selectedCategory!.toLowerCase()}');
         filteredEntries = filteredEntries.where((entry) {
-          return entry.category == selectedCategory;
+          return ((entry.category.toLowerCase() ==
+                  selectedCategory!.toLowerCase()) ||
+              (entry.location.toLowerCase().contains(queryText.toLowerCase())));
         }).toList();
       }
 
       // Show a message if no matches are found
       print('filteredEntries.length: ${filteredEntries.length}');
       print('serviceEntries.length: ${serviceEntries.length}');
+      print('selectedCategory is: ${selectedCategory}');
 
       if (isOnSubmitted &&
           searchController.text.isNotEmpty &&
@@ -287,11 +297,14 @@ class _CategoriesViewState extends State<CategoriesView>{
               filteredEntries.length == 0)) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
+            backgroundColor: Colors.red,
             content: Center(child: Text('No match found!')),
-            duration: Duration(milliseconds: 1000),
+            duration: Duration(milliseconds: 500),
           ),
         );
-        isSnackBarDisplayed = true;
+        // isSnackBarDisplayed = true;
+        selectedCategory = '';
+        // print('selectedCategory after onSubmitted is: ${selectedCategory}');
       }
     });
   }
@@ -400,19 +413,23 @@ class _CategoriesViewState extends State<CategoriesView>{
                                   SearchBar(
                                     hintText: "location... ",
                                     controller: searchController,
-                                    padding: const MaterialStatePropertyAll<EdgeInsets>(
+                                    padding: const MaterialStatePropertyAll<
+                                        EdgeInsets>(
                                       EdgeInsets.symmetric(horizontal: 16.0),
                                     ),
                                     onChanged: (_) async {
-                                      applySearchBarLocationBasedQueryAndUpdateState(false);
+                                      applySearchBarLocationBasedQueryAndUpdateState(
+                                          false);
                                     },
                                     onSubmitted: (_) async {
-                                      applySearchBarLocationBasedQueryAndUpdateState(true);
+                                      applySearchBarLocationBasedQueryAndUpdateState(
+                                          true);
                                     },
                                     leading: IconButton(
                                       icon: Icon(Icons.search),
                                       onPressed: () async {
-                                        applySearchBarLocationBasedQueryAndUpdateState(false);
+                                        applySearchBarLocationBasedQueryAndUpdateState(
+                                            false);
                                       },
                                     ),
                                   ),
@@ -451,7 +468,7 @@ class _CategoriesViewState extends State<CategoriesView>{
                         itemBuilder: (BuildContext context) {
                           // Create a list of months for filtering
                           final List<String> serviceCategories = [
-                            'Housekeeping',
+                            'House Keeping',
                             'Snow Clearance',
                             'Handy Services',
                             'Lawn Mowing'
@@ -511,6 +528,12 @@ class _CategoriesViewState extends State<CategoriesView>{
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   BuildImageFromUrl(entry),
+                                  Center(
+                                      child: Text('${entry.category}',
+                                          style: GoogleFonts.lilitaOne(
+                                            color: Colors.deepPurple,
+                                            fontSize: 30.0,
+                                          ))),
                                   Row(
                                     children: [
                                       // BuildImageFromUrl(entry),
@@ -552,7 +575,6 @@ class _CategoriesViewState extends State<CategoriesView>{
                                     ),
                                   ),
                                   SizedBox(height: 15),
-
                                   Text(
                                     '${entry.serviceDescription}',
                                     style: TextStyle(fontSize: 14),
@@ -560,8 +582,10 @@ class _CategoriesViewState extends State<CategoriesView>{
                                   SizedBox(height: 15),
                                   Text(
                                     'Service Hourly Rate: ${entry.wage}',
-                                    style: TextStyle(fontSize: 14,
-                                      fontWeight: FontWeight.bold,),
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                   SizedBox(height: 15),
                                   Row(

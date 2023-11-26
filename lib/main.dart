@@ -17,7 +17,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
+  
   // Initialize Notification Service
   NotificationService notificationService = NotificationService();
   await notificationService.init();
@@ -40,7 +40,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print('Handling a background message: ${message.messageId}');
 }
 
-/**
+/** 
 // Consolidated notification setup function
 void setupNotification() async {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -192,7 +192,7 @@ class NotificationService {
       // Listen for FCM token refresh
       FirebaseMessaging.instance.onTokenRefresh.listen(updateFcmTokenForUser);
       print('listen FCM token refresh');
-    }
+    } 
     else {
       print('User declined or has not accepted permission');
     }

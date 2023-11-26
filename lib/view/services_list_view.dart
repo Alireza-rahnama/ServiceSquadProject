@@ -215,7 +215,8 @@ class _CategoriesViewState extends State<CategoriesView> {
         //     print('entry.Category is: ${entry.category}');
         //     return entry.location.toLowerCase().contains(queryText.toLowerCase());
         //   }).toList();
-      } else if (selectedCategory != null) {
+      }
+      if (selectedCategory != null) {
         filteredEntries = filteredEntries.where((entry) {
           return entry.category == selectedCategory;
         }).toList();
@@ -224,6 +225,7 @@ class _CategoriesViewState extends State<CategoriesView> {
       // Show a message if no matches are found
       print('filteredEntries.length: ${filteredEntries.length}');
       print('serviceEntries.length: ${serviceEntries.length}');
+      print('selectedCategory is: ${selectedCategory}');
 
       if (isOnSubmitted &&
           searchController.text.isNotEmpty &&
