@@ -1,54 +1,50 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:http/http.dart' as http;
 
+import '../model/checkout_cart.dart';
+
 class PaymentService {
 
-  static Future<bool> payBooking({
+  static Future<CheckoutCart> getCheckoutCart({
     required String email,
     required String serviceID,
     required int bookingStart,
     required int bookingLength,
     required String clientID,
     required String address,
+  }) async {
+    final response = await http.post(
+        Uri.parse(
+            "https://stripepaymentintentrequest-efzsfkqsqa-uc.a.run.app/stripePaymentIntentRequest"),
+        body: {
+          'email': email,
+          'serviceID': serviceID,
+          'startEpoch': bookingStart.toString(),
+          'bookingLength': bookingLength.toString(),
+          'clientID': clientID,
+          'address': address,
+        }
+    );
+
+    final jsonResponse = jsonDecode(response.body);
+    return CheckoutCart(jsonResponse);
+  }
+
+  static Future<bool> payCheckoutCart({
+    required CheckoutCart checkoutCart,
     required BuildContext context,
   }) async {
-
     try {
-      /*
-      let serviceDocID = req.body.serviceDocID;
-      let bookingStartEpoch = req.body.startEpoch;
-      let bookingLength = parseInt(req.body.bookingLength); // Number of 30 minute blocks the user selected.
-      let clientID = req.body.clientID;
-      let address = req.body.address;
-       */
-
-      print("Payment attempt for booking of length ${bookingLength.toString()} service id $serviceID");
-      print("Waiting for response");
-      final response = await http.post(
-          Uri.parse(
-              "https://stripepaymentintentrequest-efzsfkqsqa-uc.a.run.app/stripePaymentIntentRequest"),
-          body: {
-            'email': email,
-            'serviceID': serviceID,
-            'startEpoch': bookingStart.toString(),
-            'bookingLength': bookingLength.toString(),
-            'clientID': clientID,
-            'address': address,
-          }
-      );
-
-      final jsonResponse = jsonDecode(response.body);
-      print("got $jsonResponse");
-
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
-            paymentIntentClientSecret: jsonResponse['paymentIntent'],
+            paymentIntentClientSecret: checkoutCart.clientSecret,
             merchantDisplayName: "Service Squad",
-            customerId: jsonResponse['customer'],
-            customerEphemeralKeySecret: jsonResponse['ephemeralKey']
+            customerId: checkoutCart.stripeCustomerID,
+            customerEphemeralKeySecret: checkoutCart.ephemeralKey
         ),
       );
 
@@ -58,7 +54,8 @@ class PaymentService {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Payment was successful'))
       );
-      print("Presented payment sheet");
+
+      return true;
     } catch (error) {
       if (error is StripeException) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -74,36 +71,14 @@ class PaymentService {
     return false;
   }
 
-  static Future<bool> initPayment({required String email, required int amount, required BuildContext context}) async {
-    try {
-      final response = await http.post(
-          Uri.parse("https://stripepaymentintentrequest-efzsfkqsqa-uc.a.run.app/stripePaymentIntentRequest"),
-          body: {'email': email, 'amount': amount.toString()});
-      final jsonResponse = jsonDecode(response.body);
-
-      await Stripe.instance.initPaymentSheet(
-          paymentSheetParameters: SetupPaymentSheetParameters(
-            paymentIntentClientSecret: jsonResponse['paymentIntent'],
-            merchantDisplayName: "Service Squad",
-            customerId: jsonResponse['customer'],
-            customerEphemeralKeySecret: jsonResponse['ephemeralKey'],
-
-          )
-      );
-
-      await Stripe.instance.presentPaymentSheet();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Payment is successful')));
-      return true;
-    } catch (error) {
-      if (error is StripeException) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Error occurred ${error.error.localizedMessage}')));
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Error occurred $error')));
+  static Future<DocumentSnapshot?> getBooking(String bookingID) async {
+    final stream = FirebaseFirestore.instance.doc("service_bookings/$bookingID").snapshots();
+    await for (final doc in stream) {
+      if (doc.id == bookingID) {
+        return doc;
       }
-      return false;
     }
+    return null;
   }
 
 }
