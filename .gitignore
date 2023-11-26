@@ -48,3 +48,8 @@ app.*.map.json
 build/
 .flutter-plugins
 .flutter-plugins-dependencies
+<<<<<<< HEAD
+
+#commit to add gitignore
+=======
+>>>>>>> main
