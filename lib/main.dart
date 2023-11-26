@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:service_squad/controller/professional_service_controller.dart';
 import 'package:service_squad/view/auth_gate.dart';
 import 'firebase_options.dart';
+import 'package:http/http.dart' as http;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -20,7 +22,14 @@ Future<void> main() async {
   NotificationService notificationService = NotificationService();
   await notificationService.init();
 
-  // //Just for testing Phase TODO: REMOVE AFTER
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  Stripe.publishableKey = "pk_test_51OF3BFCRzhLSPD1XuoRlWUA0ae8YFEIi8QL2Ogj5Bh9VaAZH8N4kYi2samABXboL17xjA99E1EUpkko95iYOpUht005uAhPBn7";
+  await Stripe.instance.applySettings();
+
+  //Just for testing Phase TODO: REMOVE AFTER
   // ProfessionalServiceController professionalServiceController = ProfessionalServiceController();
   // professionalServiceController.clearAllDocsInAllProfessionalServiceCollectionToDisplayToCustomers();
 
