@@ -171,6 +171,7 @@ class ProfessionalServiceController {
   Stream<List<ProfessionalService>> getProfessionalServices(
       String CategoryNameToRetrieve) {
     return individualUserProfessionalServiceCollection
+    // return allProfessionalServiceCollectionToDisplayToCustomers
         .snapshots()
         .map((snapshot) {
       return snapshot.docs
@@ -204,6 +205,22 @@ class ProfessionalServiceController {
       return snapshot.docs
           .map((doc) =>
               ProfessionalService.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
+    });
+  }
+
+  Stream<List<ProfessionalService>>
+  getAllAvailableProfessionalServiceCollectionsByCategory(String categoryNameToRetrieve) {
+    CollectionReference allAvailableProfessionalServiceCollections =
+    FirebaseFirestore.instance
+        .collection('available_professional_services');
+    return allAvailableProfessionalServiceCollections
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs
+          .map((doc) =>
+          ProfessionalService.fromMap(doc.data() as Map<String, dynamic>))
+          .where((service) => service.category.toLowerCase() == categoryNameToRetrieve.toLowerCase())
           .toList();
     });
   }
