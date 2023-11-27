@@ -140,7 +140,7 @@ class _CategoriesViewState extends State<CategoriesView> {
 
     final serviceEntries = selectedCategory != null
         ? await professionalServiceController
-            .getProfessionalServices(selectedCategory!)
+            .getProfessionalServices(selectedCategory!.toLowerCase())
             .first
         : await professionalServiceController
             //.getAllProfessionalServices()
@@ -228,9 +228,11 @@ class _CategoriesViewState extends State<CategoriesView> {
       "Lawn Mowing"
     ];
 
-    final serviceEntries = selectedCategory != null && selectedCategory != ''
+    final serviceEntries = (selectedCategory != null && selectedCategory != '')
         ? await professionalServiceController
-            .getProfessionalServices(selectedCategory!)
+            // .getProfessionalServices(selectedCategory!)
+            .getAllAvailableProfessionalServiceCollectionsByCategory(
+                selectedCategory!)
             .first
         : await professionalServiceController
             //.getAllProfessionalServices()
@@ -291,10 +293,12 @@ class _CategoriesViewState extends State<CategoriesView> {
       print('selectedCategory is: ${selectedCategory}');
 
       if (isOnSubmitted &&
-          searchController.text.isNotEmpty &&
-          !isSnackBarDisplayed &&
-          (filteredEntries.length == serviceEntries.length ||
-              filteredEntries.length == 0)) {
+              searchController.text != '' &&
+              !isSnackBarDisplayed &&
+              filteredEntries.length == 0
+          // (filteredEntries.length == serviceEntries.length ||
+          //     filteredEntries.length == 0)
+          ) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: Colors.red,
@@ -471,7 +475,8 @@ class _CategoriesViewState extends State<CategoriesView> {
                             'House Keeping',
                             'Snow Clearance',
                             'Handy Services',
-                            'Lawn Mowing'
+                            'Lawn Mowing',
+                            'Other'
                           ];
 
                           return serviceCategories.map((String category) {
@@ -641,13 +646,21 @@ class _CategoriesViewState extends State<CategoriesView> {
 
                                           //TODO: IMPLEMENT LOGIC AND VIEW Maybe only for client user type
                                           // Maybe show booked clients to service providers.
-                                          String? userType = await profileController
-                                              .getUserType(FirebaseAuth.instance.currentUser!.uid);
-                                          if (userType != null && userType == "Client") {
+                                          String? userType =
+                                              await profileController
+                                                  .getUserType(FirebaseAuth
+                                                      .instance
+                                                      .currentUser!
+                                                      .uid);
+                                          if (userType != null &&
+                                              userType == "Client") {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => BookServiceView(service: entry,),
+                                                builder: (context) =>
+                                                    BookServiceView(
+                                                  service: entry,
+                                                ),
                                               ),
                                             );
                                           }
