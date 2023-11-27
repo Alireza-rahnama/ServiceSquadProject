@@ -74,7 +74,7 @@ class PaymentService {
   static Future<DocumentSnapshot?> getBooking(String bookingID) async {
     final stream = FirebaseFirestore.instance.doc("service_bookings/$bookingID").snapshots();
     await for (final doc in stream) {
-      if (doc.id == bookingID) {
+      if (doc.id == bookingID && doc.data() != null) {
         return doc;
       }
     }
