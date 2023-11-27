@@ -216,7 +216,7 @@ async function handlePaymentIntentSucceeded(intent) {
     
     let data = intent.metadata;
     if (data.paymentType == 'booking') {
-        let doc = db.doc("service_bookings/" + data.pendingBookingID);
+        let doc = db.doc("service_bookings/" + data.bookingID);
         await doc.create({
             serviceID: data.serviceID,
             bookingStart: data.bookingStart,
