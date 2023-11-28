@@ -147,7 +147,8 @@ class _NewEntryViewState extends State<ServiceEntryView> {
         rating: 5,
         location: location,
         technicianAlias: technicianAlias!,
-        imagePath: imagePath);
+        imagePath: imagePath,
+        email: FirebaseAuth.instance.currentUser!.email!);
 
     print('new professionalService location is: ${location}');
 

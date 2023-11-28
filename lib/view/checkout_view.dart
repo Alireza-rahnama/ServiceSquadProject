@@ -102,7 +102,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                         });
                         // TODO: Handle confirmed payment here!
                         String currentUserEmail = FirebaseAuth.instance.currentUser?.email ?? "";
-                        String? otherUserEmail; // // // NEED TO GET ANOTHER GUYS'S EMAIL ///
+                        String? otherUserEmail = widget.service.email; // // // NEED TO GET ANOTHER GUYS'S EMAIL ///
                         if (otherUserEmail != null && otherUserEmail.isNotEmpty) {
                           await ChatService.startChat(currentUserEmail, otherUserEmail,context,FirebaseFirestore.instance);
                         }

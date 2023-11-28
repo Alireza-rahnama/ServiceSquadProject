@@ -111,6 +111,7 @@ class _CategoriesViewState extends State<CategoriesView> {
                         id: professionalServiceEntry!.id,
                         rating: professionalServiceEntry.rating,
                         location: location,
+                        email: FirebaseAuth.instance.currentUser?.email,
                         technicianAlias:
                             professionalServiceEntry.technicianAlias));
 
