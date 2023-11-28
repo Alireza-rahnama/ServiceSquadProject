@@ -43,6 +43,11 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+.dart_tool/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
 <<<<<<< HEAD
 
 #commit to add gitignore

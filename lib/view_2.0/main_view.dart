@@ -3,6 +3,10 @@ import 'package:service_squad/view_2.0/profile_view_2.0.dart';
 import 'package:service_squad/view_2.0/messages_view.dart';
 import 'package:service_squad/view_2.0/services_list_view_2.0.dart';
 import 'package:service_squad/view_2.0/services_list_view_professional.dart';
+import 'package:service_squad/view/message_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 
@@ -17,6 +21,7 @@ class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 2;
 
   Widget getServicesView() {
+    updateFcmToken();  // Call the method to update the token
     // Determine which view to return based on user type
     if (selectedUserType == 'Client') {
       return CategoriesView();
@@ -31,9 +36,38 @@ class _MainScreenState extends State<MainScreen> {
 
   List<Widget> get _children => [
     getServicesView(),
-    MessagesView(),
+    //MessagesView(),
+    MessageScreen(),
     ProfileView(),
   ];
+
+  Future<void> updateFcmToken() async {
+  String? userEmail = FirebaseAuth.instance.currentUser?.email;
+  if (userEmail != null) {
+    String? token = await FirebaseMessaging.instance.getToken();
+    print('START TO GET TOKENTOKENTOKENTOKENTOKEN  ${token}');
+
+    QuerySnapshot userDocs = await FirebaseFirestore.instance.collection('users')
+                                          .where('email', isEqualTo: userEmail)
+                                          .get();
+    
+    if (userDocs.docs.isEmpty) {
+      // Create the document if it doesn't exist
+      await FirebaseFirestore.instance.collection('users').add({
+        'email': userEmail,
+        'fcmToken': token,
+        // add other user details as necessary
+      });
+    } else {
+      // Update the document
+      if (token != null) {
+        DocumentReference userDocRef = userDocs.docs.first.reference;
+        await userDocRef.update({'fcmToken': token});
+      }
+    }
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +102,7 @@ class _MainScreenState extends State<MainScreen> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Center(child: Text('Please select a User Type and Location in Profile and Click Save to Continue!')),
+          content: Text('Please select a User Type in Profile and Click Save'),
           backgroundColor: Colors.red,
         ),
       );

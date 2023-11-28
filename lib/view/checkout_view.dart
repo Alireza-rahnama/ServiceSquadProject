@@ -6,6 +6,8 @@ import 'package:service_squad/model/service_booking_data.dart';
 
 import '../controller/payment_controller.dart';
 import '../model/checkout_cart.dart';
+import 'message_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CheckoutView extends StatefulWidget {
   final ProfessionalService service;
@@ -99,6 +101,12 @@ class _CheckoutViewState extends State<CheckoutView> {
                           _isLoading = false;
                         });
                         // TODO: Handle confirmed payment here!
+                        String currentUserEmail = FirebaseAuth.instance.currentUser?.email ?? "";
+                        String? otherUserEmail; // // // NEED TO GET ANOTHER GUYS'S EMAIL ///
+                        if (otherUserEmail != null && otherUserEmail.isNotEmpty) {
+                          await ChatService.startChat(currentUserEmail, otherUserEmail,context,FirebaseFirestore.instance);
+                        }
+
                       } else {
                         print("unable to confirm payment");
                       }
