@@ -100,6 +100,7 @@ class _MessageScreenState extends State<MessageScreen> {
               title: Text(contact),
               onTap: () {
                 Navigator.of(context).pop();
+                //ChatService.startChat(currentUserEmail, contact,context,_firestore);
                 startChat(currentUserEmail, contact);
               },
             )).toList(),
@@ -148,6 +149,7 @@ class _MessageScreenState extends State<MessageScreen> {
           onTap: () {
            // Prevent starting a chat with self
             if (contact != currentUserEmail + " (Self)") {
+              //ChatService.startChat(currentUserEmail, contact.replaceAll(" (Self)", ""),context,_firestore);
               startChat(currentUserEmail, contact.replaceAll(" (Self)", ""));
             }
           },
@@ -174,6 +176,7 @@ class _MessageScreenState extends State<MessageScreen> {
               title: Text(data['participants'][1]), // Adjust based on your data model
               subtitle: Text(data['latestMessage']['text']), // Latest message snippet
               trailing: Text(data['latestMessage']['timestamp'].toDate().toString()), // Timestamp
+              //onTap: () => ChatService.startChat(getCurrentUserEmail(), data['participants'][1],context,_firestore),
               onTap: () => startChat(getCurrentUserEmail(), data['participants'][1]),
             );
           },
@@ -275,6 +278,7 @@ class _MessageScreenState extends State<MessageScreen> {
               String otherUserEmail = emailController.text;
 
               if (otherUserEmail.isNotEmpty) {
+                //ChatService.startChat(currentUserEmail, emailController.text,context,_firestore);
                 startChat(currentUserEmail, emailController.text);
               }
               
@@ -287,4 +291,55 @@ class _MessageScreenState extends State<MessageScreen> {
   );
 }
   
+}
+
+class ChatService {
+  static Future<void> startChat(
+    String currentUserEmail, 
+    String otherUserEmail,
+    BuildContext context, 
+    FirebaseFirestore firestore) async {
+    final conversationId = generateConversationId(currentUserEmail, otherUserEmail);
+  
+  // Reference to the conversation document
+  DocumentReference conversationRef = firestore.collection('conversations')
+                                                  .doc(conversationId);
+  print("CONVERSATIONID IS : ${conversationId}");
+  print("conversationRef conversationRef IS : ${conversationRef.toString()}");
+  // Check if the conversation already exists
+  try {
+    var conversationSnapshot = await conversationRef.get();
+    print("conversationSnapshot conversationSnapshotconversationSnapshot:  ${conversationSnapshot.toString()}");
+    print("Does conversationSnapshot exist? ${conversationSnapshot.exists}");
+    if (!conversationSnapshot.exists) {
+    // If the conversation does not exist, create a new one
+    await conversationRef.set({
+      'participants': [currentUserEmail, otherUserEmail],
+    });
+
+  }
+  } catch (e) {
+    if (e is FirebaseException){
+      print('FirebaseException: ${e.code}, ${e.message}');
+    }
+    else {
+      print('Other exception: ${e.toString()}');
+    }
+  }
+  
+
+  // Navigate to the chat interface
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => ChatInterface(conversationId: conversationId,otherUserEmail:otherUserEmail),
+    ),
+  );
+  }
+
+  static String generateConversationId(String email1, String email2) {
+  List<String> emails = [email1, email2];
+  emails.sort(); // This sorts the list in place
+  return emails.join("_");
+  }
 }
