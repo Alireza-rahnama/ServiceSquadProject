@@ -151,6 +151,7 @@ class _ReviewsViewState extends State<ReviewsView> {
                         id: professionalServiceEntry!.id,
                         rating: professionalServiceEntry.rating,
                         location: location,
+                        email: FirebaseAuth.instance.currentUser?.email,
                         technicianAlias:
                         professionalServiceEntry.technicianAlias));
 

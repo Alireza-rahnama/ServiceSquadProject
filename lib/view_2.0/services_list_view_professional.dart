@@ -119,6 +119,7 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
                         id: professionalServiceEntry!.id,
                         rating: professionalServiceEntry.rating,
                         location: location,
+                        email: FirebaseAuth.instance.currentUser?.email,
                         technicianAlias:
                         professionalServiceEntry.technicianAlias));
 

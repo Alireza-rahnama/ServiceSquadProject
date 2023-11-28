@@ -17,6 +17,7 @@ class ProfessionalService {
   Map<String, int>? reviewsMap;
   String technicianAlias;
   String? imagePath;
+  String? email;
 
 //TODO: MAYBE ADD SOME INFO of the service technician that can be displayed on add cards
   ProfessionalService(
@@ -24,6 +25,7 @@ class ProfessionalService {
       required this.category,
       required this.serviceDescription,
       required this.location,
+      required this.email,
       this.wage,
       this.rating,
       this.id,
@@ -45,7 +47,8 @@ class ProfessionalService {
       'reviewList': reviewList,
       'technicianAlias': technicianAlias,
       'imagePath': imagePath,
-      'reviewsMap': reviewsMap
+      'reviewsMap': reviewsMap,
+      'email': email,
     };
   }
 
@@ -65,6 +68,8 @@ class ProfessionalService {
             : {},
         reviewList: map['reviewList'] != null
             ? List<String?>.from(map['reviewList'])
-            : []);
+            : [],
+        email: map['email'],);
+
   }
 }
