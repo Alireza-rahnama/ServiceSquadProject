@@ -58,12 +58,13 @@ class _CheckoutViewState extends State<CheckoutView> {
         children: [
           Scaffold(
             appBar: AppBar(
-            backgroundColor: Colors.deepPurple,
+              iconTheme: IconThemeData(color: Colors.white), // Set the color here
+              backgroundColor: Colors.deepPurple,
               title: Text(
                   "Checkout",
-                  style: GoogleFonts.pacifico(
+                  style: GoogleFonts.lilitaOne(
                     color: Colors.white,
-                    fontSize: 30.0,
+                    fontSize: 48.0,
                   )
               ),
             ),

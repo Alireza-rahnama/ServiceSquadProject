@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'chat_interface.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -193,7 +194,15 @@ class _MessageScreenState extends State<MessageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Messages'),
+        iconTheme: IconThemeData(color: Colors.white), // Set the color here
+        backgroundColor: Colors.deepPurple,
+        title: Center(
+          child: Text("Messages",
+              style: GoogleFonts.lilitaOne(
+                color: Colors.white,
+                fontSize: 48,
+              )),
+        ),
       ),
       
       body: _buildContactsList(),

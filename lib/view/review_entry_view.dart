@@ -1,20 +1,11 @@
 import 'dart:ffi';
-
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
-
-import 'package:image_picker/image_picker.dart';
 import 'package:service_squad/view/reviews_list_view.dart';
-import 'dart:io';
-
 import '../controller/professional_service_controller.dart';
-import '../controller/profile_controller.dart';
 import '../model/professional_service.dart';
-//import 'services_list_view.dart';
 
 class ReviewEntryView extends StatefulWidget {
   bool isDark;
@@ -205,62 +196,6 @@ class _NewEntryViewState extends State<ReviewEntryView> {
                         ),
                       ],
                     ),
-                    // RatingBar.builder(
-                    //     initialRating: 3,
-                    //     itemCount: 5,
-                    //     itemBuilder: (context, index){
-                    //       switch (index) {
-                    //         case 0:
-                    //           return Icon(
-                    //             Icons.sentiment_very_dissatisfied,
-                    //             color: Colors.red,
-                    //           );
-                    //         case 1:
-                    //           return Icon(
-                    //             Icons.sentiment_dissatisfied,
-                    //             color: Colors.redAccent,
-                    //           );
-                    //         case 2:
-                    //           return Icon(
-                    //             Icons.sentiment_neutral,
-                    //             color: Colors.amber,
-                    //           );
-                    //         case 3:
-                    //           return Icon(
-                    //             Icons.sentiment_satisfied,
-                    //             color: Colors.lightGreen,
-                    //           );
-                    //         case 4:
-                    //           return Icon(
-                    //             Icons.sentiment_very_satisfied,
-                    //             color: Colors.green,
-                    //           );
-                    //         default:
-                    //           return Container(height: 0.0);
-                    //       }
-                    //     },
-                    //     onRatingUpdate: (ratingValue) {
-                    //       print(ratingValue);
-                    //       rating = ratingValue.toInt();
-                    //     },
-                    // ),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //   children: <Widget>[
-                    //     Text('Rate Your Day:'),
-                    //     Slider(
-                    //       value: rating?.toDouble() ?? 5.0,
-                    //       // Use rating as the initial value
-                    //       min: 1,
-                    //       max: 5,
-                    //       onChanged: (newRating) {
-                    //         setState(() {
-                    //           rating = newRating.round();
-                    //         });
-                    //       },
-                    //     ),
-                    //   ],
-                    // ),
                     SizedBox(height: 50),
                     // Container(height: 50.0,),
                     ElevatedButton(

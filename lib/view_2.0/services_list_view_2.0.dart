@@ -3,15 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:pdf/widgets.dart' as pw;
 import 'package:service_squad/controller/professional_service_controller.dart';
 import 'package:service_squad/view/reviews_list_view.dart';
-import 'package:service_squad/view/service_entry_view.dart';
 import '../controller/profile_controller.dart';
 import '../model/professional_service.dart';
-import 'package:service_squad/view/auth_gate.dart';
-import 'package:service_squad/view/category_selection.dart';
-
 import '../view/book_service_view.dart';
 
 class CategoriesView extends StatefulWidget {
@@ -144,13 +139,10 @@ class _CategoriesViewState extends State<CategoriesView> {
             .getProfessionalServices(selectedCategory!.toLowerCase())
             .first
         : await professionalServiceController
-            //.getAllProfessionalServices()
             .getAllAvailableProfessionalServiceCollections()
             .first;
     print('length of serviceEntries is ${serviceEntries.length}');
-    // final serviceEntries = await professionalServiceController
-    //     .getAllAvailableProfessionalServiceCollections()
-    //     .first;
+
     String userLocation = await ProfileController()
         .getUserLocation(FirebaseAuth.instance.currentUser!.uid);
     bool isSnackBarDisplayed = false;
@@ -184,12 +176,6 @@ class _CategoriesViewState extends State<CategoriesView> {
               entry.rating == int.tryParse(queryText) ||
               entry.location.contains(queryText.toLowerCase());
         }).toList();
-        // } else if (queryIsLocation) {
-        //   print('queryIsLocation: ${queryIsLocation}');
-        //   filteredEntries = filteredEntries.where((entry) {
-        //     print('entry.Category is: ${entry.category}');
-        //     return entry.location.toLowerCase().contains(queryText.toLowerCase());
-        //   }).toList();
       } else if (selectedCategory != null) {
         filteredEntries = filteredEntries.where((entry) {
           return entry.category == selectedCategory;
@@ -240,9 +226,7 @@ class _CategoriesViewState extends State<CategoriesView> {
             .getAllAvailableProfessionalServiceCollections()
             .first;
     print('length of serviceEntries is ${serviceEntries.length}');
-    // final serviceEntries = await professionalServiceController
-    //     .getAllAvailableProfessionalServiceCollections()
-    //     .first;
+
     String userLocation = await ProfileController()
         .getUserLocation(FirebaseAuth.instance.currentUser!.uid);
     bool isSnackBarDisplayed = false;
@@ -325,49 +309,6 @@ class _CategoriesViewState extends State<CategoriesView> {
   }
 
   final profileController = ProfileController();
-
-  String convertIntMonthToStringRepresentation(int month) {
-    String representation = '';
-    switch (month) {
-      case 1:
-        representation = 'jan';
-        break;
-      case 2:
-        representation = 'feb';
-        break;
-      case 3:
-        representation = 'mar';
-        break;
-      case 4:
-        representation = 'apr';
-        break;
-      case 5:
-        representation = 'may';
-        break;
-      case 6:
-        representation = 'jun';
-        break;
-      case 7:
-        representation = 'jul';
-        break;
-      case 8:
-        representation = 'aug';
-        break;
-      case 9:
-        representation = 'sep';
-        break;
-      case 10:
-        representation = 'oct';
-        break;
-      case 11:
-        representation = 'nov';
-        break;
-      case 12:
-        representation = 'dec';
-        break;
-    }
-    return representation;
-  }
 
   @override
   void initState() {
@@ -600,38 +541,6 @@ class _CategoriesViewState extends State<CategoriesView> {
                                       RatingEvaluator2(entry),
                                       Spacer(),
                                       Spacer(),
-                                      // IconButton(
-                                      //   icon: Icon(Icons.delete),
-                                      //   onPressed: () async {
-                                      //     print(
-                                      //         'entry with id: ${entry!.id} was selected to delete');
-                                      //     //TODO: IMPLEMENT OR NOT
-                                      //     String? userType =
-                                      //     await profileController
-                                      //         .getUserType(FirebaseAuth
-                                      //         .instance
-                                      //         .currentUser!
-                                      //         .uid);
-                                      //     if (userType! ==
-                                      //         "Service Associate") {
-                                      //       await professionalServiceController
-                                      //           .deleteProfessionalService(
-                                      //           entry!.id);
-                                      //
-                                      //       final serviceEntries =
-                                      //       await professionalServiceController
-                                      //           .getAllAvailableProfessionalServiceCollections()//.getAllProfessionalServices()
-                                      //           .first;
-                                      //
-                                      //       setState(() {
-                                      //         // Initialize filteredEntries with a copy of serviceEntries
-                                      //         filteredEntries = List<
-                                      //             ProfessionalService>.from(
-                                      //             serviceEntries);
-                                      //       });
-                                      //     }
-                                      //   },
-                                      // ),
                                       IconButton(
                                         icon: Icon(Icons.calendar_today),
                                         onPressed: () async {
@@ -740,25 +649,6 @@ class _CategoriesViewState extends State<CategoriesView> {
             },
           ),
 
-          // Floating action button to open a dialog for adding a new service entry of a specific service category
-          // floatingActionButton: FloatingActionButton(
-          //   tooltip: "Add my service",
-          //   onPressed: () async {
-          //     String? userType = await profileController
-          //         .getUserType(FirebaseAuth.instance.currentUser!.uid);
-          //     if (userType! == "Service Associate") {
-          //       showDialog(
-          //         context: context,
-          //         builder: (context) =>
-          //             ServiceEntryView.withInheritedTheme(categoryName),
-          //       );
-          //     } else {
-          //       print("userType wasnt provider!");
-          //     }
-          //   },
-          //   child: Icon(Icons.add),
-          // )
-          // ,
         ));
   }
 }

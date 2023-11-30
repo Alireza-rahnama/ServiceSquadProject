@@ -1,9 +1,5 @@
 import 'dart:core';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uuid/uuid.dart';
-
-import '../controller/profile_controller.dart';
 
 class ProfessionalService {
   // String id = Uuid().v4();
@@ -19,7 +15,6 @@ class ProfessionalService {
   String? imagePath;
   String? email;
 
-//TODO: MAYBE ADD SOME INFO of the service technician that can be displayed on add cards
   ProfessionalService(
       {required this.technicianAlias,
       required this.category,

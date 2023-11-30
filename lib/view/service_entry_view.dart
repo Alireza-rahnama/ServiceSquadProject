@@ -2,18 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
-
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-
 import '../controller/professional_service_controller.dart';
 import '../controller/profile_controller.dart';
 import '../model/professional_service.dart';
-
-//import 'services_list_view.dart';
-//import 'package:service_squad/view_2.0/services_list_view_2.0.dart';
-//import 'package:service_squad/view_2.0/services_list_view_professional.dart';
 import 'package:service_squad/view_2.0/main_view.dart';
 
 class ServiceEntryView extends StatefulWidget {
@@ -91,20 +84,6 @@ class _NewEntryViewState extends State<ServiceEntryView> {
     }
     return downloadURL;
   }
-
-  // Future<void> _selectDate(BuildContext context) async {
-  //   final DateTime? picked = await showDatePicker(
-  //     context: context,
-  //     initialDate: selectedDate,
-  //     firstDate: DateTime(2000),
-  //     lastDate: DateTime(2101),
-  //   );
-  //
-  //   if (picked != null && picked != selectedDate)
-  //     setState(() {
-  //       selectedDate = picked;
-  //     });
-  // }
 
   void _saveServiceEntry() async {
     serviceDescription = descriptionController.text;
