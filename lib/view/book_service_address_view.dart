@@ -31,16 +31,13 @@ class _BookServiceAddressViewState extends State<BookServiceAddressView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.deepPurple,
-        title: Text(
-            "Book Service",
-            style: GoogleFonts.pacifico(
-              color: Colors.white,
-              fontSize: 30.0,
-            )
-        ),
-      ),
-      // todo: add scrollable
+          backgroundColor: Colors.deepPurple,
+          title: Center(
+              child: Text("Book Service",
+                  style: GoogleFonts.lilitaOne(
+                    color: Colors.white,
+                    fontSize: 48.0,
+                  )))),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [

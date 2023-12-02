@@ -56,15 +56,13 @@ class _CheckoutViewState extends State<CheckoutView> {
         children: [
           Scaffold(
             appBar: AppBar(
-            backgroundColor: Colors.deepPurple,
-              title: Text(
-                  "Checkout",
-                  style: GoogleFonts.pacifico(
-                    color: Colors.white,
-                    fontSize: 30.0,
-                  )
-              ),
-            ),
+                backgroundColor: Colors.deepPurple,
+                title: Center(
+                    child: Text("Checkout",
+                        style: GoogleFonts.lilitaOne(
+                          color: Colors.white,
+                          fontSize: 48.0,
+                        )))),
             body: Column(
               // padding: EdgeInsets.all(12.0),
               children: [
@@ -75,7 +73,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                     return createCheckoutItemWidget(item);
                   }
                   )) : const Text('Please wait...'),
-                Text('Total: \$${_checkoutCart != null ? (_checkoutCart!.totalAmount / 100)?.toStringAsFixed(2) : "loading"}'),
+                Text('Total: \$${_checkoutCart != null ? (_checkoutCart!.totalAmount / 100).toStringAsFixed(2) : "loading"}'),
                 ElevatedButton(
                   child: Text("Proceed to pay"),
                   onPressed: _checkoutCart == null ? null : () async {

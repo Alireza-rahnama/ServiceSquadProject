@@ -56,15 +56,13 @@ class _BookServiceViewState extends State<BookServiceView> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.deepPurple,
-        title: Text(
-          "Book Service",
-          style: GoogleFonts.pacifico(
-            color: Colors.white,
-            fontSize: 30.0,
-          )
-        ),
-      ),
+          backgroundColor: Colors.deepPurple,
+          title: Center(
+              child: Text("Book Service",
+                  style: GoogleFonts.lilitaOne(
+                    color: Colors.white,
+                    fontSize: 48.0,
+                  )))),
       body: Column(
         children: [
           Expanded(
@@ -213,11 +211,6 @@ class _BookServiceViewState extends State<BookServiceView> {
                               selectedDate.day,
                               (startTime! / 2).floor(),
                               startTime! % 2);
-                          DateTime bookingEnd = DateTime(selectedDate.year,
-                              selectedDate.month,
-                              selectedDate.day,
-                              (endTime! / 2).floor(),
-                              endTime! % 2);
                           // Go to next screen to get address.
                           Navigator.push(
                               context,
