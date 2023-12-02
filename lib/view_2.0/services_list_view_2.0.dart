@@ -48,6 +48,19 @@ class _CategoriesViewState extends State<CategoriesView> {
     });
   }
 
+  // to sort the ratings and the price of the entries
+  void sortEntries(String sortBy) {
+    setState(() {
+      if (sortBy == 'rating') {
+        // Sort by rating in descending order
+        filteredEntries.sort((a, b) => b.rating!.compareTo(a.rating as num));
+      } else if (sortBy == 'price') {
+        // Sort by price in ascending order
+        filteredEntries.sort((a, b) => a.wage!.compareTo(b.wage as num));
+      }
+    });
+  }
+
   void _showEditDialog(BuildContext context,
       ProfessionalService professionalServiceEntry, int index) {
     TextEditingController descriptionEditingController =
@@ -330,108 +343,233 @@ class _CategoriesViewState extends State<CategoriesView> {
         data: themeData,
         child: Scaffold(
           // App bar with a title and a logout button.
+          // appBar: AppBar(
+          //     automaticallyImplyLeading: false,
+          //     title: Center(
+          //         child: Text("Services",
+          //             style: GoogleFonts.lilitaOne(
+          //               color: Colors.white,
+          //               fontSize: 48.0,
+          //             ))),
+          //     backgroundColor: Colors.deepPurple,
+          //     bottom: PreferredSize(
+          //       preferredSize: Size.fromHeight(60.0),
+          //       child: Padding(
+          //         padding: const EdgeInsets.all(8.0),
+          //         child: Row(
+          //           children: [
+          //             PreferredSize(
+          //               preferredSize: const Size.fromHeight(60.0),
+          //               child: Padding(
+          //                 padding: const EdgeInsets.all(1.0),
+          //                 child: SearchAnchor(builder: (BuildContext context,
+          //                     SearchController controller) {
+          //                   //TODO: We can implement the location logic here to search services by location
+          //                   return Container(
+          //                     constraints: BoxConstraints(maxWidth: 345),
+          //                     child: Column(
+          //                       children: [
+          //                         SearchBar(
+          //                           hintText: "location... ",
+          //                           controller: searchController,
+          //                           padding: const MaterialStatePropertyAll<
+          //                               EdgeInsets>(
+          //                             EdgeInsets.symmetric(horizontal: 16.0),
+          //                           ),
+          //                           onChanged: (_) async {
+          //                             applySearchBarLocationBasedQueryAndUpdateState(
+          //                                 false);
+          //                           },
+          //                           onSubmitted: (_) async {
+          //                             applySearchBarLocationBasedQueryAndUpdateState(
+          //                                 true);
+          //                           },
+          //                           leading: IconButton(
+          //                             icon: Icon(Icons.search),
+          //                             onPressed: () async {
+          //                               applySearchBarLocationBasedQueryAndUpdateState(
+          //                                   false);
+          //                             },
+          //                           ),
+          //                         ),
+          //                       ],
+          //                     ),
+          //                   );
+          //                 }, suggestionsBuilder: (BuildContext context,
+          //                     SearchController controller) {
+          //                   return List<ListTile>.generate(5, (int index) {
+          //                     final String item = 'item $index';
+          //                     return ListTile(
+          //                       title: Text(item),
+          //                       onTap: () {
+          //                         setState(() {
+          //                           controller.closeView(item);
+          //                         });
+          //                       },
+          //                     );
+          //                   });
+          //                 }),
+          //               ),
+          //             ),
+          //             // Spacer(),
+          //             PopupMenuButton<String>(
+          //               onSelected: (String category) async {
+          //                 setState(() {
+          //                   selectedCategory = category;
+          //                 });
+          //                 print("selectedCategory is $selectedCategory");
+          //                 applySearchBarLocationBasedQueryAndUpdateState(false);
+          //               },
+          //               icon: Icon(
+          //                 Icons.filter_list_alt,
+          //                 color: Colors.white,
+          //               ),
+          //               itemBuilder: (BuildContext context) {
+          //                 // Create a list of months for filtering
+          //                 final List<String> serviceCategories = [
+          //                   'House Keeping',
+          //                   'Snow Clearance',
+          //                   'Handy Services',
+          //                   'Lawn Mowing',
+          //                   'Other'
+          //                 ];
+          //
+          //                 return serviceCategories.map((String category) {
+          //                   return PopupMenuItem<String>(
+          //                     value: category,
+          //                     child: Text(category),
+          //                   );
+          //                 }).toList();
+          //               },
+          //             ),
+          //               PopupMenuButton<String>(
+          //                 onSelected: (String value) {
+          //                   sortEntries(value);
+          //                 },
+          //                 itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+          //                   const PopupMenuItem<String>(
+          //                     value: 'rating',
+          //                     child: Text('Sort by Rating'),
+          //                   ),
+          //                   const PopupMenuItem<String>(
+          //                     value: 'price',
+          //                     child: Text('Sort by Price'),
+          //                   ),
+          //                 ],
+          //               ),
+          //           ],
+          //         ),
+          //       ),
+          //     ),
+          //   // actions: <Widget>[
+          //   //   PopupMenuButton<String>(
+          //   //     onSelected: (String value) {
+          //   //       sortEntries(value);
+          //   //     },
+          //   //     itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+          //   //       const PopupMenuItem<String>(
+          //   //         value: 'rating',
+          //   //         child: Text('Sort by Rating'),
+          //   //       ),
+          //   //       const PopupMenuItem<String>(
+          //   //         value: 'price',
+          //   //         child: Text('Sort by Price'),
+          //   //       ),
+          //   //     ],
+          //   //   ),
+          //   // ],
+          //
+          // ),
           appBar: AppBar(
-              automaticallyImplyLeading: false,
-              title: Center(
-                  child: Text("Services",
-                      style: GoogleFonts.lilitaOne(
+            automaticallyImplyLeading: false,
+            title: Center(
+              child: Text(
+                  "Services",
+                  style: GoogleFonts.lilitaOne(
+                    color: Colors.white,
+                    fontSize: 48.0,
+                  )
+              ),
+            ),
+            backgroundColor: Colors.deepPurple,
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(60.0),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Container(
+                        constraints: BoxConstraints(maxWidth: 250), // Shortened maxWidth
+                        child: SearchBar(
+                          hintText: "location...",
+                          controller: searchController,
+                          padding: const MaterialStatePropertyAll<EdgeInsets>(
+                            EdgeInsets.symmetric(horizontal: 16.0),
+                          ),
+                          onChanged: (_) async {
+                            applySearchBarLocationBasedQueryAndUpdateState(false);
+                          },
+                          onSubmitted: (_) async {
+                            applySearchBarLocationBasedQueryAndUpdateState(true);
+                          },
+                          leading: IconButton(
+                            icon: Icon(Icons.search),
+                            onPressed: () async {
+                              applySearchBarLocationBasedQueryAndUpdateState(false);
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                    PopupMenuButton<String>(
+                      onSelected: (String category) async {
+                        setState(() {
+                          selectedCategory = category;
+                        });
+                        applySearchBarLocationBasedQueryAndUpdateState(false);
+                      },
+                      icon: Icon(
+                        Icons.filter_list_alt,
                         color: Colors.white,
-                        fontSize: 48.0,
-                      ))),
-              backgroundColor: Colors.deepPurple,
-              bottom: PreferredSize(
-                preferredSize: Size.fromHeight(60.0),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      PreferredSize(
-                        preferredSize: const Size.fromHeight(60.0),
-                        child: Padding(
-                          padding: const EdgeInsets.all(1.0),
-                          child: SearchAnchor(builder: (BuildContext context,
-                              SearchController controller) {
-                            return Container(
-                              constraints: BoxConstraints(maxWidth: 345),
-                              child: Column(
-                                children: [
-                                  SearchBar(
-                                    hintText: "location... ",
-                                    controller: searchController,
-                                    padding: const MaterialStatePropertyAll<
-                                        EdgeInsets>(
-                                      EdgeInsets.symmetric(horizontal: 16.0),
-                                    ),
-                                    onChanged: (_) async {
-                                      applySearchBarLocationBasedQueryAndUpdateState(
-                                          false);
-                                    },
-                                    onSubmitted: (_) async {
-                                      applySearchBarLocationBasedQueryAndUpdateState(
-                                          true);
-                                    },
-                                    leading: IconButton(
-                                      icon: Icon(Icons.search),
-                                      onPressed: () async {
-                                        applySearchBarLocationBasedQueryAndUpdateState(
-                                            false);
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }, suggestionsBuilder: (BuildContext context,
-                              SearchController controller) {
-                            return List<ListTile>.generate(5, (int index) {
-                              final String item = 'item $index';
-                              return ListTile(
-                                title: Text(item),
-                                onTap: () {
-                                  setState(() {
-                                    controller.closeView(item);
-                                  });
-                                },
-                              );
-                            });
-                          }),
-                        ),
                       ),
-                      // Spacer(),
-                      PopupMenuButton<String>(
-                        onSelected: (String category) async {
-                          setState(() {
-                            selectedCategory = category;
-                          });
-                          print("selectedCategory is $selectedCategory");
-                          applySearchBarLocationBasedQueryAndUpdateState(false);
-                        },
-                        icon: Icon(
-                          Icons.filter_list_alt,
-                          color: Colors.white,
+                      itemBuilder: (BuildContext context) {
+                        final List<String> serviceCategories = [
+                          'House Keeping',
+                          'Snow Clearance',
+                          'Handy Services',
+                          'Lawn Mowing',
+                          'Other'
+                        ];
+                        return serviceCategories.map((String category) {
+                          return PopupMenuItem<String>(
+                            value: category,
+                            child: Text(category),
+                          );
+                        }).toList();
+                      },
+                    ),
+                    PopupMenuButton<String>(
+                      onSelected: (String value) {
+                        sortEntries(value);
+                      },
+                      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                        const PopupMenuItem<String>(
+                          value: 'rating',
+                          child: Text('Sort by Rating'),
                         ),
-                        itemBuilder: (BuildContext context) {
-                          // Create a list of months for filtering
-                          final List<String> serviceCategories = [
-                            'House Keeping',
-                            'Snow Clearance',
-                            'Handy Services',
-                            'Lawn Mowing',
-                            'Other'
-                          ];
-
-                          return serviceCategories.map((String category) {
-                            return PopupMenuItem<String>(
-                              value: category,
-                              child: Text(category),
-                            );
-                          }).toList();
-                        },
-                      ),
-                    ],
-                  ),
+                        const PopupMenuItem<String>(
+                          value: 'price',
+                          child: Text('Sort by Price'),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              )),
+              ),
+            ),
+          ),
 
           // Body of the widget using a StreamBuilder to listen for changes
           // in the professionalServiceCollection  and reflect them in the UI in real-time.
