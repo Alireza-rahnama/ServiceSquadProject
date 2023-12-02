@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:service_squad/controller/professional_service_controller.dart';
@@ -128,10 +127,10 @@ class _ReviewsViewState extends State<ReviewsView> {
                   Card(
                     margin: EdgeInsets.all(8.0),
                     child: GestureDetector(
-                      onLongPress: () {
-                        // Perform your action here when the Card is long-pressed.
-                        return;
-                      },
+                      // onLongPress: () {
+                      //   // Perform your action here when the Card is long-pressed.
+                      //   return;
+                      // },
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Column(
@@ -233,8 +232,6 @@ Widget BuildImageFromUrl(ProfessionalService entry) {
     return Container(); // You can customize this to show a placeholder image
   }
 }
-
-
 
 Row RatingEvaluatorVersion2(int entryRating) {
   switch (entryRating) {
@@ -346,22 +343,5 @@ Row RatingEvaluator2(int entryRating) {
       ]);
     default:
       return Row(); // Handle other cases or return an empty row if the rating is not 1-5.
-  }
-}
-
-class DateHeader extends StatelessWidget {
-  final String text;
-
-  const DateHeader({required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        padding: EdgeInsets.all(8.0),
-        child: Text(text,
-            style: GoogleFonts.pacifico(
-              color: Colors.deepPurple,
-              fontSize: 30.0,
-            )));
   }
 }

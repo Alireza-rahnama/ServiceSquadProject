@@ -1,5 +1,3 @@
-import 'dart:ffi';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -65,7 +63,7 @@ class _NewEntryViewState extends State<ReviewEntryView> {
         rating: rating,
         reviewsMap: newReviewsMap,
         location: professionalService.location,
-        email: FirebaseAuth.instance.currentUser?.email,
+        email: professionalService.email,
         technicianAlias: professionalService.technicianAlias!,
         imagePath: professionalService.imagePath,
         reviewList: newReviewList);

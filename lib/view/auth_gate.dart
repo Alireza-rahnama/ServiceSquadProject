@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:service_squad/view_2.0/main_view.dart';
 
-
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
   

@@ -121,8 +121,7 @@ class _NewEntryViewState extends State<ServiceEntryView> {
         // category: categoryController.text,
         category: category,
         serviceDescription: serviceDescription,
-        wage: double.parse(
-            wageController.text.isNotEmpty ? wageController.text : '1.0'),
+        wage: wage,
         rating: 5,
         location: location,
         technicianAlias: technicianAlias!,

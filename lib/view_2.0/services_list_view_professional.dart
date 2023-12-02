@@ -9,26 +9,27 @@ import 'package:service_squad/view/service_entry_view.dart';
 import '../controller/profile_controller.dart';
 import '../model/professional_service.dart';
 
-
-class ProfessionalListServicesView  extends StatefulWidget {
+class ProfessionalListServicesView extends StatefulWidget {
   ProfessionalListServicesView({Key? key}) : super(key: key);
   bool isDark = false;
   String categoryToPopulate = '';
-  ProfessionalListServicesView.WithPersistedThemeAndCategory(bool inheritedIsDark,
-      String categoryName) {
+
+  ProfessionalListServicesView.WithPersistedThemeAndCategory(
+      bool inheritedIsDark, String categoryName) {
     isDark = inheritedIsDark;
     categoryToPopulate = categoryName;
   }
+
   @override
   State<ProfessionalListServicesView> createState() =>
       _ProfessionalListServicesViewState.withPersistedThemeAndCategory(
           isDark, categoryToPopulate);
 }
 
-class _ProfessionalListServicesViewState extends State<ProfessionalListServicesView> {
-// Instance of CarService to interact with Firestore for CRUD operations on cars.
+class _ProfessionalListServicesViewState
+    extends State<ProfessionalListServicesView> {
   final ProfessionalServiceController professionalServiceController =
-  ProfessionalServiceController();
+      ProfessionalServiceController();
   String? selectedCategory;
   bool isDark;
   List<ProfessionalService> filteredEntries = [];
@@ -37,8 +38,8 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
   String categoryName;
   XFile? _image;
 
-  _ProfessionalListServicesViewState.withPersistedThemeAndCategory(this.isDark,
-      this.categoryName);
+  _ProfessionalListServicesViewState.withPersistedThemeAndCategory(
+      this.isDark, this.categoryName);
 
   Future<void> _pickImageFromGallery() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
@@ -50,7 +51,7 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
   void _showEditDialog(BuildContext context,
       ProfessionalService professionalServiceEntry, int index) {
     TextEditingController descriptionEditingController =
-    TextEditingController();
+        TextEditingController();
     descriptionEditingController.text = professionalServiceEntry
         .serviceDescription; // Initialize the text field with existing content.
 
@@ -58,7 +59,7 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
     wageEditingController.text = '${professionalServiceEntry!.wage}';
 
     ProfessionalServiceController professionalServiceController =
-    ProfessionalServiceController();
+        ProfessionalServiceController();
 
     showDialog(
       context: context,
@@ -93,8 +94,7 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
               child: Text('Save'),
               onPressed: () async {
                 print(
-                    'professionalServiceEntrycategory is: ${professionalServiceEntry!
-                        .category}');
+                    'professionalServiceEntrycategory is: ${professionalServiceEntry!.category}');
                 // Save the edited content to the service entry.
                 String location = await ProfileController()
                     .getUserLocation(FirebaseAuth.instance.currentUser!.uid);
@@ -106,9 +106,12 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
                         id: professionalServiceEntry!.id,
                         rating: professionalServiceEntry.rating,
                         location: location,
-                        email: FirebaseAuth.instance.currentUser?.email,
+                        email: professionalServiceEntry.email,
                         technicianAlias:
-                        professionalServiceEntry.technicianAlias));
+                            professionalServiceEntry.technicianAlias,
+                        imagePath: professionalServiceEntry.imagePath,
+                        reviewList: professionalServiceEntry.reviewList,
+                        reviewsMap: professionalServiceEntry.reviewsMap));
 
                 updateState(professionalServiceEntry.category);
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -136,11 +139,11 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
 
     final serviceEntries = selectedCategory != null
         ? await professionalServiceController
-        .getProfessionalServices(selectedCategory!)
-        .first
+            .getProfessionalServices(selectedCategory!)
+            .first
         : await professionalServiceController
-        .getAllProfessionalServices()
-        .first;
+            .getAllProfessionalServices()
+            .first;
     print('length of serviceEntries is ${serviceEntries.length}');
     // final serviceEntries = await professionalServiceController
     //     .getAllAvailableProfessionalServiceCollections()
@@ -154,29 +157,25 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
       filteredEntries = List<ProfessionalService>.from(serviceEntries);
       List<int> ratings = [1, 2, 3, 4, 5];
       String queryText = searchController.text.toLowerCase();
-      bool queryIsLocation = false;
 
       print(
-          '!categories.contains(queryText): ${!categories.contains(
-              queryText)}');
+          '!categories.contains(queryText): ${!categories.contains(queryText)}');
       if (!categories.contains(queryText) &&
           !ratings.contains(int.tryParse(queryText))) {
-        queryIsLocation = true;
       }
 
       print('queryText: $queryText');
       print(
           'categories.contains(queryText): ${categories.contains(queryText)}');
       print(
-          'ratings.contains(int.tryParse(queryText)): ${ratings.contains(
-              int.tryParse(queryText))}');
+          'ratings.contains(int.tryParse(queryText)): ${ratings.contains(int.tryParse(queryText))}');
       // Filter based on the rating or category
       if (searchController.text.isNotEmpty) {
         filteredEntries = filteredEntries.where((entry) {
           print('entry.location.toLowerCase() is ${userLocation}');
           return entry.category
-              .toLowerCase()
-              .contains(queryText.toLowerCase()) ||
+                  .toLowerCase()
+                  .contains(queryText.toLowerCase()) ||
               entry.rating == int.tryParse(queryText) ||
               entry.location.contains(queryText.toLowerCase());
         }).toList();
@@ -221,11 +220,11 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
 
     final serviceEntries = selectedCategory != null
         ? await professionalServiceController
-        .getProfessionalServices(selectedCategory!)
-        .first
+            .getProfessionalServices(selectedCategory!)
+            .first
         : await professionalServiceController
-        .getAllProfessionalServices()
-        .first;
+            .getAllProfessionalServices()
+            .first;
     print('length of serviceEntries is ${serviceEntries.length}');
 
     String userLocation = await ProfileController()
@@ -240,8 +239,7 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
       bool queryIsLocation = false;
 
       print(
-          '!categories.contains(queryText): ${!categories.contains(
-              queryText)}');
+          '!categories.contains(queryText): ${!categories.contains(queryText)}');
       if (!categories.contains(queryText) &&
           !ratings.contains(int.tryParse(queryText))) {
         queryIsLocation = true;
@@ -251,8 +249,7 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
       print(
           'categories.contains(queryText): ${categories.contains(queryText)}');
       print(
-          'ratings.contains(int.tryParse(queryText)): ${ratings.contains(
-              int.tryParse(queryText))}');
+          'ratings.contains(int.tryParse(queryText)): ${ratings.contains(int.tryParse(queryText))}');
       // Filter based on the rating or category
       if (searchController.text.isNotEmpty) {
         filteredEntries = filteredEntries.where((entry) {
@@ -309,7 +306,8 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
       // useMaterial3: true,
       brightness: isDark ? Brightness.dark : Brightness.light,
       snackBarTheme: SnackBarThemeData(
-        backgroundColor: Colors.deepPurple, // Example color, ensure it's not conflicting
+        backgroundColor:
+            Colors.deepPurple, // Example color, ensure it's not conflicting
       ),
     );
 
@@ -318,13 +316,14 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
         child: Scaffold(
           // App bar with a title and a logout button.
           appBar: AppBar(
-              automaticallyImplyLeading: false,
-              title: Center(child:Text("My Services",
-                  style: GoogleFonts.lilitaOne(
-                    color: Colors.white,
-                    fontSize: 48.0,
-                  ))),
-              backgroundColor: Colors.deepPurple,
+            automaticallyImplyLeading: false,
+            title: Center(
+                child: Text("My Services",
+                    style: GoogleFonts.lilitaOne(
+                      color: Colors.white,
+                      fontSize: 48.0,
+                    ))),
+            backgroundColor: Colors.deepPurple,
           ),
 
           // Body of the widget using a StreamBuilder to listen for changes
@@ -336,9 +335,8 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
               if (!snapshot.hasData) return CircularProgressIndicator();
 
               List<ProfessionalService> professionalServices =
-              (!filteredEntries.isEmpty) ? filteredEntries : snapshot.data!;
+                  (!filteredEntries.isEmpty) ? filteredEntries : snapshot.data!;
               // professionalServices
-              //     .sort((a, b) => (b.wage! as num).compareTo(a.wage! as num));
 
               String? lastCategory;
 
@@ -357,8 +355,6 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
                           margin: EdgeInsets.all(8.0),
                           child: GestureDetector(
                             onLongPress: () {
-                              // Perform your action here when the Card is long-pressed.
-                              _showEditDialog(context, entry, index);
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),
@@ -390,7 +386,7 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
                                   Row(
                                     children: [
                                       // RatingEvaluator(entry),
-                                      RatingEvaluator2(entry),
+                                      // RatingEvaluator2(entry),
                                       Spacer(),
                                       Spacer(),
                                       IconButton(
@@ -400,26 +396,26 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
                                               'entry with id: ${entry!.id} was selected to delete');
                                           //TODO: IMPLEMENT OR NOT
                                           String? userType =
-                                          await profileController
-                                              .getUserType(FirebaseAuth
-                                              .instance
-                                              .currentUser!
-                                              .uid);
+                                              await profileController
+                                                  .getUserType(FirebaseAuth
+                                                      .instance
+                                                      .currentUser!
+                                                      .uid);
                                           if (userType! ==
                                               "Service Associate") {
                                             await professionalServiceController
                                                 .deleteProfessionalService(
-                                                entry!.id);
+                                                    entry!.id);
 
                                             final serviceEntries =
-                                            await professionalServiceController
-                                                .getAllProfessionalServices()
-                                                .first;
+                                                await professionalServiceController
+                                                    .getAllProfessionalServices()
+                                                    .first;
 
                                             setState(() {
                                               // Initialize filteredEntries with a copy of serviceEntries
                                               filteredEntries = List<
-                                                  ProfessionalService>.from(
+                                                      ProfessionalService>.from(
                                                   serviceEntries);
                                             });
                                           }
@@ -438,16 +434,11 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
                     return Card(
                       margin: EdgeInsets.all(8.0),
                       child: GestureDetector(
-                        onLongPress: () {
-                          // Perform your action here when the Card is long-pressed.
-                          _showEditDialog(context, entry, index);
-                        },
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // BuildImageFromUrl(entry),todo: do we need image here?
                               Text(
                                 entry.serviceDescription,
                                 style: TextStyle(
@@ -473,15 +464,15 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
                                           .deleteProfessionalService(entry!.id);
 
                                       final serviceEntries =
-                                      await professionalServiceController
-                                          .getAllProfessionalServices()
-                                          .first;
+                                          await professionalServiceController
+                                              .getAllProfessionalServices()
+                                              .first;
 
                                       setState(() {
                                         // Initialize filteredEntries with a copy of serviceEntries
                                         filteredEntries =
-                                        List<ProfessionalService>.from(
-                                            serviceEntries);
+                                            List<ProfessionalService>.from(
+                                                serviceEntries);
                                       });
                                     },
                                   ),
@@ -515,10 +506,8 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
               }
             },
             child: Icon(Icons.add),
-          )
-          ,
-        )
-    );
+          ),
+        ));
   }
 }
 
