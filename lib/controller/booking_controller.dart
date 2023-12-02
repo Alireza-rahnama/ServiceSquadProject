@@ -1,6 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:service_squad/controller/professional_service_controller.dart';
 import 'package:service_squad/model/service_booking_data.dart';
 
 class BookingController {
@@ -16,8 +17,59 @@ class BookingController {
         .collection('service_bookings');
   }
 
-  Future<void> createBooking(ServiceBookingData bookingData) async {
-    await bookingsCollection.add(bookingData);
+  /// Called to get all bookings matching a service id.
+  Stream<List<ServiceBookingData?>> getBookingsForServiceID(String serviceID) {
+    final query = bookingsCollection.where("serviceID", isEqualTo: serviceID);
+    return query
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs
+          .map((doc) =>
+          ServiceBookingData.fromMap(doc)
+      ).toList();
+    });
   }
+
+  /// Called to get all bookings for the authenticated service provider.
+  Future<Stream<List<ServiceBookingData?>>> getBookingsForServiceProvider() async {
+    final ps = ProfessionalServiceController();
+    final stream = ps.getAllProfessionalServices();
+    final services = await stream.first;
+    List<String> ids = [];
+    services.forEach((element) {
+      if (element.id != null) {
+        ids.add(element.id!);
+      }
+    });
+
+    final matchingBookings = bookingsCollection.where("serviceID", whereIn: ids);
+    return matchingBookings
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs
+          .map((doc) {
+        final booking = ServiceBookingData.fromMap(doc);
+        return booking;
+      }).toList();
+    });
+  }
+
+  /// Returns all bookings for the authenticated client.
+  Future<Stream<List<ServiceBookingData?>>> getAllBookingsClient() async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final matchingBookings = bookingsCollection.where("clientID", isEqualTo: uid);
+    return matchingBookings
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs
+          .map((doc) =>
+          ServiceBookingData.fromMap(doc)
+      ).toList();
+    });
+  }
+
+  /* Future<void> createBooking(ServiceBookingData bookingData) async {
+    await bookingsCollection.add(bookingData);
+  } */
 
 }

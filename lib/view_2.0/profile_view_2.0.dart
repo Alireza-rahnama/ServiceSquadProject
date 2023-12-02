@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:service_squad/controller/profile_controller.dart';
 import 'package:service_squad/view/category_selection.dart';
+import 'package:service_squad/view_2.0/all_bookings_client_view.dart';
+import 'package:service_squad/view_2.0/all_bookings_provider_view.dart';
 import 'package:service_squad/view_2.0/main_view.dart';
 
 import '../model/user_profile_data.dart';
@@ -256,6 +258,28 @@ class _ProfileViewState extends State<ProfileView> {
                     ),
                   );
                 },
+              ),
+
+              SizedBox(height: 20,),
+              ElevatedButton(
+                child: Text('View bookings'),
+                onPressed: () async {
+                  if (selectedUserType != "Service Associate" &&
+                      selectedUserType != "Client") {
+                      // TODO: HANDLE THIS..
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) {
+                            if (selectedUserType == "Service Associate") {
+                              return AllBookingsProviderView();
+                            }
+                            return AllBookingsClientView();
+                          }),
+                    );
+                  }
+                }
               ),
               // Add any additional widgets you need
             ],
