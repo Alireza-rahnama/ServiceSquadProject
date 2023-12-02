@@ -16,17 +16,19 @@ class _MessageScreenState extends State<MessageScreen> {
     return _auth.currentUser?.email ?? '';
   }
 
- Future<bool> hasUnreadMessages(String conversationId) async {
+ Future<bool> hasUnreadMessages(String conversationId,String contactEmail) async {
   String currentUserEmail = _auth.currentUser?.email ?? '';
 
   QuerySnapshot querySnapshot = await _firestore.collection('conversations')
     .doc(conversationId)
     .collection('messages')
-    .where('receiver', isEqualTo: currentUserEmail) // messages received by the current user
+    .where('sender', isEqualTo: contactEmail) // messages received by the current user
     .where('isRead', isEqualTo: false) // messages that are not read
     .get();
 
-  return querySnapshot.docs.isNotEmpty;
+  bool hasUnread = querySnapshot.docs.isNotEmpty;
+  print("Unread messages for $conversationId: $hasUnread");
+  return hasUnread;
 }
 
 
@@ -205,13 +207,14 @@ class _MessageScreenState extends State<MessageScreen> {
       String conversationId = generateConversationId(getCurrentUserEmail(), contact);
 
       return FutureBuilder<bool>(
-        future: hasUnreadMessages(conversationId),
+        future: hasUnreadMessages(conversationId,contact),
         builder: (context, snapshot) {
           bool hasUnread = snapshot.data ?? false;
+          print("hasUnread:,,,,,${hasUnread}");
           return ListTile(
             title: Text(
               contact,
-              style: TextStyle(fontWeight: hasUnread ? FontWeight.bold : FontWeight.normal),
+              style: TextStyle(fontWeight: hasUnread ? FontWeight.normal : FontWeight.bold),
             ),
             onTap: () {
               startChat(getCurrentUserEmail(), contact);

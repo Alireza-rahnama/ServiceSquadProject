@@ -38,11 +38,30 @@ class _ChatInterfaceState extends State<ChatInterface> {
     return userDoc.data()?['technicianAlias'] ?? widget.otherUserEmail; // Default to email if 'technicianAlias' is not found
   }
 
+  ScrollController _scrollController = ScrollController();
+
   @override
 void initState() {
   super.initState();
-  // Call the mark as read function when the chat interface is opened
-  markMessagesAsRead(widget.conversationId); // Call this when the chat screen is opened
+  
+  _scrollController = ScrollController();
+  _scrollController.addListener(_scrollListener);
+  // _scrollController.addListener(() {
+  //     if (_scrollController.position.atEdge) { // Check if the user is at the bottom of the list
+  //       bool isBottom = _scrollController.position.pixels == _scrollController.position.maxScrollExtent;
+  //       if (isBottom) {
+  //         // User has scrolled to the bottom, mark messages as read
+  //         markMessagesAsRead(widget.conversationId);
+  //       }
+  //     }
+  //   });
+}
+
+void _scrollListener() {
+  if (_scrollController.offset >= _scrollController.position.maxScrollExtent &&
+      !_scrollController.position.outOfRange) {
+      markMessagesAsRead(widget.conversationId);
+  }
 }
 
   @override
@@ -75,6 +94,7 @@ void initState() {
         
         
                     return ListView(
+                      controller: _scrollController,
                       reverse: true,
                       children: snapshot.data!.docs.map((DocumentSnapshot document) {
                         Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
@@ -233,7 +253,7 @@ void markMessagesAsRead(String conversationId) async {
   QuerySnapshot querySnapshot = await _firestore.collection('conversations')
     .doc(conversationId)
     .collection('messages')
-    .where('receiver', isEqualTo: currentUserEmail) // Assuming a 'receiver' field exists
+    .where('sender', isEqualTo: widget.otherUserEmail) // Assuming a 'receiver' field exists
     .get();
 
   // Create a batch to update all unread messages sent by other users
@@ -330,7 +350,9 @@ void sendPushMessage(String token, String message) async {
 
   @override
   void dispose() {
-    _messageController.dispose();
+    // _messageController.dispose();
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
     super.dispose();
   }
 }
