@@ -48,12 +48,12 @@ class ServiceBookingData {
 
     return ServiceBookingData(
         id: doc.id,
-        serviceID: map['userType'],
-        bookingStart: map['bookingStart'],
-        bookingLength: map['bookingLength'],
-        dateCreated: map['dateCreated'],
-        clientID: map['clientID'],
-        address: map['address'],);
+        serviceID: map['serviceID'].toString(),
+        bookingStart: DateTime.fromMillisecondsSinceEpoch(int.parse(map['bookingStart'].toString())),
+        bookingLength: int.parse(map['bookingLength'].toString()),
+        dateCreated: DateTime.fromMillisecondsSinceEpoch(int.parse(map['dateCreated'].toString())),
+        clientID: map['clientID'].toString(),
+        address: map['address'].toString(),);
   }
 }
 

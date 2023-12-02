@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
 import '../model/professional_service.dart';
 
 /// A service class that provides methods to perform CRUD operations
@@ -169,6 +168,27 @@ class ProfessionalServiceController {
       // Handle other errors
       print('Error: $e');
     }
+  }
+
+  Future<ProfessionalService?> getProfessionalServiceByID(String id) async {
+    QuerySnapshot querySnapshot =
+      await allProfessionalServiceCollectionToDisplayToCustomers
+          .where('id', isEqualTo: id)
+          .get();
+    if (querySnapshot.docs.isNotEmpty) {
+      // Update the document in the individual user's collection
+      String documentId = querySnapshot.docs.first.id;
+      final doc = await allProfessionalServiceCollectionToDisplayToCustomers
+          .doc(documentId).get();
+      Map<String, dynamic>? map = doc.data() as Map<String, dynamic>?;
+
+      if (map == null) {
+        // Handle the case where the document doesn't contain data as expected
+        return null;
+      }
+      return ProfessionalService.fromMap(map);
+    }
+    return null;
   }
 
   // Future<void> updateProfessionalService(
