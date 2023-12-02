@@ -360,7 +360,7 @@ class _ProfessionalListServicesViewState
                           child: GestureDetector(
                             onLongPress: () {
                               // Perform your action here when the Card is long-pressed.
-                              _showEditDialog(context, entry, index);
+                              // _showEditDialog(context, entry, index);
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),
@@ -392,7 +392,7 @@ class _ProfessionalListServicesViewState
                                   Row(
                                     children: [
                                       // RatingEvaluator(entry),
-                                      RatingEvaluator2(entry),
+                                      // RatingEvaluator2(entry),
                                       Spacer(),
                                       Spacer(),
                                       IconButton(
@@ -440,10 +440,10 @@ class _ProfessionalListServicesViewState
                     return Card(
                       margin: EdgeInsets.all(8.0),
                       child: GestureDetector(
-                        onLongPress: () {
-                          // Perform your action here when the Card is long-pressed.
-                          _showEditDialog(context, entry, index);
-                        },
+                        // onLongPress: () {
+                        //   // Perform your action here when the Card is long-pressed.
+                        //   // _showEditDialog(context, entry, index);
+                        // },
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Column(

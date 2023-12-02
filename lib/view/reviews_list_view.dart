@@ -128,10 +128,10 @@ class _ReviewsViewState extends State<ReviewsView> {
                   Card(
                     margin: EdgeInsets.all(8.0),
                     child: GestureDetector(
-                      onLongPress: () {
-                        // Perform your action here when the Card is long-pressed.
-                        return;
-                      },
+                      // onLongPress: () {
+                      //   // Perform your action here when the Card is long-pressed.
+                      //   return;
+                      // },
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Column(
