@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:service_squad/controller/booking_controller.dart';
-
 import '../model/professional_service.dart';
 import '../model/service_booking_data.dart';
 

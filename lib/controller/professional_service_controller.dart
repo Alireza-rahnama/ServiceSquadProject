@@ -95,59 +95,10 @@ class ProfessionalServiceController {
   Future<void> updateProfessionalService(
       ProfessionalService professionalService) async {
     try {
-      // CollectionReference professionalUserCollection =
-      //     FirebaseFirestore.instance.collection('users');
-      //
-      // QuerySnapshot userCollectionWithMatchingEmailSnapshot =
-      //     await professionalUserCollection
-      //         .where('email', isEqualTo: professionalService.email)
-      //         .get();
-      //
-      // if (userCollectionWithMatchingEmailSnapshot.docs.isNotEmpty) {
-      //   // Document found, get its reference
-      //   var userDocumentReference =
-      //       userCollectionWithMatchingEmailSnapshot.docs.first.reference;
-      //
-      //   // Access the professional_services subcollection using the collection method
-      //   CollectionReference professionalServicesCollection =
-      //       userDocumentReference.collection('professional_services');
-      //
-      //   // perform operations on the professional_services subcollection
-      //   QuerySnapshot userProfessionalServicesCollectionWithMatchingIdSnapshot =
-      //       await professionalServicesCollection
-      //           .where('id', isEqualTo: professionalService.id)
-      //           .get();
-      //   if (userProfessionalServicesCollectionWithMatchingIdSnapshot
-      //       .docs.isNotEmpty) {
-      //     // Update the document in the individual user's collection
-      //     String documentId =
-      //         userProfessionalServicesCollectionWithMatchingIdSnapshot
-      //             .docs.first.id;
-      //     await individualUserProfessionalServiceCollection
-      //         .doc(documentId)
-      //         .update(professionalService.toMap());
-      //   }
-
-      // .doc(professionalService.email)
-      // .collection('professional_services');
-      // Query the collection to find the document ID based on the ID
-      // QuerySnapshot querySnapshot =
-      // await individualUserProfessionalServiceCollection
-      //     .where('email', isEqualTo: professionalService.email)
-      //     .get();
-
       QuerySnapshot querySnapshot2 =
       await allProfessionalServiceCollectionToDisplayToCustomers
           .where('id', isEqualTo: professionalService.id)
           .get();
-
-      // if (querySnapshot.docs.isNotEmpty) {
-      //   // Update the document in the individual user's collection
-      //   String documentId = querySnapshot.docs.first.id;
-      //   await individualUserProfessionalServiceCollection
-      //       .doc(documentId)
-      //       .update(professionalService.toMap());
-      // }
 
       // Update the document in the global collection
       if (querySnapshot2.docs.isNotEmpty) {
@@ -159,11 +110,6 @@ class ProfessionalServiceController {
         // Handle the case where the document is not found in the global collection
         print('Document not found in the global collection');
       }
-      // }
-      // else {
-      //   print('Document not found for category: ${professionalService.category}');
-      // }
-    // }
     } catch (e) {
       // Handle other errors
       print('Error: $e');
@@ -190,52 +136,6 @@ class ProfessionalServiceController {
     }
     return null;
   }
-
-  // Future<void> updateProfessionalService(
-  //     ProfessionalService professionalService) async {
-  //   try {
-  //     // Query the collection to find the document ID based on the ID
-  //     QuerySnapshot querySnapshot =
-  //         await individualUserProfessionalServiceCollection
-  //             .where('id', isEqualTo: professionalService.id)
-  //             .get();
-  //
-  //     if (querySnapshot.docs.isNotEmpty) {
-  //       // Update the document in the individual user's collection
-  //       String documentId = querySnapshot.docs.first.id;
-  //       await individualUserProfessionalServiceCollection
-  //           .doc(documentId)
-  //           .update(professionalService.toMap());
-  //
-  //       // Use a separate try-catch block for the global collection update
-  //       try {
-  //         QuerySnapshot querySnapshot2 =
-  //             await allProfessionalServiceCollectionToDisplayToCustomers
-  //                 .where('id', isEqualTo: professionalService.id)
-  //                 .get();
-  //
-  //         if (querySnapshot2.docs.isNotEmpty) {
-  //           String documentId2 = querySnapshot2.docs.first.id;
-  //           await allProfessionalServiceCollectionToDisplayToCustomers
-  //               .doc(documentId2)
-  //               .update(professionalService.toMap());
-  //         } else {
-  //           // Handle the case where the document is not found in the global collection
-  //           print('Document not found in the global collection');
-  //         }
-  //       } catch (e) {
-  //         // Handle errors for the global collection update
-  //         print('Error updating global collection: $e');
-  //       }
-  //     } else {
-  //       print(
-  //           'Document not found for category: ${professionalService.category} in professionals service collection');
-  //     }
-  //   } catch (e) {
-  //     // Handle other errors
-  //     print('Error updating individual collection: $e');
-  //   }
-  // }
 
   Future<void> deleteProfessionalService(String? id) async {
     try {
