@@ -38,7 +38,6 @@ class _AllBookingsClientViewState extends State<AllBookingsClientView> {
   }
 
   Future<void> asyncInit() async {
-    print("made async call");
     final newStream = await BookingController().getAllBookingsClient();
     setState(() {
       stream = newStream;
@@ -99,9 +98,6 @@ class _AllBookingsClientViewState extends State<AllBookingsClientView> {
                               children: [
                                 Row(
                                   children: [
-                                    // BuildImageFromUrl(entry),
-                                    // Icon(Icons.face),
-                                    // Spacer(),
                                     Text(
                                       '${getDateString(booking.bookingStart)}',
                                       style: TextStyle(

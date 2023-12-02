@@ -127,6 +127,27 @@ class ProfessionalServiceController {
     }
   }
 
+  Future<ProfessionalService?> getProfessionalServiceByID(String? id) async {
+    QuerySnapshot querySnapshot =
+    await individualUserProfessionalServiceCollection
+        .where('id', isEqualTo: id!)
+        .get();
+    if (querySnapshot.docs.isNotEmpty) {
+      // Update the document in the individual user's collection
+      String documentId = querySnapshot.docs.first.id;
+      final doc = await individualUserProfessionalServiceCollection
+          .doc(documentId).get();
+      Map<String, dynamic>? map = doc.data() as Map<String, dynamic>?;
+
+      if (map == null) {
+        // Handle the case where the document doesn't contain data as expected
+        return null;
+      }
+      return ProfessionalService.fromMap(map);
+    }
+    return null;
+  }
+
   Future<void> deleteProfessionalService(String? id) async {
     try {
       // Query the collection to find the document ID based on the ID

@@ -54,6 +54,12 @@ class BookingController {
     });
   }
 
+  Future<ServiceBookingData?> getAssociatedProfessionalService(ServiceBookingData booking) {
+    final serviceController = ProfessionalServiceController();
+    serviceController.getProfessionalServiceByID(booking.serviceID);
+    return null;
+  }
+
   /// Returns all bookings for the authenticated client.
   Future<Stream<List<ServiceBookingData?>>> getAllBookingsClient() async {
     final uid = FirebaseAuth.instance.currentUser!.uid;
@@ -67,6 +73,8 @@ class BookingController {
       ).toList();
     });
   }
+
+
 
   /* Future<void> createBooking(ServiceBookingData bookingData) async {
     await bookingsCollection.add(bookingData);
