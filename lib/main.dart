@@ -31,6 +31,7 @@ Future<void> main() async {
   //Just for testing Phase
   // ProfessionalServiceController professionalServiceController = ProfessionalServiceController();
   // professionalServiceController.clearAllDocsInAllProfessionalServiceCollectionToDisplayToCustomers();
+  // professionalServiceController.clearAllDocsInIndividualUserProfessionalServiceCollection();
 
   runApp(const MainApp());
 }

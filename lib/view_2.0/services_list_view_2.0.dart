@@ -49,7 +49,17 @@ class _CategoriesViewState extends State<CategoriesView> {
   }
 
   // to sort the ratings and the price of the entries
-  void sortEntries(String sortBy) {
+  void sortEntries(String sortBy) async{
+    final serviceEntries = selectedCategory != null
+        ? await professionalServiceController
+        .getProfessionalServices(selectedCategory!.toLowerCase())
+        .first
+        : await professionalServiceController
+        .getAllAvailableProfessionalServiceCollections()
+        .first;
+
+    filteredEntries = List<ProfessionalService>.from(serviceEntries);
+
     setState(() {
       if (sortBy == 'rating') {
         filteredEntries.sort((a, b) => b.rating!.compareTo(a.rating as num));
@@ -402,7 +412,7 @@ class _CategoriesViewState extends State<CategoriesView> {
                           'Snow Clearance',
                           'Handy Services',
                           'Lawn Mowing',
-                          'Other'
+                          'All'
                         ];
                         return serviceCategories.map((String category) {
                           return PopupMenuItem<String>(
