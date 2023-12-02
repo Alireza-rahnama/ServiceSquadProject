@@ -251,18 +251,21 @@ class _CategoriesViewState extends State<CategoriesView> {
   void applySearchBarLocationBasedQueryAndUpdateState(
       bool isOnSubmitted) async {
     List<String> categories = [
-      "Snow Clearance",
-      "House Keeping",
-      "Handy Services",
-      "Lawn Mowing"
+      "snow clearance",
+      "house keeping",
+      "handy services",
+      "lawn mowing"
     ];
 
-    final serviceEntries = selectedCategory != null
+    print('selesctedCategory in filtering stage issssss: $selectedCategory');
+    final serviceEntries = selectedCategory != null && categories.contains(selectedCategory)
         ? await professionalServiceController
-            .getProfessionalServices(selectedCategory!)
+            // .getProfessionalServices(selectedCategory!)
+            .getAllAvailableProfessionalServiceCollectionsByCategory(
+                selectedCategory!)
             .first
         : await professionalServiceController
-            .getAllProfessionalServices()
+            .getAllAvailableProfessionalServiceCollections()
             .first;
     print('length of serviceEntries is ${serviceEntries.length}');
     // final serviceEntries = await professionalServiceController
@@ -326,7 +329,8 @@ class _CategoriesViewState extends State<CategoriesView> {
 
   void updateState(String category) async {
     final professionalServiceEntries = await professionalServiceController
-        .getProfessionalServices(category)
+        // .getProfessionalServices(category)
+        .getAllAvailableProfessionalServiceCollectionsByCategory(category)
         .first;
 
     setState(() {
@@ -447,7 +451,8 @@ class _CategoriesViewState extends State<CategoriesView> {
                         child: Padding(
                           padding: const EdgeInsets.all(1.0),
                           child: SearchAnchor(
-                            builder: (BuildContext context, SearchController controller) {
+                            builder: (BuildContext context,
+                                SearchController controller) {
                               return Container(
                                 constraints: BoxConstraints(maxWidth: 345),
                                 child: Column(
@@ -455,19 +460,23 @@ class _CategoriesViewState extends State<CategoriesView> {
                                     SearchBar(
                                       hintText: "location... ",
                                       controller: searchController,
-                                      padding: const MaterialStatePropertyAll<EdgeInsets>(
+                                      padding: const MaterialStatePropertyAll<
+                                          EdgeInsets>(
                                         EdgeInsets.symmetric(horizontal: 16.0),
                                       ),
                                       onChanged: (_) async {
-                                        applySearchBarLocationBasedQueryAndUpdateState(false);
+                                        applySearchBarLocationBasedQueryAndUpdateState(
+                                            false);
                                       },
                                       onSubmitted: (_) async {
-                                        applySearchBarLocationBasedQueryAndUpdateState(true);
+                                        applySearchBarLocationBasedQueryAndUpdateState(
+                                            true);
                                       },
                                       leading: IconButton(
                                         icon: Icon(Icons.search),
                                         onPressed: () async {
-                                          applySearchBarLocationBasedQueryAndUpdateState(false);
+                                          applySearchBarLocationBasedQueryAndUpdateState(
+                                              false);
                                         },
                                       ),
                                     ),
@@ -475,7 +484,8 @@ class _CategoriesViewState extends State<CategoriesView> {
                                 ),
                               );
                             },
-                            suggestionsBuilder: (BuildContext context, SearchController controller) {
+                            suggestionsBuilder: (BuildContext context,
+                                SearchController controller) {
                               return List<ListTile>.generate(5, (int index) {
                                 final String item = 'item $index';
                                 return ListTile(
@@ -542,6 +552,8 @@ class _CategoriesViewState extends State<CategoriesView> {
                         onSelected: (String category) async {
                           setState(() {
                             selectedCategory = category;
+                            applySearchBarLocationBasedQueryAndUpdateState(
+                                true);
                           });
                           print("selectedCategory is $selectedCategory");
                           applySearchBarLocationBasedQueryAndUpdateState(false);
@@ -667,7 +679,8 @@ class _CategoriesViewState extends State<CategoriesView> {
           // Body of the widget using a StreamBuilder to listen for changes
           // in the professionalServiceCollection  and reflect them in the UI in real-time.
           body: StreamBuilder<List<ProfessionalService>>(
-            stream: professionalServiceController.getAllProfessionalServices(),
+            // stream: professionalServiceController.getAllProfessionalServices(),
+            stream: professionalServiceController.getAllAvailableProfessionalServiceCollections(),
             builder: (context, snapshot) {
               // Show a loading indicator until data is fetched from Firestore.
               if (!snapshot.hasData) return CircularProgressIndicator();
@@ -788,13 +801,21 @@ class _CategoriesViewState extends State<CategoriesView> {
 
                                           //TODO: IMPLEMENT LOGIC AND VIEW Maybe only for client user type
                                           // Maybe show booked clients to service providers.
-                                          String? userType = await profileController
-                                              .getUserType(FirebaseAuth.instance.currentUser!.uid);
-                                          if (userType != null && userType == "Client") {
+                                          String? userType =
+                                              await profileController
+                                                  .getUserType(FirebaseAuth
+                                                      .instance
+                                                      .currentUser!
+                                                      .uid);
+                                          if (userType != null &&
+                                              userType == "Client") {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => BookServiceView(service: entry,),
+                                                builder: (context) =>
+                                                    BookServiceView(
+                                                  service: entry,
+                                                ),
                                               ),
                                             );
                                           }

@@ -132,7 +132,7 @@ class _NewEntryViewState extends State<ReviewEntryView> {
                   },),
             ),
             body: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(35.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
 

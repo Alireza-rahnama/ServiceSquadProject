@@ -351,7 +351,6 @@ class _CategoriesViewState extends State<CategoriesView> {
                           padding: const EdgeInsets.all(1.0),
                           child: SearchAnchor(builder: (BuildContext context,
                               SearchController controller) {
-                            //TODO: We can implement the location logic here to search services by location
                             return Container(
                               constraints: BoxConstraints(maxWidth: 345),
                               child: Column(
@@ -455,20 +454,11 @@ class _CategoriesViewState extends State<CategoriesView> {
                 itemCount: professionalServices.length,
                 itemBuilder: (context, index) {
                   final entry = professionalServices[index];
-                  if (lastCategory == null || entry.category != lastCategory) {
-                    final headerText = entry.category;
-                    lastCategory = entry.category!;
-
-                    return Column(
+                  return Column(
                       children: [
-                        // DateHeader(text: headerText),
                         Card(
                           margin: EdgeInsets.all(8.0),
                           child: GestureDetector(
-                            onLongPress: () {
-                              // Perform your action here when the Card is long-pressed.
-                              _showEditDialog(context, entry, index);
-                            },
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: Column(
@@ -509,7 +499,6 @@ class _CategoriesViewState extends State<CategoriesView> {
                                               '${FirebaseAuth.instance.currentUser!.email}');
                                           print(
                                               'selectedProfessionalServiceCategory is ${entry.category}');
-                                          //TODO: IMPLEMENT LOGIC AND VIEW Maybe only for client user type
                                         },
                                       )
                                     ],
@@ -548,14 +537,11 @@ class _CategoriesViewState extends State<CategoriesView> {
                                               '${FirebaseAuth.instance.currentUser!.email}');
                                           print(
                                               'selectedCategory is ${selectedCategory}');
-                                          //TODO: IMPLEMENT LOGIC AND VIEW Maybe only for client user type
                                           print(
                                               '${FirebaseAuth.instance.currentUser!.email}');
                                           print(
                                               'selectedCategory is ${selectedCategory}');
 
-                                          //TODO: IMPLEMENT LOGIC AND VIEW Maybe only for client user type
-                                          // Maybe show booked clients to service providers.
                                           String? userType =
                                               await profileController
                                                   .getUserType(FirebaseAuth
@@ -585,65 +571,6 @@ class _CategoriesViewState extends State<CategoriesView> {
                         ),
                       ],
                     );
-                  } else {
-                    return Card(
-                      margin: EdgeInsets.all(8.0),
-                      child: GestureDetector(
-                        onLongPress: () {
-                          // Perform your action here when the Card is long-pressed.
-                          _showEditDialog(context, entry, index);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // BuildImageFromUrl(entry),todo: do we need image here?
-                              Text(
-                                entry.serviceDescription,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(height: 15),
-                              Text(
-                                '${entry.serviceDescription}',
-                                style: TextStyle(fontSize: 14),
-                              ),
-                              SizedBox(height: 15),
-                              Row(
-                                children: [
-                                  RatingEvaluator(entry),
-                                  Spacer(),
-                                  Spacer(),
-                                  IconButton(
-                                    icon: Icon(Icons.delete),
-                                    onPressed: () async {
-                                      await professionalServiceController
-                                          .deleteProfessionalService(entry!.id);
-
-                                      final serviceEntries =
-                                          await professionalServiceController
-                                              .getAllAvailableProfessionalServiceCollections() //.getAllProfessionalServices()
-                                              .first;
-
-                                      setState(() {
-                                        // Initialize filteredEntries with a copy of serviceEntries
-                                        filteredEntries =
-                                            List<ProfessionalService>.from(
-                                                serviceEntries);
-                                      });
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  }
                 },
               );
             },
@@ -799,37 +726,5 @@ Row RatingEvaluator2(ProfessionalService entry) {
       ]);
     default:
       return Row(); // Handle other cases or return an empty row if the rating is not 1-5.
-  }
-}
-
-class Month {
-  int num;
-  String name;
-
-  Month(this.num, this.name);
-
-  String get Name {
-    return name;
-  }
-
-  int get Number {
-    return num;
-  }
-}
-
-class DateHeader extends StatelessWidget {
-  final String text;
-
-  const DateHeader({required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        padding: EdgeInsets.all(8.0),
-        child: Text(text,
-            style: GoogleFonts.lilitaOne(
-              color: Colors.deepPurple,
-              fontSize: 30.0,
-            )));
   }
 }
