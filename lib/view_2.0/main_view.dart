@@ -29,15 +29,12 @@ class _MainScreenState extends State<MainScreen> {
       checkTechnicalAlias(currentUserId!);
       fetchUserType(currentUserId!);
     }
-    // selectedUserType = getUserType(currentUserId!) as String?;
+
 
 
   }
 
-  // Future<String?> getUserType(String uid) async {
-  //   selectedUserType = (await profileController.getUserType(uid))!;
-  //   return selectedUserType;
-  // }
+
   Future<void> fetchUserType(String uid) async {
     String? userType = await profileController.getUserType(uid);
     if (userType != null) {
@@ -66,8 +63,6 @@ class _MainScreenState extends State<MainScreen> {
     updateFcmToken();  // Call the method to update the token
     // Determine which view to return based on user type
 
-    //currentUserId = FirebaseAuth.instance.currentUser?.uid;
-    //selectedUserType = (profileController.getUserType(currentUserId!))! as String;
     print('Selected User Typeeeeeeeeeee');
     print(selectedUserType);
 
@@ -158,56 +153,3 @@ class _MainScreenState extends State<MainScreen> {
   }
 }
 
-  /*
-  final List<Widget> _children = [
-    CategoriesView(),
-    MessagesView(),
-    ProfileView(),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: _children[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: onTabTapped,
-        currentIndex: _currentIndex,
-        items: [
-          BottomNavigationBarItem(
-            icon: new Icon(Icons.list),
-            label: 'Services',
-          ),
-          BottomNavigationBarItem(
-            icon: new Icon(Icons.mail),
-            label: 'Messages',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-      ),
-    );
-  }
-
-  void onTabTapped(int index) {
-    // Assuming 'selectedUserType' is a global variable that stores the user type
-    // print("TO DEBUGGGGGGGGGGGGGGGGGG");
-    // print(selectedUserType);
-    if (selectedUserType != 'Select an option' || index == 2) {
-      setState(() {
-        _currentIndex = index;
-      });
-    } else {
-      // Show an alert or a snackbar
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Please select a User Type in Profile and Click Save'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
-  }
-}
-
-   */
