@@ -48,82 +48,82 @@ class _CategoriesViewState extends State<CategoriesView> {
     });
   }
 
-  void _showEditDialog(BuildContext context,
-      ProfessionalService professionalServiceEntry, int index) {
-    TextEditingController descriptionEditingController =
-        TextEditingController();
-    descriptionEditingController.text = professionalServiceEntry
-        .serviceDescription; // Initialize the text field with existing content.
-
-    TextEditingController wageEditingController = TextEditingController();
-    wageEditingController.text = '${professionalServiceEntry!.wage}';
-
-    ProfessionalServiceController professionalServiceController =
-        ProfessionalServiceController();
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Edit Diary Entry'),
-          content: Column(children: [
-            TextField(
-              controller: descriptionEditingController,
-              decoration: InputDecoration(labelText: "New Description"),
-              maxLines: null, // Allows multiple lines of text.
-            ),
-            TextField(
-              controller: wageEditingController,
-              decoration: InputDecoration(labelText: "New Wage"),
-              maxLines: null, // Allows multiple lines of text.
-            ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () => _pickImageFromGallery(),
-              child: Text('pick image from gallery'),
-            )
-          ]),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Save'),
-              onPressed: () async {
-                print(
-                    'professionalServiceEntrycategory is: ${professionalServiceEntry!.category}');
-                // Save the edited content to the service entry.
-                String location = await ProfileController()
-                    .getUserLocation(FirebaseAuth.instance.currentUser!.uid);
-                await professionalServiceController.updateProfessionalService(
-                    ProfessionalService(
-                        serviceDescription: descriptionEditingController.text,
-                        wage: double.parse(wageEditingController.text),
-                        category: professionalServiceEntry.category,
-                        id: professionalServiceEntry!.id,
-                        rating: professionalServiceEntry.rating,
-                        location: location,
-                        email: FirebaseAuth.instance.currentUser?.email,
-                        technicianAlias:
-                            professionalServiceEntry.technicianAlias));
-
-                updateState(professionalServiceEntry.category);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content: Center(child: Text('Entry successfully saved!')),
-                      backgroundColor: Colors.green),
-                );
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // void _showEditDialog(BuildContext context,
+  //     ProfessionalService professionalServiceEntry, int index) {
+  //   TextEditingController descriptionEditingController =
+  //       TextEditingController();
+  //   descriptionEditingController.text = professionalServiceEntry
+  //       .serviceDescription; // Initialize the text field with existing content.
+  //
+  //   TextEditingController wageEditingController = TextEditingController();
+  //   wageEditingController.text = '${professionalServiceEntry!.wage}';
+  //
+  //   ProfessionalServiceController professionalServiceController =
+  //       ProfessionalServiceController();
+  //
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text('Edit Diary Entry'),
+  //         content: Column(children: [
+  //           TextField(
+  //             controller: descriptionEditingController,
+  //             decoration: InputDecoration(labelText: "New Description"),
+  //             maxLines: null, // Allows multiple lines of text.
+  //           ),
+  //           TextField(
+  //             controller: wageEditingController,
+  //             decoration: InputDecoration(labelText: "New Wage"),
+  //             maxLines: null, // Allows multiple lines of text.
+  //           ),
+  //           SizedBox(height: 10),
+  //           ElevatedButton(
+  //             onPressed: () => _pickImageFromGallery(),
+  //             child: Text('pick image from gallery'),
+  //           )
+  //         ]),
+  //         actions: <Widget>[
+  //           TextButton(
+  //             child: Text('Cancel'),
+  //             onPressed: () {
+  //               Navigator.of(context).pop();
+  //             },
+  //           ),
+  //           TextButton(
+  //             child: Text('Save'),
+  //             onPressed: () async {
+  //               print(
+  //                   'professionalServiceEntrycategory is: ${professionalServiceEntry!.category}');
+  //               // Save the edited content to the service entry.
+  //               String location = await ProfileController()
+  //                   .getUserLocation(FirebaseAuth.instance.currentUser!.uid);
+  //               await professionalServiceController.updateProfessionalService(
+  //                   ProfessionalService(
+  //                       serviceDescription: descriptionEditingController.text,
+  //                       wage: double.parse(wageEditingController.text),
+  //                       category: professionalServiceEntry.category,
+  //                       id: professionalServiceEntry!.id,
+  //                       rating: professionalServiceEntry.rating,
+  //                       location: location,
+  //                       email: FirebaseAuth.instance.currentUser?.email,
+  //                       technicianAlias:
+  //                           professionalServiceEntry.technicianAlias));
+  //
+  //               updateState(professionalServiceEntry.category);
+  //               ScaffoldMessenger.of(context).showSnackBar(
+  //                 SnackBar(
+  //                     content: Center(child: Text('Entry successfully saved!')),
+  //                     backgroundColor: Colors.green),
+  //               );
+  //               Navigator.of(context).pop();
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   void applySearchBarLocationCategoryRatingBasedQueryAndUpdateState3(
       bool isOnSubmitted) async {

@@ -65,7 +65,7 @@ class _NewEntryViewState extends State<ReviewEntryView> {
         rating: rating,
         reviewsMap: newReviewsMap,
         location: professionalService.location,
-        email: FirebaseAuth.instance.currentUser?.email,
+        email: professionalService.email,
         technicianAlias: professionalService.technicianAlias!,
         imagePath: professionalService.imagePath,
         reviewList: newReviewList);

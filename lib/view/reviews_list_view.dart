@@ -234,8 +234,6 @@ Widget BuildImageFromUrl(ProfessionalService entry) {
   }
 }
 
-
-
 Row RatingEvaluatorVersion2(int entryRating) {
   switch (entryRating) {
     case (1):
@@ -346,22 +344,5 @@ Row RatingEvaluator2(int entryRating) {
       ]);
     default:
       return Row(); // Handle other cases or return an empty row if the rating is not 1-5.
-  }
-}
-
-class DateHeader extends StatelessWidget {
-  final String text;
-
-  const DateHeader({required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        padding: EdgeInsets.all(8.0),
-        child: Text(text,
-            style: GoogleFonts.pacifico(
-              color: Colors.deepPurple,
-              fontSize: 30.0,
-            )));
   }
 }
