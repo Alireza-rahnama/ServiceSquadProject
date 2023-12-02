@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'chat_interface.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -15,6 +14,29 @@ class _MessageScreenState extends State<MessageScreen> {
 
   String getCurrentUserEmail() {
     return _auth.currentUser?.email ?? '';
+  }
+
+ Future<bool> hasUnreadMessages(String conversationId) async {
+  String currentUserEmail = _auth.currentUser?.email ?? '';
+
+  QuerySnapshot querySnapshot = await _firestore.collection('conversations')
+    .doc(conversationId)
+    .collection('messages')
+    .where('receiver', isEqualTo: currentUserEmail) // messages received by the current user
+    .where('isRead', isEqualTo: false) // messages that are not read
+    .get();
+
+  return querySnapshot.docs.isNotEmpty;
+}
+
+
+  Future<String> getCurrentUserTechnicianAlias() async {
+    String userEmail = _auth.currentUser?.email ?? '';
+    if (userEmail.isEmpty) {
+      return ''; // Or handle this case as needed
+    }
+    var userDoc = await _firestore.collection('users').doc(userEmail).get();
+    return userDoc.data()?['technicianAlias'] ?? userEmail; // Default to email if 'technicianAlias' is not found
   }
 
   @override
@@ -144,18 +166,63 @@ class _MessageScreenState extends State<MessageScreen> {
         return contact == currentUserEmail ? "$contact (Self)" : contact;
       }).toList();
 
-      return ListView(
-        children: modifiedContacts.map((contact) => ListTile(
-          title: Text(contact),
-          onTap: () {
-           // Prevent starting a chat with self
-            if (contact != currentUserEmail + " (Self)") {
-              //ChatService.startChat(currentUserEmail, contact.replaceAll(" (Self)", ""),context,_firestore);
-              startChat(currentUserEmail, contact.replaceAll(" (Self)", ""));
-            }
-          },
-        )).toList(),
+      // return ListView(
+      //   children: modifiedContacts.map((contact) => ListTile(
+      //     title: Text(contact),
+      //     onTap: () {
+      //      // Prevent starting a chat with self
+      //       if (contact != currentUserEmail + " (Self)") {
+      //         //ChatService.startChat(currentUserEmail, contact.replaceAll(" (Self)", ""),context,_firestore);
+      //         startChat(currentUserEmail, contact.replaceAll(" (Self)", ""));
+      //       }
+      //     },
+      //   )).toList(),
+      // );
+
+      // return ListView(
+      //   children: contacts.map((contact) => FutureBuilder<bool>(
+      //     future: hasUnreadMessages(contact),
+      //     builder: (context, snapshot) {
+      //       bool hasUnread = snapshot.data ?? false;
+      //       return ListTile(
+      //         title: Text(
+      //           contact,
+      //           style: TextStyle(fontWeight: hasUnread ? FontWeight.bold : FontWeight.normal),
+      //         ),
+      //         onTap: () {
+      //           startChat(getCurrentUserEmail(), contact);
+      //         },
+      //       );
+      //     },
+      //   )).toList(),
+      // );
+
+
+      return ListView.builder(
+    itemCount: contacts.length,
+    itemBuilder: (context, index) {
+      String contact = contacts[index];
+      String conversationId = generateConversationId(getCurrentUserEmail(), contact);
+
+      return FutureBuilder<bool>(
+        future: hasUnreadMessages(conversationId),
+        builder: (context, snapshot) {
+          bool hasUnread = snapshot.data ?? false;
+          return ListTile(
+            title: Text(
+              contact,
+              style: TextStyle(fontWeight: hasUnread ? FontWeight.bold : FontWeight.normal),
+            ),
+            onTap: () {
+              startChat(getCurrentUserEmail(), contact);
+            },
+          );
+        },
       );
+    },
+  );
+
+
     },
   );
 }
@@ -194,15 +261,7 @@ class _MessageScreenState extends State<MessageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white), // Set the color here
-        backgroundColor: Colors.deepPurple,
-        title: Center(
-          child: Text("Messages",
-              style: GoogleFonts.lilitaOne(
-                color: Colors.white,
-                fontSize: 48,
-              )),
-        ),
+        title: Text('Messages'),
       ),
       
       body: _buildContactsList(),

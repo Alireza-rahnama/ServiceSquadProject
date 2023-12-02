@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -34,61 +33,72 @@ class _ChatInterfaceState extends State<ChatInterface> {
       .snapshots();
   }
 
+  Future<String> getOtherUserTechnicianAlias() async {
+    var userDoc = await _firestore.collection('users').doc(widget.otherUserEmail).get();
+    return userDoc.data()?['technicianAlias'] ?? widget.otherUserEmail; // Default to email if 'technicianAlias' is not found
+  }
+
+  @override
+void initState() {
+  super.initState();
+  // Call the mark as read function when the chat interface is opened
+  markMessagesAsRead(widget.conversationId); // Call this when the chat screen is opened
+}
+
   @override
   Widget build(BuildContext context) {
     String currentUserEmail = getCurrentUserEmail(); 
 
-    return Scaffold(
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white), // Set the color here
-        backgroundColor: Colors.deepPurple,
-        title: Center(
-          child: Text('${widget.otherUserEmail}',
-              style: GoogleFonts.lilitaOne(
-                color: Colors.white,
-                fontSize: 48,
-              )),
-        ),
-      ),
-      // appBar: AppBar(title: Text('Chat with ${widget.otherUserEmail}')),
-      body: Column(
-        children: [
-          Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: _chatStream(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text('Something went wrong');
-                }
+    // Fetch technicianAlias asynchronously
+    Future<String> otherUserAliasFuture = getOtherUserTechnicianAlias();
 
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                }
-
-
-                return ListView(
-                  reverse: true,
-                  children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                    Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-                    return _messageTile(data['text'], data['imageUrl'], data['sender'] == currentUserEmail);
-                  }).toList(),
-                );
-
-                // return ListView(
-                //   reverse: true,
-                //   children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                //     Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-                //     bool isCurrentUser = data['sender'] == currentUserEmail;
-
-                //     return _messageTile(data['text'], isCurrentUser);
-                //   }).toList(),
-                // );
-              },
-            ),
+    return FutureBuilder<String>(
+      future: otherUserAliasFuture,
+      builder: (context, snapshot) {
+        String title = snapshot.hasData ? 'Chat with ${snapshot.data}' : widget.otherUserEmail;
+        return Scaffold(
+          //appBar: AppBar(title: Text('Chat with ${widget.otherUserEmail}')),
+          appBar: AppBar(title: Text(title)),
+          body: Column(
+            children: [
+              Expanded(
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: _chatStream(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Text('Something went wrong');
+                    }
+        
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    }
+        
+        
+                    return ListView(
+                      reverse: true,
+                      children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                        Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+                        return _messageTile(data['text'], data['imageUrl'], data['sender'] == currentUserEmail);
+                      }).toList(),
+                    );
+        
+                    // return ListView(
+                    //   reverse: true,
+                    //   children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                    //     Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+                    //     bool isCurrentUser = data['sender'] == currentUserEmail;
+        
+                    //     return _messageTile(data['text'], isCurrentUser);
+                    //   }).toList(),
+                    // );
+                  },
+                ),
+              ),
+              _sendMessageArea(),
+            ],
           ),
-          _sendMessageArea(),
-        ],
-      ),
+        );
+      }
     );
   }
 
@@ -200,6 +210,7 @@ class _ChatInterfaceState extends State<ChatInterface> {
       'imageUrl': imageUrl, // Image URL (can be null)
       'sender': getCurrentUserEmail(),
       'timestamp': FieldValue.serverTimestamp(),
+      'isRead': false, // Add this field when sending a new message
     });
 
     String recipientEmail = widget.otherUserEmail; // Replace with actual recipient's email
@@ -214,6 +225,32 @@ class _ChatInterfaceState extends State<ChatInterface> {
     _messageController.clear();
   }
 }
+
+void markMessagesAsRead(String conversationId) async {
+  String currentUserEmail = _auth.currentUser?.email ?? '';
+
+  // Fetch messages sent to the current user
+  QuerySnapshot querySnapshot = await _firestore.collection('conversations')
+    .doc(conversationId)
+    .collection('messages')
+    .where('receiver', isEqualTo: currentUserEmail) // Assuming a 'receiver' field exists
+    .get();
+
+  // Create a batch to update all unread messages sent by other users
+  WriteBatch batch = _firestore.batch();
+
+  for (var document in querySnapshot.docs) {
+    var data = document.data() as Map<String, dynamic>;
+    // Check if the message is unread and not sent by the current user
+    if (data['sender'] != currentUserEmail && !(data['isRead'] as bool? ?? true)) {
+      batch.update(document.reference, {'isRead': true});
+    }
+  }
+
+  // Commit the batch update
+  await batch.commit();
+}
+
 
 Future<void> _sendImage() async {
   final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
