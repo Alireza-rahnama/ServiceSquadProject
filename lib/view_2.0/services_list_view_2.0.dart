@@ -48,82 +48,95 @@ class _CategoriesViewState extends State<CategoriesView> {
     });
   }
 
-  // void _showEditDialog(BuildContext context,
-  //     ProfessionalService professionalServiceEntry, int index) {
-  //   TextEditingController descriptionEditingController =
-  //       TextEditingController();
-  //   descriptionEditingController.text = professionalServiceEntry
-  //       .serviceDescription; // Initialize the text field with existing content.
-  //
-  //   TextEditingController wageEditingController = TextEditingController();
-  //   wageEditingController.text = '${professionalServiceEntry!.wage}';
-  //
-  //   ProfessionalServiceController professionalServiceController =
-  //       ProfessionalServiceController();
-  //
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: Text('Edit Diary Entry'),
-  //         content: Column(children: [
-  //           TextField(
-  //             controller: descriptionEditingController,
-  //             decoration: InputDecoration(labelText: "New Description"),
-  //             maxLines: null, // Allows multiple lines of text.
-  //           ),
-  //           TextField(
-  //             controller: wageEditingController,
-  //             decoration: InputDecoration(labelText: "New Wage"),
-  //             maxLines: null, // Allows multiple lines of text.
-  //           ),
-  //           SizedBox(height: 10),
-  //           ElevatedButton(
-  //             onPressed: () => _pickImageFromGallery(),
-  //             child: Text('pick image from gallery'),
-  //           )
-  //         ]),
-  //         actions: <Widget>[
-  //           TextButton(
-  //             child: Text('Cancel'),
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //           ),
-  //           TextButton(
-  //             child: Text('Save'),
-  //             onPressed: () async {
-  //               print(
-  //                   'professionalServiceEntrycategory is: ${professionalServiceEntry!.category}');
-  //               // Save the edited content to the service entry.
-  //               String location = await ProfileController()
-  //                   .getUserLocation(FirebaseAuth.instance.currentUser!.uid);
-  //               await professionalServiceController.updateProfessionalService(
-  //                   ProfessionalService(
-  //                       serviceDescription: descriptionEditingController.text,
-  //                       wage: double.parse(wageEditingController.text),
-  //                       category: professionalServiceEntry.category,
-  //                       id: professionalServiceEntry!.id,
-  //                       rating: professionalServiceEntry.rating,
-  //                       location: location,
-  //                       email: FirebaseAuth.instance.currentUser?.email,
-  //                       technicianAlias:
-  //                           professionalServiceEntry.technicianAlias));
-  //
-  //               updateState(professionalServiceEntry.category);
-  //               ScaffoldMessenger.of(context).showSnackBar(
-  //                 SnackBar(
-  //                     content: Center(child: Text('Entry successfully saved!')),
-  //                     backgroundColor: Colors.green),
-  //               );
-  //               Navigator.of(context).pop();
-  //             },
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
+  // to sort the ratings and the price of the entries
+  void sortEntries(String sortBy) {
+    setState(() {
+      if (sortBy == 'rating') {
+        // Sort by rating in descending order
+        filteredEntries.sort((a, b) => b.rating!.compareTo(a.rating as num));
+      } else if (sortBy == 'price') {
+        // Sort by price in ascending order
+        filteredEntries.sort((a, b) => a.wage!.compareTo(b.wage as num));
+      }
+    });
+  }
+
+  void _showEditDialog(BuildContext context,
+      ProfessionalService professionalServiceEntry, int index) {
+    TextEditingController descriptionEditingController =
+        TextEditingController();
+    descriptionEditingController.text = professionalServiceEntry
+        .serviceDescription; // Initialize the text field with existing content.
+
+    TextEditingController wageEditingController = TextEditingController();
+    wageEditingController.text = '${professionalServiceEntry!.wage}';
+
+    ProfessionalServiceController professionalServiceController =
+        ProfessionalServiceController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Edit Diary Entry'),
+          content: Column(children: [
+            TextField(
+              controller: descriptionEditingController,
+              decoration: InputDecoration(labelText: "New Description"),
+              maxLines: null, // Allows multiple lines of text.
+            ),
+            TextField(
+              controller: wageEditingController,
+              decoration: InputDecoration(labelText: "New Wage"),
+              maxLines: null, // Allows multiple lines of text.
+            ),
+            SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () => _pickImageFromGallery(),
+              child: Text('pick image from gallery'),
+            )
+          ]),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Save'),
+              onPressed: () async {
+                print(
+                    'professionalServiceEntrycategory is: ${professionalServiceEntry!.category}');
+                // Save the edited content to the service entry.
+                String location = await ProfileController()
+                    .getUserLocation(FirebaseAuth.instance.currentUser!.uid);
+                await professionalServiceController.updateProfessionalService(
+                    ProfessionalService(
+                        serviceDescription: descriptionEditingController.text,
+                        wage: double.parse(wageEditingController.text),
+                        category: professionalServiceEntry.category,
+                        id: professionalServiceEntry!.id,
+                        rating: professionalServiceEntry.rating,
+                        location: location,
+                        email: FirebaseAuth.instance.currentUser?.email,
+                        technicianAlias:
+                            professionalServiceEntry.technicianAlias));
+
+                updateState(professionalServiceEntry.category);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                      content: Center(child: Text('Entry successfully saved!')),
+                      backgroundColor: Colors.green),
+                );
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   void applySearchBarLocationCategoryRatingBasedQueryAndUpdateState3(
       bool isOnSubmitted) async {
@@ -331,107 +344,95 @@ class _CategoriesViewState extends State<CategoriesView> {
         child: Scaffold(
           // App bar with a title and a logout button.
           appBar: AppBar(
-              automaticallyImplyLeading: false,
-              title: Center(
-                  child: Text("Services",
-                      style: GoogleFonts.lilitaOne(
+            automaticallyImplyLeading: false,
+            title: Center(
+              child: Text(
+                  "Services",
+                  style: GoogleFonts.lilitaOne(
+                    color: Colors.white,
+                    fontSize: 48.0,
+                  )
+              ),
+            ),
+            backgroundColor: Colors.deepPurple,
+            bottom: PreferredSize(
+              preferredSize: Size.fromHeight(60.0),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Container(
+                        constraints: BoxConstraints(maxWidth: 250), // Shortened maxWidth
+                        child: SearchBar(
+                          hintText: "location...",
+                          controller: searchController,
+                          padding: const MaterialStatePropertyAll<EdgeInsets>(
+                            EdgeInsets.symmetric(horizontal: 16.0),
+                          ),
+                          onChanged: (_) async {
+                            applySearchBarLocationBasedQueryAndUpdateState(false);
+                          },
+                          onSubmitted: (_) async {
+                            applySearchBarLocationBasedQueryAndUpdateState(true);
+                          },
+                          leading: IconButton(
+                            icon: Icon(Icons.search),
+                            onPressed: () async {
+                              applySearchBarLocationBasedQueryAndUpdateState(false);
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                    PopupMenuButton<String>(
+                      onSelected: (String category) async {
+                        setState(() {
+                          selectedCategory = category;
+                        });
+                        applySearchBarLocationBasedQueryAndUpdateState(false);
+                      },
+                      icon: Icon(
+                        Icons.filter_list_alt,
                         color: Colors.white,
-                        fontSize: 48.0,
-                      ))),
-              backgroundColor: Colors.deepPurple,
-              bottom: PreferredSize(
-                preferredSize: Size.fromHeight(60.0),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      PreferredSize(
-                        preferredSize: const Size.fromHeight(60.0),
-                        child: Padding(
-                          padding: const EdgeInsets.all(1.0),
-                          child: SearchAnchor(builder: (BuildContext context,
-                              SearchController controller) {
-                            return Container(
-                              constraints: BoxConstraints(maxWidth: 345),
-                              child: Column(
-                                children: [
-                                  SearchBar(
-                                    hintText: "location... ",
-                                    controller: searchController,
-                                    padding: const MaterialStatePropertyAll<
-                                        EdgeInsets>(
-                                      EdgeInsets.symmetric(horizontal: 16.0),
-                                    ),
-                                    onChanged: (_) async {
-                                      applySearchBarLocationBasedQueryAndUpdateState(
-                                          false);
-                                    },
-                                    onSubmitted: (_) async {
-                                      applySearchBarLocationBasedQueryAndUpdateState(
-                                          true);
-                                    },
-                                    leading: IconButton(
-                                      icon: Icon(Icons.search),
-                                      onPressed: () async {
-                                        applySearchBarLocationBasedQueryAndUpdateState(
-                                            false);
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }, suggestionsBuilder: (BuildContext context,
-                              SearchController controller) {
-                            return List<ListTile>.generate(5, (int index) {
-                              final String item = 'item $index';
-                              return ListTile(
-                                title: Text(item),
-                                onTap: () {
-                                  setState(() {
-                                    controller.closeView(item);
-                                  });
-                                },
-                              );
-                            });
-                          }),
-                        ),
                       ),
-                      // Spacer(),
-                      PopupMenuButton<String>(
-                        onSelected: (String category) async {
-                          setState(() {
-                            selectedCategory = category;
-                          });
-                          print("selectedCategory is $selectedCategory");
-                          applySearchBarLocationBasedQueryAndUpdateState(false);
-                        },
-                        icon: Icon(
-                          Icons.filter_list_alt,
-                          color: Colors.white,
+                      itemBuilder: (BuildContext context) {
+                        final List<String> serviceCategories = [
+                          'House Keeping',
+                          'Snow Clearance',
+                          'Handy Services',
+                          'Lawn Mowing',
+                          'Other'
+                        ];
+                        return serviceCategories.map((String category) {
+                          return PopupMenuItem<String>(
+                            value: category,
+                            child: Text(category),
+                          );
+                        }).toList();
+                      },
+                    ),
+                    PopupMenuButton<String>(
+                      onSelected: (String value) {
+                        sortEntries(value);
+                      },
+                      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                        const PopupMenuItem<String>(
+                          value: 'rating',
+                          child: Text('Sort by Rating'),
                         ),
-                        itemBuilder: (BuildContext context) {
-                          // Create a list of months for filtering
-                          final List<String> serviceCategories = [
-                            'House Keeping',
-                            'Snow Clearance',
-                            'Handy Services',
-                            'Lawn Mowing',
-                            'Other'
-                          ];
-
-                          return serviceCategories.map((String category) {
-                            return PopupMenuItem<String>(
-                              value: category,
-                              child: Text(category),
-                            );
-                          }).toList();
-                        },
-                      ),
-                    ],
-                  ),
+                        const PopupMenuItem<String>(
+                          value: 'price',
+                          child: Text('Sort by Price'),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              )),
+              ),
+            ),
+          ),
 
           // Body of the widget using a StreamBuilder to listen for changes
           // in the professionalServiceCollection  and reflect them in the UI in real-time.
