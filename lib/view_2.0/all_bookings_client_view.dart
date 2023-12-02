@@ -55,6 +55,14 @@ class _AllBookingsClientViewState extends State<AllBookingsClientView> {
         // App bar with a title and a logout button.
         appBar: AppBar(
           // automaticallyImplyLeading: false,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_outlined),
+            tooltip: 'Go back',
+            color: Colors.white,
+            onPressed: () {
+              print('pressed arrow_back_outlined in add a review');
+              Navigator.of(context).pop();
+            },),
           title: Center(
               child: Text("Bookings",
                   style: GoogleFonts.lilitaOne(

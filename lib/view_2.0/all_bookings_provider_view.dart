@@ -17,7 +17,6 @@ class AllBookingsProviderView extends StatefulWidget {
     categoryToPopulate = categoryName;
   }
 
-
   @override
   State<AllBookingsProviderView> createState() => _AllBookingsProviderViewState
     .withPersistedThemeAndCategory(
@@ -63,14 +62,22 @@ class _AllBookingsProviderViewState extends State<AllBookingsProviderView> {
         child: Scaffold(
         // App bar with a title and a logout button.
         appBar: AppBar(
-        // automaticallyImplyLeading: false,
-        title: Center(
-            child: Text("Bookings",
-                style: GoogleFonts.lilitaOne(
-                  color: Colors.white,
-                  fontSize: 48.0,
-                ))),
-        backgroundColor: Colors.deepPurple,
+          // automaticallyImplyLeading: false,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_outlined),
+            tooltip: 'Go back',
+            color: Colors.white,
+            onPressed: () {
+              print('pressed arrow_back_outlined in add a review');
+              Navigator.of(context).pop();
+            },),
+          title: Center(
+              child: Text("Bookings",
+                  style: GoogleFonts.lilitaOne(
+                    color: Colors.white,
+                    fontSize: 48.0,
+                  ))),
+          backgroundColor: Colors.deepPurple,
         ),
 
         // Body of the widget using a StreamBuilder to listen for changes
@@ -81,6 +88,11 @@ class _AllBookingsProviderViewState extends State<AllBookingsProviderView> {
             if (!snapshot.hasData) return Center(child: CircularProgressIndicator(),);
 
             List<ServiceBookingData?> bookings = snapshot.data!;
+
+            if (idServicePair.isEmpty) {
+              downloadServiceProviderListings(bookings);
+            }
+
             bookings.sort((a, b) {
               if (a == null || b == null) { return 0; }
               return a.bookingStart.millisecondsSinceEpoch - b.bookingStart.millisecondsSinceEpoch;
@@ -90,6 +102,10 @@ class _AllBookingsProviderViewState extends State<AllBookingsProviderView> {
               itemBuilder: (context, index) {
                 ServiceBookingData? booking = bookings[index];
                 if (booking == null) { return null; }
+
+                if (!idServicePair.containsKey(booking.serviceID)) {
+                  downloadServiceProviderListings(bookings);
+                }
 
                 return Column(
                   children: [
@@ -130,6 +146,17 @@ class _AllBookingsProviderViewState extends State<AllBookingsProviderView> {
                                 ),
                               ),
                               SizedBox(height: 15),
+                              Text(
+                                  'Category: ${idServicePair[booking.serviceID]?.category}'
+                              ),
+                              SizedBox(height: 15),
+                              Text(
+                                  'Hourly rate: \$${idServicePair[booking.serviceID]?.wage}'
+                              ),
+                              SizedBox(height: 15),
+                              Text(
+                                  'Description: ${idServicePair[booking.serviceID]?.serviceDescription}'
+                              ),
                             ],
                           ),
                         )
