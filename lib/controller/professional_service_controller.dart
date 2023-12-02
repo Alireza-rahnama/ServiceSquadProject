@@ -4,12 +4,12 @@ import 'package:flutter/services.dart';
 import '../model/professional_service.dart';
 
 /// A service class that provides methods to perform CRUD operations
-/// on user's cars stored in Firestore.
+/// on user's ProfessionalService stored in Firestore.
 class ProfessionalServiceController {
   /// The currently authenticated user from Firebase.
   final user = FirebaseAuth.instance.currentUser;
 
-  /// A reference to the Firestore collection where the cars for
+  /// A reference to the Firestore collection where the ProfessionalService for
   /// the current user are stored.
   late final CollectionReference individualUserProfessionalServiceCollection;
   /// A reference to the Firestore collection where the perfessional services to
@@ -17,7 +17,7 @@ class ProfessionalServiceController {
   late final CollectionReference allProfessionalServiceCollectionToDisplayToCustomers;
 
   /// Constructor initializes the reference to the Firestore collection
-/// specific to the current user's car details.
+/// specific to the current user's ProfessionalService details.
   ProfessionalServiceController() {
     individualUserProfessionalServiceCollection = FirebaseFirestore.instance
         .collection('users')
@@ -166,7 +166,7 @@ class ProfessionalServiceController {
     }
   }
 
-  /// Retrieves a stream of a list of `profesiional services` objects associated
+  /// Retrieves a stream of a list of `profesional services` objects associated
   /// with the current user from Firestore with specific category.
   Stream<List<ProfessionalService>> getProfessionalServices(
       String CategoryNameToRetrieve) {
@@ -193,7 +193,6 @@ class ProfessionalServiceController {
     });
   }
 
-//TODO: if they are client they will have a single view that shows all available services from this collection
   Stream<List<ProfessionalService>>
       getAllAvailableProfessionalServiceCollections() {
     CollectionReference allAvailableProfessionalServiceCollections =

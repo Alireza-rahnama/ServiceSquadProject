@@ -1,26 +1,13 @@
-// import 'package:flutter/material.dart';
-//
-// class ProfessionalListServicesView extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     // Implement your List Services View
-//     return Center(child: Text('List Services View'));
-//   }
-// }
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:pdf/widgets.dart' as pw;
 import 'package:service_squad/controller/professional_service_controller.dart';
 import 'package:service_squad/view/reviews_list_view.dart';
 import 'package:service_squad/view/service_entry_view.dart';
 import '../controller/profile_controller.dart';
 import '../model/professional_service.dart';
-import 'package:service_squad/view/auth_gate.dart';
-import 'package:service_squad/view/category_selection.dart';
 
 
 class ProfessionalListServicesView  extends StatefulWidget {
@@ -193,12 +180,6 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
               entry.rating == int.tryParse(queryText) ||
               entry.location.contains(queryText.toLowerCase());
         }).toList();
-        // } else if (queryIsLocation) {
-        //   print('queryIsLocation: ${queryIsLocation}');
-        //   filteredEntries = filteredEntries.where((entry) {
-        //     print('entry.Category is: ${entry.category}');
-        //     return entry.location.toLowerCase().contains(queryText.toLowerCase());
-        //   }).toList();
       } else if (selectedCategory != null) {
         filteredEntries = filteredEntries.where((entry) {
           return entry.category == selectedCategory;
@@ -246,9 +227,7 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
         .getAllProfessionalServices()
         .first;
     print('length of serviceEntries is ${serviceEntries.length}');
-    // final serviceEntries = await professionalServiceController
-    //     .getAllAvailableProfessionalServiceCollections()
-    //     .first;
+
     String userLocation = await ProfileController()
         .getUserLocation(FirebaseAuth.instance.currentUser!.uid);
     bool isSnackBarDisplayed = false;
@@ -319,49 +298,6 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
 
   final profileController = ProfileController();
 
-  String convertIntMonthToStringRepresentation(int month) {
-    String representation = '';
-    switch (month) {
-      case 1:
-        representation = 'jan';
-        break;
-      case 2:
-        representation = 'feb';
-        break;
-      case 3:
-        representation = 'mar';
-        break;
-      case 4:
-        representation = 'apr';
-        break;
-      case 5:
-        representation = 'may';
-        break;
-      case 6:
-        representation = 'jun';
-        break;
-      case 7:
-        representation = 'jul';
-        break;
-      case 8:
-        representation = 'aug';
-        break;
-      case 9:
-        representation = 'sep';
-        break;
-      case 10:
-        representation = 'oct';
-        break;
-      case 11:
-        representation = 'nov';
-        break;
-      case 12:
-        representation = 'dec';
-        break;
-    }
-    return representation;
-  }
-
   @override
   void initState() {
     super.initState();
@@ -389,93 +325,6 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
                     fontSize: 48.0,
                   ))),
               backgroundColor: Colors.deepPurple,
-              // bottom: PreferredSize(
-              //   preferredSize: Size.fromHeight(60.0),
-              //   child: Padding(
-              //     padding: const EdgeInsets.all(8.0),
-              //     child: Row(
-              //       children: [
-              //         PreferredSize(
-              //           preferredSize: const Size.fromHeight(60.0),
-              //           child: Padding(
-              //             padding: const EdgeInsets.all(1.0),
-              //             child: SearchAnchor(builder: (BuildContext context,
-              //                 SearchController controller) {
-              //               //TODO: We can implement the location logic here to search services by location
-              //               return Expanded(
-              //                 child: Container(
-              //                   constraints: BoxConstraints(maxWidth: 345), // Adjust the maximum width as needed
-              //                   child: SearchBar(
-              //                     hintText: "location... ",
-              //                     controller: searchController,
-              //                     padding: const MaterialStatePropertyAll<EdgeInsets>(
-              //                       EdgeInsets.symmetric(horizontal: 16.0),
-              //                     ),
-              //                     onChanged: (_) async {
-              //                       applySearchBarLocationBasedQueryAndUpdateState(false);
-              //                     },
-              //                     onSubmitted: (_) async {
-              //                       applySearchBarLocationBasedQueryAndUpdateState(true);
-              //                     },
-              //                     leading: IconButton(
-              //                       icon: Icon(Icons.search),
-              //                       onPressed: () async {
-              //                         applySearchBarLocationBasedQueryAndUpdateState(false);
-              //                       },
-              //                     ),
-              //                   ),
-              //                 ),
-              //               );
-              //             }, suggestionsBuilder: (BuildContext context,
-              //                 SearchController controller) {
-              //               return List<ListTile>.generate(5, (int index) {
-              //                 final String item = 'item $index';
-              //                 return ListTile(
-              //                   title: Text(item),
-              //                   onTap: () {
-              //                     setState(() {
-              //                       controller.closeView(item);
-              //                     });
-              //                   },
-              //                 );
-              //               });
-              //             }),
-              //           ),
-              //         ),
-              //         // Spacer(),
-              //         PopupMenuButton<String>(
-              //           onSelected: (String category) async {
-              //             setState(() {
-              //               selectedCategory = category;
-              //             });
-              //             print("selectedCategory is $selectedCategory");
-              //             applySearchBarLocationBasedQueryAndUpdateState(false);
-              //           },
-              //           icon: Icon(
-              //             Icons.filter_list_alt,
-              //             color: Colors.white,
-              //           ),
-              //           itemBuilder: (BuildContext context) {
-              //             // Create a list of months for filtering
-              //             final List<String> serviceCategories = [
-              //               'Housekeeping',
-              //               'Snow Clearance',
-              //               'Handy Services',
-              //               'Lawn Mowing'
-              //             ];
-              //
-              //             return serviceCategories.map((String category) {
-              //               return PopupMenuItem<String>(
-              //                 value: category,
-              //                 child: Text(category),
-              //               );
-              //             }).toList();
-              //           },
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // )
           ),
 
           // Body of the widget using a StreamBuilder to listen for changes
@@ -530,25 +379,6 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
                                       ),
                                       Spacer(),
                                       BuildImageFromUrl(entry),
-
-                                      // IconButton(
-                                      //   icon: Icon(Icons.rate_review_rounded),
-                                      //   onPressed: () async {
-                                      //     Navigator.push(
-                                      //       context,
-                                      //       MaterialPageRoute(
-                                      //         builder: (context) => ReviewsView
-                                      //             .forEachProfessionalService(
-                                      //             isDark, entry),
-                                      //       ),
-                                      //     );
-                                      //     print(
-                                      //         '${FirebaseAuth.instance.currentUser!.email}');
-                                      //     print(
-                                      //         'selectedProfessionalServiceCategory is ${entry.category}');
-                                      //     //TODO: IMPLEMENT LOGIC AND VIEW Maybe only for client user type
-                                      //   },
-                                      // )
                                     ],
                                   ),
                                   SizedBox(height: 15),
@@ -595,17 +425,6 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
                                           }
                                         },
                                       ),
-                                      //Dont need the calendar button for professional
-                                      // IconButton(
-                                      //   icon: Icon(Icons.calendar_today),
-                                      //   onPressed: () async {
-                                      //     print(
-                                      //         '${FirebaseAuth.instance.currentUser!.email}');
-                                      //     print(
-                                      //         'selectedCategory is ${selectedCategory}');
-                                      //     //TODO: IMPLEMENT LOGIC AND VIEW Maybe only for client user type
-                                      //   },
-                                      // ),
                                     ],
                                   ),
                                 ],
@@ -702,9 +521,6 @@ class _ProfessionalListServicesViewState extends State<ProfessionalListServicesV
     );
   }
 }
-
-
-
 
 Row RatingEvaluator(ProfessionalService entry) {
   Map<String, int> reviewsMap = entry.reviewsMap ?? {};

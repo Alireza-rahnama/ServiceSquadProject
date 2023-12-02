@@ -89,4 +89,32 @@ class ProfileController{
         .doc(uid)
         .set({'userType': userType}, SetOptions(merge: true));
   }
+
+  void setEmail(String uid, String email) {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .set({'userEmail': email}, SetOptions(merge: true));
+  }
+
+  void setUserLocation(String uid, String location) {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .set({'userLocation': location}, SetOptions(merge: true));
+  }
+
+  void setMobileNumber(String uid, String mobileNumber) {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .set({'mobileNumber': mobileNumber}, SetOptions(merge: true));
+  }
+
+  void setAboutMe(String uid, String aboutMe) {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .set({'userAbout': aboutMe}, SetOptions(merge: true));
+  }
 }

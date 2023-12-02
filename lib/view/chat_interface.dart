@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -38,7 +39,18 @@ class _ChatInterfaceState extends State<ChatInterface> {
     String currentUserEmail = getCurrentUserEmail(); 
 
     return Scaffold(
-      appBar: AppBar(title: Text('Chat with ${widget.otherUserEmail}')),
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white), // Set the color here
+        backgroundColor: Colors.deepPurple,
+        title: Center(
+          child: Text('${widget.otherUserEmail}',
+              style: GoogleFonts.lilitaOne(
+                color: Colors.white,
+                fontSize: 48,
+              )),
+        ),
+      ),
+      // appBar: AppBar(title: Text('Chat with ${widget.otherUserEmail}')),
       body: Column(
         children: [
           Expanded(

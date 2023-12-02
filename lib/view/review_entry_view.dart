@@ -1,20 +1,11 @@
 import 'dart:ffi';
-
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
-
-import 'package:image_picker/image_picker.dart';
 import 'package:service_squad/view/reviews_list_view.dart';
-import 'dart:io';
-
 import '../controller/professional_service_controller.dart';
-import '../controller/profile_controller.dart';
 import '../model/professional_service.dart';
-//import 'services_list_view.dart';
 
 class ReviewEntryView extends StatefulWidget {
   bool isDark;
@@ -117,34 +108,49 @@ class _NewEntryViewState extends State<ReviewEntryView> {
         ThemeData(useMaterial3: true, brightness: Brightness.light);
 
     return Scaffold(
-            appBar: AppBar(
-              backgroundColor: Colors.deepPurple,
-              title: Center(child: Text("Add a Review",
+        appBar: AppBar(
+          backgroundColor: Colors.deepPurple,
+          title: Center(
+              child: Text("Add a Review",
                   style: GoogleFonts.lilitaOne(
                     color: Colors.white,
                     fontSize: 48.0,
                   ))),
-              // leadingWidth: 0.0,
-              leading: IconButton(
-                  icon: Icon(Icons.arrow_back_outlined),
-                  tooltip: 'Go back',
-                  color: Colors.white,
-                  onPressed: () {
-                    print('pressed arrow_back_outlined in add a review');
-                    // Navigator.of(context).pop();
+          // leadingWidth: 0.0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_outlined),
+            tooltip: 'Go back',
+            color: Colors.white,
+            onPressed: () {
+              print('pressed arrow_back_outlined in add a review');
+              // Navigator.of(context).pop();
 
-                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                ReviewsView.forEachProfessionalService(false, service)),);
-                  },),
-            ),
-            body: Padding(
-                padding: const EdgeInsets.all(16.0),
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        ReviewsView.forEachProfessionalService(false, service)),
+              );
+            },
+          ),
+        ),
+
+        // body: Column(
+        //   children: [
+        //     Expanded(
+        //       child:
+        //         padding: EdgeInsets.all(12.0),
+        //         child: _currentWidget,
+        //       ),
+        //     ),
+        //     if (_bottomNavBar != null) _bottomNavBar!,
+        //   ],
+        // ),
+        body: SingleChildScrollView(
+            child: Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
-
                   children: <Widget>[
                     SizedBox(height: 150.0),
 
@@ -158,7 +164,9 @@ class _NewEntryViewState extends State<ReviewEntryView> {
                       maxLength: 100, // Set the maximum character limit
                       maxLines: null, // Allow multiple lines of text
                     ),
-                    SizedBox(height: 50,),
+                    SizedBox(
+                      height: 50,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -167,7 +175,7 @@ class _NewEntryViewState extends State<ReviewEntryView> {
                         RatingBar.builder(
                           initialRating: 3,
                           itemCount: 5,
-                          itemBuilder: (context, index){
+                          itemBuilder: (context, index) {
                             switch (index) {
                               case 0:
                                 return Icon(
@@ -205,62 +213,6 @@ class _NewEntryViewState extends State<ReviewEntryView> {
                         ),
                       ],
                     ),
-                    // RatingBar.builder(
-                    //     initialRating: 3,
-                    //     itemCount: 5,
-                    //     itemBuilder: (context, index){
-                    //       switch (index) {
-                    //         case 0:
-                    //           return Icon(
-                    //             Icons.sentiment_very_dissatisfied,
-                    //             color: Colors.red,
-                    //           );
-                    //         case 1:
-                    //           return Icon(
-                    //             Icons.sentiment_dissatisfied,
-                    //             color: Colors.redAccent,
-                    //           );
-                    //         case 2:
-                    //           return Icon(
-                    //             Icons.sentiment_neutral,
-                    //             color: Colors.amber,
-                    //           );
-                    //         case 3:
-                    //           return Icon(
-                    //             Icons.sentiment_satisfied,
-                    //             color: Colors.lightGreen,
-                    //           );
-                    //         case 4:
-                    //           return Icon(
-                    //             Icons.sentiment_very_satisfied,
-                    //             color: Colors.green,
-                    //           );
-                    //         default:
-                    //           return Container(height: 0.0);
-                    //       }
-                    //     },
-                    //     onRatingUpdate: (ratingValue) {
-                    //       print(ratingValue);
-                    //       rating = ratingValue.toInt();
-                    //     },
-                    // ),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //   children: <Widget>[
-                    //     Text('Rate Your Day:'),
-                    //     Slider(
-                    //       value: rating?.toDouble() ?? 5.0,
-                    //       // Use rating as the initial value
-                    //       min: 1,
-                    //       max: 5,
-                    //       onChanged: (newRating) {
-                    //         setState(() {
-                    //           rating = newRating.round();
-                    //         });
-                    //       },
-                    //     ),
-                    //   ],
-                    // ),
                     SizedBox(height: 50),
                     // Container(height: 50.0,),
                     ElevatedButton(
@@ -268,7 +220,7 @@ class _NewEntryViewState extends State<ReviewEntryView> {
                       child: Text('Save Entry'),
                     ),
                   ],
-                )));
+                ))));
   }
 }
 
