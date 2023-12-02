@@ -28,7 +28,6 @@ class ProfessionalListServicesView extends StatefulWidget {
 
 class _ProfessionalListServicesViewState
     extends State<ProfessionalListServicesView> {
-// Instance of CarService to interact with Firestore for CRUD operations on cars.
   final ProfessionalServiceController professionalServiceController =
       ProfessionalServiceController();
   String? selectedCategory;
@@ -158,13 +157,11 @@ class _ProfessionalListServicesViewState
       filteredEntries = List<ProfessionalService>.from(serviceEntries);
       List<int> ratings = [1, 2, 3, 4, 5];
       String queryText = searchController.text.toLowerCase();
-      bool queryIsLocation = false;
 
       print(
           '!categories.contains(queryText): ${!categories.contains(queryText)}');
       if (!categories.contains(queryText) &&
           !ratings.contains(int.tryParse(queryText))) {
-        queryIsLocation = true;
       }
 
       print('queryText: $queryText');
@@ -340,7 +337,6 @@ class _ProfessionalListServicesViewState
               List<ProfessionalService> professionalServices =
                   (!filteredEntries.isEmpty) ? filteredEntries : snapshot.data!;
               // professionalServices
-              //     .sort((a, b) => (b.wage! as num).compareTo(a.wage! as num));
 
               String? lastCategory;
 
@@ -359,8 +355,6 @@ class _ProfessionalListServicesViewState
                           margin: EdgeInsets.all(8.0),
                           child: GestureDetector(
                             onLongPress: () {
-                              // Perform your action here when the Card is long-pressed.
-                              _showEditDialog(context, entry, index);
                             },
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),
@@ -392,7 +386,7 @@ class _ProfessionalListServicesViewState
                                   Row(
                                     children: [
                                       // RatingEvaluator(entry),
-                                      RatingEvaluator2(entry),
+                                      // RatingEvaluator2(entry),
                                       Spacer(),
                                       Spacer(),
                                       IconButton(
@@ -440,16 +434,11 @@ class _ProfessionalListServicesViewState
                     return Card(
                       margin: EdgeInsets.all(8.0),
                       child: GestureDetector(
-                        onLongPress: () {
-                          // Perform your action here when the Card is long-pressed.
-                          _showEditDialog(context, entry, index);
-                        },
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // BuildImageFromUrl(entry),todo: do we need image here?
                               Text(
                                 entry.serviceDescription,
                                 style: TextStyle(

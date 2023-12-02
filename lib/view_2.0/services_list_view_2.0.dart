@@ -49,10 +49,19 @@ class _CategoriesViewState extends State<CategoriesView> {
   }
 
   // to sort the ratings and the price of the entries
-  void sortEntries(String sortBy) {
+  void sortEntries(String sortBy) async{
+    final serviceEntries = selectedCategory != null
+        ? await professionalServiceController
+        .getProfessionalServices(selectedCategory!.toLowerCase())
+        .first
+        : await professionalServiceController
+        .getAllAvailableProfessionalServiceCollections()
+        .first;
+
+    filteredEntries = List<ProfessionalService>.from(serviceEntries);
+
     setState(() {
       if (sortBy == 'rating') {
-        // Sort by rating in descending order
         filteredEntries.sort((a, b) => b.rating!.compareTo(a.rating as num));
       } else if (sortBy == 'price') {
         // Sort by price in ascending order
@@ -230,12 +239,10 @@ class _CategoriesViewState extends State<CategoriesView> {
 
     final serviceEntries = (selectedCategory != null && selectedCategory != '')
         ? await professionalServiceController
-            // .getProfessionalServices(selectedCategory!)
             .getAllAvailableProfessionalServiceCollectionsByCategory(
                 selectedCategory!)
             .first
         : await professionalServiceController
-            //.getAllProfessionalServices()
             .getAllAvailableProfessionalServiceCollections()
             .first;
     print('length of serviceEntries is ${serviceEntries.length}');
@@ -294,8 +301,6 @@ class _CategoriesViewState extends State<CategoriesView> {
               searchController.text != '' &&
               !isSnackBarDisplayed &&
               filteredEntries.length == 0
-          // (filteredEntries.length == serviceEntries.length ||
-          //     filteredEntries.length == 0)
           ) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -304,9 +309,7 @@ class _CategoriesViewState extends State<CategoriesView> {
             duration: Duration(milliseconds: 500),
           ),
         );
-        // isSnackBarDisplayed = true;
         selectedCategory = '';
-        // print('selectedCategory after onSubmitted is: ${selectedCategory}');
       }
     });
   }
@@ -331,7 +334,6 @@ class _CategoriesViewState extends State<CategoriesView> {
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = ThemeData(
-      // useMaterial3: true,
       brightness: isDark ? Brightness.dark : Brightness.light,
       snackBarTheme: SnackBarThemeData(
         backgroundColor:
@@ -403,7 +405,7 @@ class _CategoriesViewState extends State<CategoriesView> {
                           'Snow Clearance',
                           'Handy Services',
                           'Lawn Mowing',
-                          'Other'
+                          'All'
                         ];
                         return serviceCategories.map((String category) {
                           return PopupMenuItem<String>(
@@ -417,14 +419,18 @@ class _CategoriesViewState extends State<CategoriesView> {
                       onSelected: (String value) {
                         sortEntries(value);
                       },
+                      icon: Icon(
+                        Icons.sort,
+                        color: Colors.white,
+                      ),
                       itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                         const PopupMenuItem<String>(
                           value: 'rating',
-                          child: Text('Sort by Rating'),
+                          child: Text('Sort by Rating Desc'),
                         ),
                         const PopupMenuItem<String>(
                           value: 'price',
-                          child: Text('Sort by Price'),
+                          child: Text('Sort by Price Asc'),
                         ),
                       ],
                     ),
@@ -439,15 +445,12 @@ class _CategoriesViewState extends State<CategoriesView> {
           body: StreamBuilder<List<ProfessionalService>>(
             stream: professionalServiceController
                 .getAllAvailableProfessionalServiceCollections(),
-            //getAllProfessionalServices(),
             builder: (context, snapshot) {
               // Show a loading indicator until data is fetched from Firestore.
               if (!snapshot.hasData) return CircularProgressIndicator();
 
               List<ProfessionalService> professionalServices =
                   (!filteredEntries.isEmpty) ? filteredEntries : snapshot.data!;
-              // professionalServices
-              //     .sort((a, b) => (b.wage! as num).compareTo(a.wage! as num));
 
               String? lastCategory;
 

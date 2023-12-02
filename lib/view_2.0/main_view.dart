@@ -7,28 +7,71 @@ import 'package:service_squad/view/message_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-
+import 'package:service_squad/controller/profile_controller.dart';
 
 class MainScreen extends StatefulWidget {
   @override
   _MainScreenState createState() => _MainScreenState();
 }
 
-String selectedUserType = 'Select an option';
+String? selectedUserType = 'Select an option';
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 2;
+  final ProfileController profileController = ProfileController();
+  String? currentUserId;
+
+  @override
+  void initState() {
+    super.initState();
+    currentUserId = FirebaseAuth.instance.currentUser?.uid; // Assuming FirebaseAuth is used for user management
+    if (currentUserId != null) {
+      checkTechnicalAlias(currentUserId!);
+      fetchUserType(currentUserId!);
+    }
+
+
+
+  }
+
+
+  Future<void> fetchUserType(String uid) async {
+    String? userType = await profileController.getUserType(uid);
+    if (userType != null) {
+      setState(() {
+        selectedUserType = userType;
+      });
+    }
+  }
+
+
+  Future<void> checkTechnicalAlias(String uid) async {
+    String? technicalAlias = await profileController.gettechnicianAlias(uid);
+    String? userType = await profileController.getUserType(uid);
+    if (technicalAlias == "" || userType=="Select an option") {
+      setState(() {
+        _currentIndex = 2;
+      });
+    } else {
+      setState(() {
+        _currentIndex = 0;
+      });
+    }
+  }
 
   Widget getServicesView() {
     updateFcmToken();  // Call the method to update the token
     // Determine which view to return based on user type
+
+    print('Selected User Typeeeeeeeeeee');
+    print(selectedUserType);
+
     if (selectedUserType == 'Client') {
       return CategoriesView();
     } else if (selectedUserType == 'Service Associate') {
       return ProfessionalListServicesView();
     } else {
-      return Placeholder(); // Or any default view
+      return Placeholder();
     }
   }
 
@@ -95,71 +138,18 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void onTabTapped(int index) {
-    if (selectedUserType != 'Select an option' || index != 0) {
-      setState(() {
-        _currentIndex = index;
-      });
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Please select a User Type in Profile and Click Save'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
+      if (selectedUserType != 'Select an option' || index != 0) {
+        setState(() {
+          _currentIndex = index;
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Please select a User Type in Profile and Click Save'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
   }
 }
 
-  /*
-  final List<Widget> _children = [
-    CategoriesView(),
-    MessagesView(),
-    ProfileView(),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: _children[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: onTabTapped,
-        currentIndex: _currentIndex,
-        items: [
-          BottomNavigationBarItem(
-            icon: new Icon(Icons.list),
-            label: 'Services',
-          ),
-          BottomNavigationBarItem(
-            icon: new Icon(Icons.mail),
-            label: 'Messages',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-      ),
-    );
-  }
-
-  void onTabTapped(int index) {
-    // Assuming 'selectedUserType' is a global variable that stores the user type
-    // print("TO DEBUGGGGGGGGGGGGGGGGGG");
-    // print(selectedUserType);
-    if (selectedUserType != 'Select an option' || index == 2) {
-      setState(() {
-        _currentIndex = index;
-      });
-    } else {
-      // Show an alert or a snackbar
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Please select a User Type in Profile and Click Save'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
-  }
-}
-
-   */

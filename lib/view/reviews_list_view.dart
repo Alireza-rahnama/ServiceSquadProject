@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:service_squad/controller/professional_service_controller.dart';
@@ -128,10 +127,10 @@ class _ReviewsViewState extends State<ReviewsView> {
                   Card(
                     margin: EdgeInsets.all(8.0),
                     child: GestureDetector(
-                      onLongPress: () {
-                        // Perform your action here when the Card is long-pressed.
-                        return;
-                      },
+                      // onLongPress: () {
+                      //   // Perform your action here when the Card is long-pressed.
+                      //   return;
+                      // },
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Column(

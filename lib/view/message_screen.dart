@@ -268,50 +268,6 @@ class _MessageScreenState extends State<MessageScreen> {
       ),
       
       body: _buildContactsList(),
-      // body: StreamBuilder<QuerySnapshot>(
-      //   stream: _fetchConversations(),
-      //   builder: (context, snapshot) {
-      //     if (snapshot.hasError) {
-      //       return Text('Error: ${snapshot.error}');
-      //     }
-
-      //     if (snapshot.connectionState == ConnectionState.waiting) {
-      //       return CircularProgressIndicator();
-      //     }
-
-      //     // Display list of conversations
-      //     return ListView(
-      //       children: snapshot.data!.docs.map((DocumentSnapshot document) {
-      //         Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-      //         // Assuming 'userName' is a field in each document
-      //         String? userName = data['userName'] as String?;
-
-      //         if (userName != null) {
-      //           return ListTile(
-      //           title: Text(userName),
-      //           onTap: () {
-      //             String currentUserEmail = getCurrentUserEmail();
-      //             String otherUserEmail = userName; // Assuming 'userName' holds the other user's email
-      //             String conversationId = generateConversationId(currentUserEmail, otherUserEmail);
-      //             // Navigate to individual chat screen with this user
-      //             Navigator.push(
-      //               context,
-      //               MaterialPageRoute(
-      //                 builder: (context) => ChatInterface(conversationId: conversationId,otherUserEmail:otherUserEmail),
-      //                 ),
-      //             );
-      //             print("Tapped on $userName");
-      //           },
-      //         );
-      //         } else {
-      //           // Handle the case where userName is null, return an empty Container 
-      //           return Container();
-      //         }
-              
-      //       }).toList(),
-      //     );
-      //   },
-      // ),
 
       floatingActionButton: FloatingActionButton(
         onPressed: () {

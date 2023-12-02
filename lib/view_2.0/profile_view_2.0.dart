@@ -6,43 +6,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:service_squad/controller/profile_controller.dart';
 import 'package:service_squad/view_2.0/main_view.dart';
 import '../view/auth_gate.dart';
+import 'all_bookings_client_view.dart';
+import 'all_bookings_provider_view.dart';
 
 final GlobalKey<DropdownMenuExampleState> dropdownMenuKey = GlobalKey();
-//
-// void setUserType(String uid, String userType) {
-//   FirebaseFirestore.instance
-//       .collection('users')
-//       .doc(uid)
-//       .set({'userType': userType}, SetOptions(merge: true));
-// }
-//
-// void setEmail(String uid, String email) {
-//   FirebaseFirestore.instance
-//       .collection('users')
-//       .doc(uid)
-//       .set({'userEmail': email}, SetOptions(merge: true));
-// }
-//
-// void setUserLocation(String uid, String location) {
-//   FirebaseFirestore.instance
-//       .collection('users')
-//       .doc(uid)
-//       .set({'userLocation': location}, SetOptions(merge: true));
-// }
-//
-// void setMobileNumber(String uid, String mobileNumber) {
-//   FirebaseFirestore.instance
-//       .collection('users')
-//       .doc(uid)
-//       .set({'mobileNumber': mobileNumber}, SetOptions(merge: true));
-// }
-//
-// void setAboutMe(String uid, String aboutMe) {
-//   FirebaseFirestore.instance
-//       .collection('users')
-//       .doc(uid)
-//       .set({'userAbout': aboutMe}, SetOptions(merge: true));
-// }
 
 Future<String?> getUserLocation(String uid) async {
   try {
@@ -244,6 +211,28 @@ class _ProfileViewState extends State<ProfileView> {
                   );
                 },
               ),
+
+              SizedBox(height: 20,),
+              ElevatedButton(
+                child: Text('View bookings'),
+                onPressed: () async {
+                  if (selectedUserType != "Service Associate" &&
+                      selectedUserType != "Client") {
+                      // TODO: HANDLE THIS..
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) {
+                            if (selectedUserType == "Service Associate") {
+                              return AllBookingsProviderView();
+                            }
+                            return AllBookingsClientView();
+                          }),
+                    );
+                  }
+                }
+              ),
               // Add any additional widgets you need
             ],
           ),
@@ -288,7 +277,6 @@ class DropdownMenuExampleState extends State<DropdownMenuExample> {
         onChanged: (String? value) {
           setState(() {
             dropdownValue = value!;
-            ProfileController().setUserType(FirebaseAuth.instance.currentUser!.uid, dropdownValue);//TODO REMOVE
             ProfileController().setUserType(FirebaseAuth.instance.currentUser!.uid, dropdownValue);
             selectedUserType = dropdownValue;
           });
@@ -308,3 +296,13 @@ class DropdownMenuExampleState extends State<DropdownMenuExample> {
         ]);
   }
 }
+
+
+
+
+
+
+
+
+
+
