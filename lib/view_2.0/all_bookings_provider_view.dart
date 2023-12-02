@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:service_squad/controller/booking_controller.dart';
 
+import '../model/professional_service.dart';
 import '../model/service_booking_data.dart';
 
 class AllBookingsProviderView extends StatefulWidget {
@@ -28,7 +29,8 @@ class _AllBookingsProviderViewState extends State<AllBookingsProviderView> {
 
   bool isDark;
   Stream<List<ServiceBookingData?>>? stream;
-
+  bool isDownloading = false;
+  Map<String, ProfessionalService> idServicePair = Map();
 
   _AllBookingsProviderViewState.withPersistedThemeAndCategory(
       this.isDark);
@@ -140,6 +142,19 @@ class _AllBookingsProviderViewState extends State<AllBookingsProviderView> {
         ),
       ),
     );
+  }
+
+  Future<void> downloadServiceProviderListings(List<ServiceBookingData?> bookings) async {
+    if (isDownloading) return;
+    isDownloading = true;
+    for (ServiceBookingData? booking in bookings) {
+      if (booking == null) continue;
+      ProfessionalService? service = await BookingController().getAssociatedProfessionalService(booking);
+      if (service == null) continue;
+      idServicePair[booking.serviceID] = service;
+    }
+    isDownloading = false;
+    setState(() { });
   }
 
   static const List<String> months = [

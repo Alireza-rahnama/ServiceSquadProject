@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
 import '../model/professional_service.dart';
 
 /// A service class that provides methods to perform CRUD operations
@@ -127,15 +126,15 @@ class ProfessionalServiceController {
     }
   }
 
-  Future<ProfessionalService?> getProfessionalServiceByID(String? id) async {
+  Future<ProfessionalService?> getProfessionalServiceByID(String id) async {
     QuerySnapshot querySnapshot =
-    await individualUserProfessionalServiceCollection
-        .where('id', isEqualTo: id!)
-        .get();
+      await allProfessionalServiceCollectionToDisplayToCustomers
+          .where('id', isEqualTo: id)
+          .get();
     if (querySnapshot.docs.isNotEmpty) {
       // Update the document in the individual user's collection
       String documentId = querySnapshot.docs.first.id;
-      final doc = await individualUserProfessionalServiceCollection
+      final doc = await allProfessionalServiceCollectionToDisplayToCustomers
           .doc(documentId).get();
       Map<String, dynamic>? map = doc.data() as Map<String, dynamic>?;
 
@@ -158,7 +157,7 @@ class ProfessionalServiceController {
 
       QuerySnapshot querySnapshot2 =
       await allProfessionalServiceCollectionToDisplayToCustomers
-          .where('id', isEqualTo: id!)
+          .where('id', isEqualTo: id)
           .get();
 
       if (querySnapshot.docs.isNotEmpty) {

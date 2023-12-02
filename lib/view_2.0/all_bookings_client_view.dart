@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:service_squad/controller/booking_controller.dart';
 
+import '../model/professional_service.dart';
 import '../model/service_booking_data.dart';
 
 class AllBookingsClientView extends StatefulWidget {
@@ -15,7 +16,6 @@ class AllBookingsClientView extends StatefulWidget {
     categoryToPopulate = categoryName;
   }
 
-
   @override
   State<AllBookingsClientView> createState() => _AllBookingsClientViewState
       .withPersistedThemeAndCategory(
@@ -26,7 +26,9 @@ class AllBookingsClientView extends StatefulWidget {
 class _AllBookingsClientViewState extends State<AllBookingsClientView> {
 
   bool isDark;
+  bool isDownloading = false;
   Stream<List<ServiceBookingData?>>? stream;
+  Map<String, ProfessionalService> idServicePair = Map();
 
   _AllBookingsClientViewState.withPersistedThemeAndCategory(
       this.isDark);
@@ -34,14 +36,7 @@ class _AllBookingsClientViewState extends State<AllBookingsClientView> {
   @override
   void initState() {
     super.initState();
-    asyncInit();
-  }
-
-  Future<void> asyncInit() async {
-    final newStream = await BookingController().getAllBookingsClient();
-    setState(() {
-      stream = newStream;
-    });
+    stream = BookingController().getAllBookingsClient();
   }
 
   @override
@@ -77,6 +72,11 @@ class _AllBookingsClientViewState extends State<AllBookingsClientView> {
             if (!snapshot.hasData) return Center(child: CircularProgressIndicator(),);
 
             List<ServiceBookingData?> bookings = snapshot.data!;
+
+            if (idServicePair.isEmpty) {
+              downloadServiceProviderListings(bookings);
+            }
+
             bookings.sort((a, b) {
               if (a == null || b == null) { return 0; }
               return a.bookingStart.millisecondsSinceEpoch - b.bookingStart.millisecondsSinceEpoch;
@@ -86,6 +86,10 @@ class _AllBookingsClientViewState extends State<AllBookingsClientView> {
               itemBuilder: (context, index) {
                 ServiceBookingData? booking = bookings[index];
                 if (booking == null) { return null; }
+
+                if (!idServicePair.containsKey(booking.serviceID)) {
+                  downloadServiceProviderListings(bookings);
+                }
 
                 return Column(
                     children: [
@@ -123,6 +127,21 @@ class _AllBookingsClientViewState extends State<AllBookingsClientView> {
                                   ),
                                 ),
                                 SizedBox(height: 15),
+                                Text(
+                                  'Category: ${idServicePair[booking.serviceID]?.category}'
+                                ),
+                                SizedBox(height: 15),
+                                Text(
+                                    'Technician: ${idServicePair[booking.serviceID]?.technicianAlias}'
+                                ),
+                                SizedBox(height: 15),
+                                Text(
+                                    'Hourly rate: \$${idServicePair[booking.serviceID]?.wage}'
+                                ),
+                                SizedBox(height: 15),
+                                Text(
+                                    'Description: ${idServicePair[booking.serviceID]?.serviceDescription}'
+                                ),
                               ],
                             ),
                           )
@@ -135,6 +154,19 @@ class _AllBookingsClientViewState extends State<AllBookingsClientView> {
         ),
       ),
     );
+  }
+
+  Future<void> downloadServiceProviderListings(List<ServiceBookingData?> bookings) async {
+    if (isDownloading) return;
+    isDownloading = true;
+    for (ServiceBookingData? booking in bookings) {
+      if (booking == null) continue;
+      ProfessionalService? service = await BookingController().getAssociatedProfessionalService(booking);
+      if (service == null) continue;
+      idServicePair[booking.serviceID] = service;
+    }
+    isDownloading = false;
+    setState(() { });
   }
 
   static const List<String> months = [

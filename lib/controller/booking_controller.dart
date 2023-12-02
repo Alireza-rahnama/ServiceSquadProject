@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:service_squad/controller/professional_service_controller.dart';
+import 'package:service_squad/model/professional_service.dart';
 import 'package:service_squad/model/service_booking_data.dart';
 
 class BookingController {
@@ -54,14 +55,13 @@ class BookingController {
     });
   }
 
-  Future<ServiceBookingData?> getAssociatedProfessionalService(ServiceBookingData booking) {
+  Future<ProfessionalService?> getAssociatedProfessionalService(ServiceBookingData booking) async {
     final serviceController = ProfessionalServiceController();
-    serviceController.getProfessionalServiceByID(booking.serviceID);
-    return null;
+    return await serviceController.getProfessionalServiceByID(booking.serviceID);
   }
 
   /// Returns all bookings for the authenticated client.
-  Future<Stream<List<ServiceBookingData?>>> getAllBookingsClient() async {
+  Stream<List<ServiceBookingData?>> getAllBookingsClient() {
     final uid = FirebaseAuth.instance.currentUser!.uid;
     final matchingBookings = bookingsCollection.where("clientID", isEqualTo: uid);
     return matchingBookings
@@ -73,11 +73,4 @@ class BookingController {
       ).toList();
     });
   }
-
-
-
-  /* Future<void> createBooking(ServiceBookingData bookingData) async {
-    await bookingsCollection.add(bookingData);
-  } */
-
 }
