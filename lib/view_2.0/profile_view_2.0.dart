@@ -6,6 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:service_squad/controller/profile_controller.dart';
 import 'package:service_squad/view_2.0/main_view.dart';
 import '../view/auth_gate.dart';
+import 'all_bookings_client_view.dart';
+import 'all_bookings_provider_view.dart';
 
 final GlobalKey<DropdownMenuExampleState> dropdownMenuKey = GlobalKey();
 //

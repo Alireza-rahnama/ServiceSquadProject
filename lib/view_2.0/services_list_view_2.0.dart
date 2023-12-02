@@ -52,7 +52,6 @@ class _CategoriesViewState extends State<CategoriesView> {
   void sortEntries(String sortBy) {
     setState(() {
       if (sortBy == 'rating') {
-        // Sort by rating in descending order
         filteredEntries.sort((a, b) => b.rating!.compareTo(a.rating as num));
       } else if (sortBy == 'price') {
         // Sort by price in ascending order
@@ -417,14 +416,18 @@ class _CategoriesViewState extends State<CategoriesView> {
                       onSelected: (String value) {
                         sortEntries(value);
                       },
+                      icon: Icon(
+                        Icons.sort,
+                        color: Colors.white,
+                      ),
                       itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                         const PopupMenuItem<String>(
                           value: 'rating',
-                          child: Text('Sort by Rating'),
+                          child: Text('Sort by Rating Desc'),
                         ),
                         const PopupMenuItem<String>(
                           value: 'price',
-                          child: Text('Sort by Price'),
+                          child: Text('Sort by Price Asc'),
                         ),
                       ],
                     ),
