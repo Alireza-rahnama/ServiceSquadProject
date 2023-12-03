@@ -71,7 +71,7 @@ class _MainScreenState extends State<MainScreen> {
     } else if (selectedUserType == 'Service Associate') {
       return ProfessionalListServicesView();
     } else {
-      return Placeholder();
+      return MessagesView();
     }
   }
 
@@ -138,7 +138,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void onTabTapped(int index) {
-      if (selectedUserType != 'Select an option' || index != 0) {
+      if (selectedUserType != 'Select an option' || selectedUserType != ""|| selectedUserType != null ) {
         setState(() {
           _currentIndex = index;
         });
