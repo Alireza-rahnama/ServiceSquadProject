@@ -9,7 +9,7 @@ class MessagesView extends StatelessWidget {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.deepPurple,
         title: Center(child: Text(
-          "My Messages",
+          "Services",
           style: GoogleFonts.lilitaOne(
             color: Colors.white,
             fontSize: 48.0,
@@ -21,13 +21,13 @@ class MessagesView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Icon(
-              Icons.message, // Icon for no messages
+              Icons.warning_amber, // Icon for no messages
               size: 100.0,
               color: Colors.deepPurple,
             ),
             SizedBox(height: 20), // Space between icon and text
             Text(
-              'You currently have no messages',
+              'Please Select the UserType First',
               style: GoogleFonts.lato(
                 fontSize: 20.0,
                 color: Colors.black,
